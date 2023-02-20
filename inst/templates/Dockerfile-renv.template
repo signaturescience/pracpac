@@ -1,0 +1,12 @@
+FROM {base_image}
+
+COPY renv.lock /renv.lock
+
+RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos="https://cloud.r-project.org")'
+
+## set the renv path var to the renv lib
+ENV RENV_PATHS_LIBRARY renv/library
+
+## restore packages from renv.lock
+RUN Rscript -e 'renv::restore(lockfile = "/renv.lock")'
+
