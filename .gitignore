@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 pracpac_*.tar.gz
+pracpac.tar.gz
 docker/

@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
+pracpac_*.tar.gz
+pracpac.tar.gz
+docker/
