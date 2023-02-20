@@ -4,9 +4,9 @@
 \name{pracpac-package}
 \alias{pracpac}
 \alias{pracpac-package}
-\title{pracpac: What the Package Does (One Line, Title Case)}
+\title{pracpac: Practical R Packaging in Docker}
 \description{
-What the package does (one paragraph).
+This package streamlines the creation of Docker images with R packages and dependencies embedded. It provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
 }
 \author{
 \strong{Maintainer}: VP Nagraj \email{pnagraj@signaturescience.com} (\href{https://orcid.org/0000-0003-0060-566X}{ORCID})
