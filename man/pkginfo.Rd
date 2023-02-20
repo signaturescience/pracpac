@@ -10,5 +10,10 @@ pkginfo()
 A list fixme
 }
 \description{
-Get information about the current package
+Returns information about the current package in a list which can be passed to other functions.
+}
+\examples{
+\dontrun{
+pkginfo()
+}
 }

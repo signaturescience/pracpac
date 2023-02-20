@@ -18,8 +18,8 @@ A list of package info returned by \link{pkginfo}, tar.gz source and destination
 Build a package tar.gz and move it into a user-specified location (default \verb{docker/})
 }
 \examples{
-build_pkg(dir="docker", build=FALSE)
 \dontrun{
+build_pkg(dir="docker", build=FALSE)
 build_pkg(dir="docker", build=TRUE)
 }
 }
