@@ -4,19 +4,22 @@
 \alias{build_pkg}
 \title{Build a package tar.gz}
 \usage{
-build_pkg(dir = "docker")
+build_pkg(dir = "docker", build = TRUE)
 }
 \arguments{
 \item{dir}{Location for the built package tar.gz. Defaults to \verb{docker/}}
+
+\item{build}{Logical; should the package actually be built? Default \code{TRUE}. Set to \code{FALSE} for debugging.}
 }
 \value{
-Nothing
+A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
 }
 \description{
 Build a package tar.gz and move it into a user-specified location (default \verb{docker/})
 }
 \examples{
+build_pkg(dir="docker", build=FALSE)
 \dontrun{
-build_pkg()
+build_pkg(dir="docker", build=TRUE)
 }
 }
