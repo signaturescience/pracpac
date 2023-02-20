@@ -2,15 +2,16 @@
 #'
 #' Returns information about the current package in a list which can be passed to other functions.
 #'
+#' @param ... Arguments passed to [rprojroot::find_package_root_file]. E.g. `path="/path/to/dir"`.
 #' @return A list fixme
 #' @export
 #' @examples
 #' \dontrun{
 #' pkginfo()
 #' }
-pkginfo <- function() {
+pkginfo <- function(...) {
   # Fixme: wrap this in try, fail gracefully if this is not a package
-  pkgroot <- rprojroot::find_package_root_file()
+  pkgroot <- rprojroot::find_package_root_file(...)
 
   # Find the description file
   descfile <- file.path(pkgroot, "DESCRIPTION")
