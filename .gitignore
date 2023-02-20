@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+pracpac_*.tar.gz
+docker/
