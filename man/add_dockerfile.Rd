@@ -2,7 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{add_dockerfile}
 \alias{add_dockerfile}
-\title{Title}
+\title{Add a Dockerfile to the docker directory}
 \usage{
 add_dockerfile(
   path = getwd(),
@@ -12,8 +12,22 @@ add_dockerfile(
 )
 }
 \arguments{
-\item{use_renv}{}
+\item{path}{Path to the package directory}
+
+\item{base_image}{Name of base image to start FROM in Dockerfile}
+
+\item{pkgs}{Vector of packages to include in Dockerfile; only relevant if \code{use_renv = FALSE}}
+
+\item{use_renv}{Logical as to whether or not to use renv}
+}
+\value{
+Side-effect. Creates directory.
 }
 \description{
-Title
+Add a Dockerfile to the docker directory
+}
+\examples{
+\dontrun{
+add_dockerfile()
+}
 }
