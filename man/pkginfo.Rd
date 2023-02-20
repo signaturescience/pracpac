@@ -4,10 +4,12 @@
 \alias{pkginfo}
 \title{Get information about the current package}
 \usage{
-pkginfo(...)
+pkginfo(path = ".", ...)
 }
 \arguments{
-\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}. E.g. \code{path="/path/to/dir"}.}
+\item{path}{Directory path to a package root}
+
+\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}}
 }
 \value{
 A list fixme
@@ -17,6 +19,9 @@ Returns information about the current package in a list which can be passed to o
 }
 \examples{
 \dontrun{
+# This will succeed if this is a package
 pkginfo()
+# This will fail if this is not a package location
+pkginfo(tempdir())
 }
 }

@@ -14,19 +14,25 @@
 #' build_pkg(dir="docker", build=TRUE)
 #' }
 build_pkg <- function(dir="docker", build=TRUE) {
+
+  # Create the target directory if it doesn't already exist
   if (!fs::dir_exists(dir)) fs::dir_create(dir)
+
+  # Get package information and construct filepaths to file built by R CMD build and eventual package tar.gz
   info <- pkginfo()
-  tarsrc <- sprintf("%s_%s.tar.gz", info$pkgname, info$pkgver)
-  tardst <- sprintf("%s.tar.gz", info$pkgname)
-  tardst <- file.path(dir, tardst)
+  tarsrc <- file.path(glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
+  tardst <- file.path(dir, glue::glue("{info$pkgname}.tar.gz"))
+
+  # Build the package
   if (build) {
+    message(glue::glue("Bulding package {info$pkgname}: {tarsrc} moved to {tardst}"))
     system(paste("R CMD build", info$pkgroot), ignore.stdout=TRUE)
     fs::file_move(tarsrc, tardst)
-    message(sprintf("Built package %s: %s moved to %s", info$pkgname, tarsrc, tardst))
-  } else {
-    message(sprintf("Would build package %s: %s move to %s", info$pkgname, tarsrc, tardst))
   }
+
+  # Return info
   return(list(info=info, tarsrc=tarsrc, tardst=tardst))
+
 }
 
 #' Build a Docker image
@@ -46,11 +52,22 @@ build_pkg <- function(dir="docker", build=TRUE) {
 #' build_image()
 #' }
 build_image <- function(dir="docker", build=TRUE, cache=TRUE) {
+
+  # Check that a dockerfile exists
+  dockerfilepath <- file.path(dir, "Dockerfile")
+  if (!fs::file_exists(dockerfilepath)) stop(glue::glue("Dockerfile doesn't exist: {dockerfilepath}"))
+
+  # Get package info
   info <- pkginfo()
+
+  # Parse docker build options
   cache <- ifelse(cache, "", "--no-cache")
-  buildcmd <- sprintf("docker build %s --tag %s:latest --tag %s:%s %s", cache, info$pkgname, info$pkgname, info$pkgver, dir)
+
+  # Construct and run the build command as a system command
+  buildcmd <- glue::glue("docker build {cache} --tag {info$pkgname}:latest --tag {info$pkgname}:{info$pkgver} {dir}")
   message(buildcmd)
   if (build) {
     system(buildcmd, ignore.stdout=TRUE)
   }
+
 }

@@ -1,0 +1,85 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.4.1
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "pracpac" in publications use:'
+type: software
+license: GPL-3.0-or-later
+title: 'pracpac: Practical R Packaging in Docker'
+version: 0.0.0.9000
+abstract: This package streamlines the creation of Docker images with R packages and
+  dependencies embedded. It provides a usethis-like interface to creating Dockerfiles
+  with dependencies managed by renv.
+authors:
+- family-names: Turner
+  given-names: Stephen
+  orcid: https://orcid.org/0000-0001-9140-9028
+- family-names: Nagraj
+  given-names: VP
+  email: pnagraj@signaturescience.com
+  orcid: https://orcid.org/0000-0003-0060-566X
+contact:
+- family-names: Nagraj
+  given-names: VP
+  email: pnagraj@signaturescience.com
+  orcid: https://orcid.org/0000-0003-0060-566X
+references:
+- type: software
+  title: magrittr
+  abstract: 'magrittr: A Forward-Pipe Operator for R'
+  notes: Imports
+  url: https://magrittr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=magrittr
+  authors:
+  - family-names: Bache
+    given-names: Stefan Milton
+    email: stefan@stefanbache.dk
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'
+- type: software
+  title: glue
+  abstract: 'glue: Interpreted String Literals'
+  notes: Imports
+  url: https://glue.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=glue
+  authors:
+  - family-names: Hester
+    given-names: Jim
+    orcid: https://orcid.org/0000-0002-2739-7082
+  - family-names: Bryan
+    given-names: Jennifer
+    email: jenny@rstudio.com
+    orcid: https://orcid.org/0000-0002-6983-2759
+  year: '2023'
+- type: software
+  title: fs
+  abstract: 'fs: Cross-Platform File System Operations Based on ''libuv'''
+  notes: Imports
+  url: https://fs.r-lib.org
+  repository: https://CRAN.R-project.org/package=fs
+  authors:
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2023'
+- type: software
+  title: rprojroot
+  abstract: 'rprojroot: Finding Files in Project Subdirectories'
+  notes: Imports
+  url: https://rprojroot.r-lib.org/
+  repository: https://CRAN.R-project.org/package=rprojroot
+  authors:
+  - family-names: Müller
+    given-names: Kirill
+    email: krlmlr+r@mailbox.org
+    orcid: https://orcid.org/0000-0002-1416-3412
+  year: '2023'
