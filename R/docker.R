@@ -15,12 +15,12 @@ create_ddir <- function(path = getwd()) {
   ## NOTE: path is just getwd()
   ## need to make this configurable with resolve_path
   ## that resolve_path will also have a check to make sure the path is a pkg
-  dir.create(file.path(path, "docker"))
+  fs::dir_create(fs::path(path, "docker"))
 
   ## NOTE: originally had an argument to conditionally add to Rbuildignore ... but why??
   ## we ALWAYS want this Rbuildignored i think
   ## that said lets chekc that the rbuildignore file is set up
-  ignore_fp <- file.path(path, ".Rbuildignore")
+  ignore_fp <- fs::path(path, ".Rbuildignore")
   if(file.exists(ignore_fp)) {
       write("^docker$", file = ignore_fp, append=TRUE)
   } else {
@@ -47,15 +47,15 @@ create_ddir <- function(path = getwd()) {
 #' }
 add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
-  ddir_path <- file.path(path, "docker")
+  ddir_path <- fs::path(path, "docker")
 
   if(!dir.exists(ddir_path)) {
     create_ddir(path)
   }
 
   ## create the dockerfile
-  dockerfile_fp <- file.path(ddir_path, "Dockerfile")
-  invisible(file.create(dockerfile_fp))
+  dockerfile_fp <- fs::path(ddir_path, "Dockerfile")
+  invisible(fs::file_create(dockerfile_fp))
 
   ## NOTE: conditionally pull different templates for renv or not
   if(use_renv) {
