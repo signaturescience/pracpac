@@ -22,4 +22,7 @@ Imports:
     magrittr,
     glue,
     fs,
-    rprojroot
+    rprojroot,
+    withr,
+    rstudioapi,
+    renv

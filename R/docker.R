@@ -73,3 +73,76 @@ add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", p
   write(dockerfile_contents, file = dockerfile_fp, append = TRUE)
 
 }
+
+#' Get renv dependencies
+#'
+#' @param path Path to the package directory
+#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
+#'
+#' @return
+#' Side effect. Writes an `renv` lock file to the docker/ directory.
+#'
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' renv_deps()
+#' }
+renv_deps <- function(path = getwd(), other_packages = NULL) {
+
+  ## get pkg_name from pkginfo helper
+  pkg_name <- pkginfo()$pkgname
+
+  ## establish out path for the renv lock file
+  out_path <- fs::path(path.package(), "docker", "renv.lock")
+
+  ## was thinking we should have a check that docker dir exists
+  ## TODO: think through if this is the best way to handle this check
+  if(!fs::dir_exists(fs::path(path, "docker"))) {
+    stop("The docker/ dir does not exist.")
+  }
+
+  ## NOTE: storing the original libpath to reset libpaths at the end of this function
+  lps <- .libPaths()
+
+  ## establish tempdir path
+  ## used as argument to with_tempdir below
+  tmp <- tempdir()
+
+  withr::with_tempdir(clean=TRUE, tmpdir = tmp, code = {
+
+    ## create the temp dir and file path with a script that loads pkg ...
+    ## ... and other_packages as specified
+    fs::dir_create(fs::path(tmp, pkg_name))
+    tmp_fp <- fs::path(tmp, pkg_name, "tmp.R")
+    fs::file_create(tmp_fp)
+
+    write(paste0("library(", pkg_name, ")"),
+          file = tmp_fp,
+          append=TRUE)
+
+    ## this allows for other packages that the user may want to be installed
+    ## other_packages passed as a vector and we loop over that and append
+    if(!is.null(other_packages)) {
+      for(i in 1:length(other_packages)) {
+        write(paste0("library(", other_packages[i], ")"),
+              file = tmp_fp,
+              append=TRUE)
+      }
+    }
+
+    ## TODO: add a helper function that abstracts out the renv consent and sandbox options
+    ## NOTE: side effect to set the option to NOT use sandbox
+    Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
+    renv::consent(provided = TRUE)
+    renv::init(fs::path(tmp, pkg_name), force = TRUE, restart = FALSE)
+
+    renv::snapshot(fs::path(tmp, pkg_name), lockfile = out_path, prompt = FALSE)
+
+  })
+
+  ## ensure that libpath is reset to initial state after renv::init side effects
+  .libPaths(lps)
+
+}
