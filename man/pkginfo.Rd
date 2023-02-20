@@ -19,6 +19,9 @@ Returns information about the current package in a list which can be passed to o
 }
 \examples{
 \dontrun{
+# This will succeed if this is a package
 pkginfo()
+# This will fail if this is not a package location
+pkginfo(tempdir())
 }
 }
