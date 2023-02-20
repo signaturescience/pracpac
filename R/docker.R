@@ -27,13 +27,16 @@ create_ddir <- function(path = getwd()) {
 #' Title
 #'
 #' @param path
+#' @param base_image
+#' @param pkgs
+#' @param use_renv
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", use_renv = TRUE) {
+add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
   ddir_path <- file.path(path, "docker")
 
@@ -54,14 +57,14 @@ add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", u
 
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image)
 
-  }
+  } else {
+    template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
+    tmpl <-
+      readLines(template_fp) %>%
+      paste0(., collapse = "\n")
 
-  # ## NOTE we can do better with a template and glue::glue
-  # write(c(paste0("FROM ", base_image)
-  #         ),
-  #       sep = "\n",
-  #       file=dockerfile_fp,
-  #       append = TRUE)
+    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs)
+  }
   write(dockerfile_contents, file = dockerfile_fp, append = TRUE)
 
 }

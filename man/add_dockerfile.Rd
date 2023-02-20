@@ -7,11 +7,12 @@
 add_dockerfile(
   path = getwd(),
   base_image = "rocker/r-ver:latest",
+  pkgs = NULL,
   use_renv = TRUE
 )
 }
 \arguments{
-\item{path}{}
+\item{use_renv}{}
 }
 \description{
 Title
