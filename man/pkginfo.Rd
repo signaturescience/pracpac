@@ -4,7 +4,10 @@
 \alias{pkginfo}
 \title{Get information about the current package}
 \usage{
-pkginfo()
+pkginfo(...)
+}
+\arguments{
+\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}. E.g. \code{path="/path/to/dir"}.}
 }
 \value{
 A list fixme
