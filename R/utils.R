@@ -1,5 +1,13 @@
-#' @title Get information about the current package
+#' Get information about the current package
+#'
+#' Returns information about the current package in a list which can be passed to other functions.
+#'
 #' @return A list fixme
+#' @export
+#' @examples
+#' \dontrun{
+#' pkginfo()
+#' }
 pkginfo <- function() {
   # Fixme: wrap this in try, fail gracefully if this is not a package
   pkgroot <- rprojroot::find_package_root_file()
