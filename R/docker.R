@@ -95,7 +95,7 @@ renv_deps <- function(path = getwd(), other_packages = NULL) {
   pkg_name <- pkginfo()$pkgname
 
   ## establish out path for the renv lock file
-  out_path <- fs::path(path.package(), "docker", "renv.lock")
+  out_path <- fs::path(path, "docker", "renv.lock")
 
   ## was thinking we should have a check that docker dir exists
   ## TODO: think through if this is the best way to handle this check
