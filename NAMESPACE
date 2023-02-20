@@ -3,4 +3,7 @@
 export("%>%")
 export(add_dockerfile)
 export(create_ddir)
+export(build_image)
+export(build_pkg)
+export(pkginfo)
 importFrom(magrittr,"%>%")

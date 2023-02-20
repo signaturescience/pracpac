@@ -21,3 +21,5 @@ RoxygenNote: 7.2.3
 Imports: 
     magrittr,
     glue
+    fs,
+    rprojroot
