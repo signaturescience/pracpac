@@ -8,14 +8,17 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' # This will succeed if this is a package
 #' pkginfo()
+#' # This will fail if this is not a package location
+#' pkginfo(tempdir())
 #' }
 pkginfo <- function(path=".", ...) {
   # Find the package root
   pkgroot <- pkgroot(path=path, ...)
 
   # Find the description file
-  descfile <- file.path(pkgroot, "DESCRIPTION")
+  descfile <- fs::path(pkgroot, "DESCRIPTION")
 
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
@@ -25,7 +28,7 @@ pkginfo <- function(path=".", ...) {
   return(list(pkgroot=pkgroot, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
 }
 
-#' @title Find package root
+#' Find package root
 #' @param path Directory path to a package root
 #' @param ... Arguments passed to [rprojroot::find_package_root_file]
 #' @return A file path of the package root.
