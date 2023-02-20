@@ -2,13 +2,22 @@
 % Please edit documentation in R/docker.R
 \name{create_ddir}
 \alias{create_ddir}
-\title{Title}
+\title{Function to create docker directory}
 \usage{
 create_ddir(path = getwd())
 }
 \arguments{
-\item{path}{}
+\item{path}{Path to the package directory}
+}
+\value{
+Side-effect. Creates directory.
 }
 \description{
-Title
+Function to create docker directory
+}
+\examples{
+\dontrun{
+create_ddir()
+}
+
 }

@@ -1,11 +1,15 @@
-#' Title
+#' Function to create docker directory
 #'
-#' @param path
+#' @param path Path to the package directory
 #'
 #' @return
+#' Side-effect. Creates directory.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' create_ddir()
+#' }
 #'
 create_ddir <- function(path = getwd()) {
   ## NOTE: path is just getwd()
@@ -24,18 +28,23 @@ create_ddir <- function(path = getwd()) {
     }
 }
 
-#' Title
+#' Add a Dockerfile to the docker directory
 #'
-#' @param path
-#' @param base_image
-#' @param pkgs
-#' @param use_renv
+#' @param path Path to the package directory
+#' @param base_image Name of base image to start FROM in Dockerfile
+#' @param pkgs Vector of packages to include in Dockerfile; only relevant if `use_renv = FALSE`
+#' @param use_renv Logical as to whether or not to use renv
 #'
 #' @return
+#'
+#' Side-effect. Creates directory.
+#'
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
+#' add_dockerfile()
+#' }
 add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
   ddir_path <- file.path(path, "docker")
@@ -51,17 +60,13 @@ add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", p
   ## NOTE: conditionally pull different templates for renv or not
   if(use_renv) {
     template_fp <- system.file("templates/Dockerfile-renv.template", package = "pracpac")
-    tmpl <-
-      readLines(template_fp) %>%
-      paste0(., collapse = "\n")
+    tmpl <- paste0(readLines(template_fp), collapse = "\n")
 
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image)
 
   } else {
     template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
-    tmpl <-
-      readLines(template_fp) %>%
-      paste0(., collapse = "\n")
+    tmpl <- paste0(readLines(template_fp), collapse = "\n")
 
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs)
   }
