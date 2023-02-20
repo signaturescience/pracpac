@@ -20,12 +20,15 @@ pkginfo <- function(path=".", ...) {
   # Find the description file
   descfile <- fs::path(pkgroot, "DESCRIPTION")
 
+  # Get package dependencies
+  pkgdeps <- strsplit(as.data.frame(read.dcf(descfile))$Imports, split=",\\n")[[1]]
+
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
   pkgver <- strsplit(grep("^Version:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
 
   # Return a list
-  return(list(pkgroot=pkgroot, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
+  return(list(pkgroot=pkgroot, pkgdeps, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
 }
 
 #' Find package root
