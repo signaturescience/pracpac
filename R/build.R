@@ -9,8 +9,8 @@
 #' @export
 #'
 #' @examples
-#' build_pkg(dir="docker", build=FALSE)
 #' \dontrun{
+#' build_pkg(dir="docker", build=FALSE)
 #' build_pkg(dir="docker", build=TRUE)
 #' }
 build_pkg <- function(dir="docker", build=TRUE) {
@@ -29,3 +29,28 @@ build_pkg <- function(dir="docker", build=TRUE) {
   return(list(info=info, tarsrc=tarsrc, tardst=tardst))
 }
 
+#' Build a Docker image
+#'
+#' Build a Docker image created by FIXME function name.
+#'
+#' @param dir Directory containing the Dockerfile built by FIXME
+#' @param build Logical; should the image actually be built? Default `TRUE`. Set to `FALSE` for debugging.
+#' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
+#'
+#' @return Nothing
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' build_image(build=FALSE)
+#' build_image()
+#' }
+build_image <- function(dir="docker", build=TRUE, cache=TRUE) {
+  info <- pkginfo()
+  cache <- ifelse(cache, "", "--no-cache")
+  buildcmd <- sprintf("docker build %s --tag %s:latest --tag %s:%s %s", cache, info$pkgname, info$pkgname, info$pkgver, dir)
+  message(buildcmd)
+  if (build) {
+    system(buildcmd, ignore.stdout=TRUE)
+  }
+}
