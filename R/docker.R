@@ -102,10 +102,10 @@ renv_deps <- function(path = ".", other_packages = NULL) {
   path <- fs::path_real(path)
 
   # Check that path is a package
-  info <- pkginfo()
+  info <- pkginfo(path)
 
   ## get pkgname from pkginfo helper
-  pkgname <- pkginfo()$pkgname
+  pkgname <- info$pkgname
 
   ## establish out path for the renv lock file
   out_path <- fs::path(path, "docker", "renv.lock")
