@@ -2,7 +2,7 @@
 #'
 #' @param path Path to the package directory
 #'
-#' @return A list with information about the package.
+#' @return A list with information about the package. Also called for side-effect, creates docker directory.
 #' @export
 #'
 #' @examples
@@ -39,9 +39,7 @@ create_docker_dir <- function(path = ".") {
 #' @param pkgs Vector of packages to include in Dockerfile; only relevant if `use_renv = FALSE`
 #' @param use_renv Logical as to whether or not to use renv
 #'
-#' @return
-#'
-#' Side-effect. Creates directory.
+#' @return A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
 #' @export
 #'
@@ -79,6 +77,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
   }
   write(dockerfile_contents, file = dockerfile_fp, append = TRUE)
 
+  return(info)
 }
 
 #' Get renv dependencies
