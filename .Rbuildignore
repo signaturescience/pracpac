@@ -4,5 +4,5 @@
 ^README\.Rmd$
 pracpac_*.tar.gz
 pracpac.tar.gz
-docker/
 ^CITATION\.cff$
+^docker$

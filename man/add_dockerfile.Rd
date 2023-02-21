@@ -5,7 +5,7 @@
 \title{Add a Dockerfile to the docker directory}
 \usage{
 add_dockerfile(
-  path = getwd(),
+  path = ".",
   base_image = "rocker/r-ver:latest",
   pkgs = NULL,
   use_renv = TRUE
@@ -21,7 +21,7 @@ add_dockerfile(
 \item{use_renv}{Logical as to whether or not to use renv}
 }
 \value{
-Side-effect. Creates directory.
+A list with information about the package. Also called for side-effect, creates Dockerfile.
 }
 \description{
 Add a Dockerfile to the docker directory
