@@ -14,7 +14,7 @@ build_image(path = ".", build = TRUE, cache = TRUE)
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
 }
 \value{
-Nothing
+(Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
 }
 \description{
 Build a Docker image created by FIXME function name.

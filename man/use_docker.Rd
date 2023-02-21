@@ -24,7 +24,7 @@ use_docker(
 \item{build}{Logical as to wether or not the function should build the Docker image; default is \code{TRUE}}
 }
 \value{
-Side effects. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).
+(Invisible) A list with information about the package. Primarily called for side effect. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).
 }
 \description{
 Use docker packaging tools

@@ -2,7 +2,7 @@
 #'
 #' @param path Path to the package directory
 #'
-#' @return A list with information about the package. Also called for side-effect, creates docker directory.
+#' @return (Invisible) A list with information about the package. Also called for side-effect, creates docker directory.
 #' @export
 #'
 #' @examples
@@ -29,7 +29,7 @@ create_docker_dir <- function(path = ".") {
     stop(glue::glue("The package at {path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
   }
 
-  return(info)
+  return(invisible(info))
 }
 
 #' Add a Dockerfile to the docker directory
@@ -39,7 +39,7 @@ create_docker_dir <- function(path = ".") {
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
 #'
-#' @return A list with information about the package. Also called for side-effect, creates Dockerfile.
+#' @return (Invisible) A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
 #' @export
 #'
@@ -103,7 +103,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   # FIXME: need some UI messaging here
   write(dockerfile_contents, file = dockerfile_fp, append = FALSE)
 
-  return(info)
+  return(invisible(info))
 }
 
 #' Get renv dependencies
@@ -111,7 +111,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 #' @param path Path to the package directory
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #'
-#' @return A list with information about the package. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
+#' @return (Invisible) A list with information about the package. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
@@ -146,6 +146,8 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 
   # FIXME some UI messaging here
 
+  return(invisible(info))
+
 }
 
 
@@ -157,9 +159,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
 #'
-#' @return
-#'
-#' Side effects. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
+#' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
 #'
 #' @examples
@@ -188,4 +188,7 @@ use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:l
   if(build) {
     build_image()
   }
+
+  return(invisible(info))
+
 }

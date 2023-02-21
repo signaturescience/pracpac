@@ -5,7 +5,7 @@
 #' @param path Path to the package directory
 #' @param build Logical; should the package actually be built? Default `TRUE`. Set to `FALSE` for debugging.
 #'
-#' @return A list of package info returned by [pkginfo], tar.gz source and destination file paths.
+#' @return (Invisible) A list of package info returned by [pkginfo], tar.gz source and destination file paths.
 #' @export
 #'
 #' @examples
@@ -34,7 +34,7 @@ build_pkg <- function(path=".", build=TRUE) {
   }
 
   # Return info
-  return(list(info=info, tarsrc=tarsrc))
+  return(invisible(list(info=info, tarsrc=tarsrc)))
 
 }
 
@@ -46,7 +46,7 @@ build_pkg <- function(path=".", build=TRUE) {
 #' @param build Logical; should the image actually be built? Default `TRUE`. Set to `FALSE` for debugging.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
 #'
-#' @return Nothing
+#' @return (Invisible) The `docker build` command. Called for its side effects, which runs the `docker build` as a system command.
 #' @export
 #'
 #' @examples
@@ -75,5 +75,7 @@ build_image <- function(path=".", build=TRUE, cache=TRUE) {
   if (build) {
     system(buildcmd, ignore.stdout=TRUE)
   }
+
+  return(invisible(buildcmd))
 
 }
