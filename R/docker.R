@@ -76,7 +76,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
     }
     template_fp <- system.file("templates/Dockerfile-renv.template", package = "pracpac")
     tmpl <- paste0(readLines(template_fp), collapse = "\n")
-    dockerfile_contents <- glue::glue(tmpl, base_image = base_image)
+    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgname=info$pkgname, pkgver=info$pkgver)
   } else {
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
     template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
