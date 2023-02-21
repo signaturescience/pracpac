@@ -152,11 +152,11 @@ use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:l
 
   create_docker_dir(path)
 
-  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image)
-
   if(use_renv) {
     renv_deps(path = path, other_packages = other_packages)
   }
+
+  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image)
 
   build_pkg()
   if(build) {
