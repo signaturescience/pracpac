@@ -33,13 +33,15 @@ devtools::install_github("signaturescience/pracpac")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, eval=FALSE}
 library(pracpac)
-## basic example code
+# Build this package without renv
+build_pkg()
+add_dockerfile(use_renv = FALSE)
+build_image()
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
+```{sh, eval=TRUE}
+docker run --rm pracpac Rscript -e 'sapply(c("rprojroot", "glue", "pracpac"), packageVersion); R.version.string'
 ```
+
