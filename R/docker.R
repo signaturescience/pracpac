@@ -35,9 +35,8 @@ create_docker_dir <- function(path = ".") {
 #' Add a Dockerfile to the docker directory
 #'
 #' @param path Path to the package directory
-#' @param base_image Name of base image to start FROM in Dockerfile
-#' @param pkgs Vector of packages to include in Dockerfile; only relevant if `use_renv = FALSE`
-#' @param use_renv Logical as to whether or not to use renv
+#' @param base_image Name of base image to start `FROM` in Dockerfile
+#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #'
 #' @return A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
@@ -45,15 +44,19 @@ create_docker_dir <- function(path = ".") {
 #'
 #' @examples
 #' \dontrun{
-#' add_dockerfile()
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
 #' }
-add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
+add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE) {
 
   # Get canonical path
   path <- fs::path_real(path)
 
   # Check that path is a package
   info <- pkginfo()
+
+  # Turn the string vector: c("a", "b", "c") to the single element string "'a','b','c'"
+  pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
 
   # Create docker dir if it doesn't exist
   ddir_path <- fs::path(path, "docker")
@@ -67,20 +70,22 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
 
   ## NOTE: conditionally pull different templates for renv or not
   if(use_renv) {
+    message(glue::glue("Using renv. Dockerfile will build from renv.lock in {ddir_path}."))
+    if (!fs::file_exists(fs::path(ddir_path, "renv.lock"))) {
+      warning(glue::glue("use_renv=TRUE but no renv.lock file found in {ddir_path}. Run renv_deps() to generate."))
+    }
     template_fp <- system.file("templates/Dockerfile-renv.template", package = "pracpac")
     tmpl <- paste0(readLines(template_fp), collapse = "\n")
-
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image)
-
   } else {
+    message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
     template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
     tmpl <- paste0(readLines(template_fp), collapse = "\n")
-
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs)
   }
 
   # FIXME: need some UI messaging here
-  write(dockerfile_contents, file = dockerfile_fp, append = TRUE)
+  write(dockerfile_contents, file = dockerfile_fp, append = FALSE)
 
   return(info)
 }
