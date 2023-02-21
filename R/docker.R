@@ -49,7 +49,7 @@ create_docker_dir <- function(path = ".") {
 #' \dontrun{
 #' add_dockerfile()
 #' }
-add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
+add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
   ddir_path <- fs::path(path, "docker")
 
@@ -93,7 +93,7 @@ add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", p
 #' \dontrun{
 #' renv_deps()
 #' }
-renv_deps <- function(path = getwd(), other_packages = NULL) {
+renv_deps <- function(path = ".", other_packages = NULL) {
 
   ## get pkg_name from pkginfo helper
   pkg_name <- pkginfo()$pkgname
