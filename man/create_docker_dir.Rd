@@ -10,7 +10,7 @@ create_docker_dir(path = ".")
 \item{path}{Path to the package directory}
 }
 \value{
-A list with information about the package. Also called for side-effect, creates docker directory.
+(Invisible) A list with information about the package. Also called for side-effect, creates docker directory.
 }
 \description{
 Function to create docker directory

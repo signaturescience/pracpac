@@ -21,7 +21,7 @@ add_dockerfile(
 \item{usecase}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added.}
 }
 \value{
-A list with information about the package. Also called for side-effect, creates Dockerfile.
+(Invisible) A list with information about the package. Also called for side-effect, creates Dockerfile.
 }
 \description{
 Add a Dockerfile to the docker directory

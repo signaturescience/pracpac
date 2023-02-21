@@ -12,7 +12,7 @@ build_pkg(path = ".", build = TRUE)
 \item{build}{Logical; should the package actually be built? Default \code{TRUE}. Set to \code{FALSE} for debugging.}
 }
 \value{
-A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
+(Invisible) A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
 }
 \description{
 Build a package tar.gz and move it into a user-specified location (default \verb{docker/})
