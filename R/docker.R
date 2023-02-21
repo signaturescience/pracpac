@@ -126,7 +126,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 
   ## NOTE: need to pass a tempdir in otherwise renv can't find pkgname when run in current directory ...
   ## ... not sure exactly why that is but this seems to work
-  renv::snapshot(project = tempdir(), packages = c(pkgname, other_packages), lockfile = out_path, prompt = FALSE, update = TRUE)
+  renv::snapshot(project = tempdir(), packages = c(info$pkgdeps, other_packages), lockfile = out_path, prompt = FALSE, update = TRUE)
 
   # FIXME some UI messaging here
 
