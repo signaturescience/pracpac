@@ -42,7 +42,7 @@ build_pkg <- function(path=".", build=TRUE) {
 #'
 #' Build a Docker image created by FIXME function name.
 #'
-#' @param docker_dir Directory containing the Dockerfile built by [add_dockerfile]
+#' @param path Path to a package directory containing a `docker` subdirectory, which contains the Dockerfile built by [add_dockerfile]
 #' @param build Logical; should the image actually be built? Default `TRUE`. Set to `FALSE` for debugging.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
 #'
@@ -54,7 +54,10 @@ build_pkg <- function(path=".", build=TRUE) {
 #' build_image(build=FALSE)
 #' build_image()
 #' }
-build_image <- function(docker_dir="docker", build=TRUE, cache=TRUE) {
+build_image <- function(path=".", build=TRUE, cache=TRUE) {
+
+  # Construct path to the docker directory
+  docker_dir <- fs::path(path, "docker")
 
   # Check that a dockerfile exists
   dockerfilepath <- file.path(docker_dir, "Dockerfile")
