@@ -25,13 +25,13 @@ build_pkg <- function(dir="docker", build=TRUE) {
 
   # Build the package
   if (build) {
-    message(glue::glue("Bulding package {info$pkgname}: {tarsrc} moved to {tardst}"))
+    message(glue::glue("Bulding package {info$pkgname} version {info$pkgver}: {tarsrc}"))
     system(paste("R CMD build", info$pkgroot), ignore.stdout=TRUE)
-    fs::file_move(tarsrc, tardst)
+    fs::file_move(tarsrc, dir)
   }
 
   # Return info
-  return(list(info=info, tarsrc=tarsrc, tardst=tardst))
+  return(list(info=info, tarsrc=tarsrc))
 
 }
 
