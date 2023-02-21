@@ -28,7 +28,7 @@ pkginfo <- function(path=".", ...) {
   pkgver <- strsplit(grep("^Version:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
 
   # Return a list
-  return(list(pkgroot=pkgroot, pkgdeps, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
+  return(list(pkgroot=pkgroot, pkgdeps=pkgdeps, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
 }
 
 #' Find package root
