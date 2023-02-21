@@ -133,32 +133,42 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 }
 
 
-#' Title
+#' Use docker packaging tools
 #'
-#' @param path
-#' @param use_renv
-#' @param base_image
-#' @param other_packages
-#' @param build
+#' @param path Path to the package directory
+#' @param base_image Name of base image to start `FROM` in Dockerfile
+#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
+#' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
 #'
 #' @return
+#'
+#' Side effects. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
+#' use_docker()
+#' }
 use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE) {
 
+  ## check the package path
   info <- pkginfo(path)
 
+  ## create docker/ dir
   create_docker_dir(path)
 
+  ## if using renv then make sure the renv_deps runs and outputs lockfile in docker/ dir
   if(use_renv) {
     renv_deps(path = path, other_packages = other_packages)
   }
 
+  ## add the dockerfile to the docker/ dir
   add_dockerfile(path = path, use_renv = use_renv, base_image = base_image)
 
+  ## build the package tar.gz and copy that to the docker dir/
   build_pkg()
+  ## conditionally build the image
   if(build) {
     build_image()
   }

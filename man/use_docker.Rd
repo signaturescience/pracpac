@@ -2,7 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{use_docker}
 \alias{use_docker}
-\title{Title}
+\title{Use docker packaging tools}
 \usage{
 use_docker(
   path = ".",
@@ -13,8 +13,24 @@ use_docker(
 )
 }
 \arguments{
-\item{build}{}
+\item{path}{Path to the package directory}
+
+\item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
+
+\item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
+
+\item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
+
+\item{build}{Logical as to wether or not the function should build the Docker image; default is \code{TRUE}}
+}
+\value{
+Side effects. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).
 }
 \description{
-Title
+Use docker packaging tools
+}
+\examples{
+\dontrun{
+use_docker()
+}
 }
