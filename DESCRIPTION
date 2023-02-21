@@ -24,5 +24,4 @@ Imports:
     fs,
     rprojroot,
     withr,
-    rstudioapi,
     renv
