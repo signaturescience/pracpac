@@ -4,7 +4,7 @@
 \alias{renv_deps}
 \title{Get renv dependencies}
 \usage{
-renv_deps(path = getwd(), other_packages = NULL)
+renv_deps(path = ".", other_packages = NULL)
 }
 \arguments{
 \item{path}{Path to the package directory}
@@ -12,7 +12,7 @@ renv_deps(path = getwd(), other_packages = NULL)
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 }
 \value{
-Side effect. Writes an \code{renv} lock file to the docker/ directory.
+A list with information about the package. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
 }
 \description{
 Get renv dependencies
