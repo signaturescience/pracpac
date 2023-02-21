@@ -86,6 +86,11 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 
   # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
   base_template <- paste0(readLines(base_template_fp), collapse = "\n")
+  ## NOTE: this step is important ...
+  ## the NULL option should NOT be quoted when glued into template ...
+  ## but the repo names should be quoted ..
+  ## so we need to add a double layer of quotes in this statement if you specify repos
+  repos <- ifelse(is.null(repos), 'NULL', paste0('"', repos, '"'))
   base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver, repos = repos)
 
   # If usecase is NULL, no additional Dockerfile boilerplate is added.

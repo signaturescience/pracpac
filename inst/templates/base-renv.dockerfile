@@ -10,7 +10,7 @@ RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos="https://cloud.r
 ENV RENV_PATHS_LIBRARY renv/library
 
 ## restore packages from renv.lock
-RUN Rscript -e 'renv::restore(lockfile = "/renv.lock", repos = "{repos}")'
+RUN Rscript -e 'renv::restore(lockfile = "/renv.lock", repos = {repos})'
 
 ## copy in built R package
 COPY {pkgname}_{pkgver}.tar.gz /{pkgname}_{pkgver}.tar.gz
