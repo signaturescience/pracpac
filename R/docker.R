@@ -49,6 +49,9 @@ create_docker_dir <- function(path = ".") {
 #' }
 add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
+  # Get canonical path
+  path <- fs::path_real(path)
+
   # Check that path is a package
   info <- pkginfo()
 
