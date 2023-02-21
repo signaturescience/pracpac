@@ -75,6 +75,8 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
 
     dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs)
   }
+
+  # FIXME: need some UI messaging here
   write(dockerfile_contents, file = dockerfile_fp, append = TRUE)
 
   return(info)
