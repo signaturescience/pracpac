@@ -72,7 +72,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   if(use_renv) {
     message(glue::glue("Using renv. Dockerfile will build from renv.lock in {ddir_path}."))
     if (!fs::file_exists(fs::path(ddir_path, "renv.lock"))) {
-      warning(glue::glue("use_renv=TRUE but no renv.lock file found in {ddir_path}. Run renv_deps() to generate."))
+      stop(glue::glue("use_renv=TRUE but no renv.lock file found in {ddir_path}. Run renv_deps() to generate."))
     }
     template_fp <- system.file("templates/Dockerfile-renv.template", package = "pracpac")
     tmpl <- paste0(readLines(template_fp), collapse = "\n")
