@@ -98,6 +98,9 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
 #' }
 renv_deps <- function(path = ".", other_packages = NULL) {
 
+  # Get canonical path
+  path <- fs::path_real(path)
+
   # Check that path is a package
   info <- pkginfo()
 
