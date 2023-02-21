@@ -4,12 +4,10 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(path = ".", build = TRUE, cache = TRUE)
+build_image(path = ".", cache = TRUE)
 }
 \arguments{
 \item{path}{Path to a package directory containing a \code{docker} subdirectory, which contains the Dockerfile built by \link{add_dockerfile}}
-
-\item{build}{Logical; should the image actually be built? Default \code{TRUE}. Set to \code{FALSE} for debugging.}
 
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
 }
@@ -21,7 +19,6 @@ Build a Docker image created by FIXME function name.
 }
 \examples{
 \dontrun{
-build_image(build=FALSE)
 build_image()
 }
 }

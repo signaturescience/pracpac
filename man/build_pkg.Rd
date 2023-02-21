@@ -4,12 +4,10 @@
 \alias{build_pkg}
 \title{Build a package tar.gz}
 \usage{
-build_pkg(path = ".", build = TRUE)
+build_pkg(path = ".")
 }
 \arguments{
 \item{path}{Path to the package directory}
-
-\item{build}{Logical; should the package actually be built? Default \code{TRUE}. Set to \code{FALSE} for debugging.}
 }
 \value{
 (Invisible) A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
@@ -19,7 +17,6 @@ Build a package tar.gz and move it into a user-specified location (default \verb
 }
 \examples{
 \dontrun{
-build_pkg(build=FALSE)
-build_pkg(build=TRUE)
+build_pkg()
 }
 }

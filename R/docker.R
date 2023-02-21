@@ -13,11 +13,17 @@
 create_docker_dir <- function(path = ".") {
   # Check that the path is a package, then create a docker directory inside the package
   info <- pkginfo()
-  fs::dir_create(fs::path(path, "docker"))
 
-  ## NOTE: originally had an argument to conditionally add to Rbuildignore ... but why??
-  ## we ALWAYS want this Rbuildignored i think
-  ## that said lets chekc that the rbuildignore file is set up
+  docker_dir <- fs::path(path, "docker")
+  if (fs::dir_exists(docker_dir)) {
+    message(glue::glue("Directory already exists: {docker_dir}"))
+  } else {
+    message(glue::glue("Creating docker directory: {docker_dir}"))
+    fs::dir_create(docker_dir)
+  }
+
+  # Check that there's an .Rbuildignore
+  # FIXME: if .Rbuildignore doesn't exist, perhaps we should create one
   ignore_fp <- fs::path(path, ".Rbuildignore")
   if(file.exists(ignore_fp)) {
     # Only append ^docker$ to .Rbuildignore if ^docker$ isn't already there
@@ -29,6 +35,7 @@ create_docker_dir <- function(path = ".") {
     stop(glue::glue("The package at {path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
   }
 
+  # Invisibly return package information
   return(invisible(info))
 }
 
@@ -93,6 +100,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
     usecase_dockerfile <- ""
   } else {
     # Read in the use case template
+    message(glue::glue("Using template: {usecase}"))
     usecase_template_fp <- system.file(glue::glue("templates/{usecase}.dockerfile"), package = "pracpac", mustWork = TRUE)
     usecase_dockerfile <- paste0(readLines(usecase_template_fp), collapse = "\n")
   }
@@ -101,6 +109,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   dockerfile_contents <- glue::glue(paste(base_dockerfile, usecase_dockerfile, sep="\n\n"))
 
   # FIXME: need some UI messaging here
+  message(glue::glue("Writing dockerfile: {dockerfile_fp}"))
   write(dockerfile_contents, file = dockerfile_fp, append = FALSE)
 
   return(invisible(info))
@@ -142,10 +151,11 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 
   ## NOTE: need to pass a tempdir in otherwise renv can't find pkgname when run in current directory ...
   ## ... not sure exactly why that is but this seems to work
+  message(glue::glue("Creating renv.lockfile with renv::snapshot: {out_path}"))
+  if (!is.null(other_packages)) message(glue::glue("With additional packages: {paste(other_packages, collapse=', ')}"))
   renv::snapshot(project = tempdir(), packages = c(info$pkgdeps, other_packages), lockfile = out_path, prompt = FALSE, update = TRUE)
 
-  # FIXME some UI messaging here
-
+  # Invisibly return package information
   return(invisible(info))
 
 }
