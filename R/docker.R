@@ -116,50 +116,10 @@ renv_deps <- function(path = ".", other_packages = NULL) {
     stop("The docker/ dir does not exist.")
   }
 
-  ## NOTE: storing the original libpath to reset libpaths at the end of this function
-  lps <- .libPaths()
+  ## NOTE: need to pass a tempdir in otherwise renv can't find pkgname when run in current directory ...
+  ## ... not sure exactly why that is but this seems to work
+  renv::snapshot(project = tempdir(), packages = c(pkgname, other_packages), lockfile = out_path, prompt = FALSE, update = TRUE)
 
-  ## establish tempdir path
-  ## used as argument to with_tempdir below
-  tmp <- tempdir()
-
-  # FIXME better inline documentation
-  withr::with_tempdir(clean=TRUE, tmpdir = tmp, code = {
-
-    ## create the temp dir and file path with a script that loads pkg ...
-    ## ... and other_packages as specified
-    fs::dir_create(fs::path(tmp, pkgname))
-    tmp_fp <- fs::path(tmp, pkgname, "tmp.R")
-    fs::file_create(tmp_fp)
-
-    # FIXME use glue for readability
-    write(paste0("library(", pkgname, ")"),
-          file = tmp_fp,
-          append=TRUE)
-
-    ## this allows for other packages that the user may want to be installed
-    ## other_packages passed as a vector and we loop over that and append
-    if(!is.null(other_packages)) {
-      for(i in 1:length(other_packages)) {
-        write(paste0("library(", other_packages[i], ")"),
-              file = tmp_fp,
-              append=TRUE)
-      }
-    }
-
-    ## TODO: add a helper function that abstracts out the renv consent and sandbox options
-    ## NOTE: side effect to set the option to NOT use sandbox
-    Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
-    renv::consent(provided = TRUE)
-    renv::init(fs::path(tmp, pkgname), force = TRUE, restart = FALSE)
-
-    renv::snapshot(fs::path(tmp, pkgname), lockfile = out_path, prompt = FALSE)
-
-    # FIXME some UI messaging here
-
-  })
-
-  ## ensure that libpath is reset to initial state after renv::init side effects
-  .libPaths(lps)
+  # FIXME some UI messaging here
 
 }
