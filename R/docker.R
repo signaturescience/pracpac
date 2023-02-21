@@ -120,6 +120,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
   ## used as argument to with_tempdir below
   tmp <- tempdir()
 
+  # FIXME better inline documentation
   withr::with_tempdir(clean=TRUE, tmpdir = tmp, code = {
 
     ## create the temp dir and file path with a script that loads pkg ...
@@ -128,6 +129,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
     tmp_fp <- fs::path(tmp, pkgname, "tmp.R")
     fs::file_create(tmp_fp)
 
+    # FIXME use glue for readability
     write(paste0("library(", pkgname, ")"),
           file = tmp_fp,
           append=TRUE)
@@ -149,6 +151,8 @@ renv_deps <- function(path = ".", other_packages = NULL) {
     renv::init(fs::path(tmp, pkgname), force = TRUE, restart = FALSE)
 
     renv::snapshot(fs::path(tmp, pkgname), lockfile = out_path, prompt = FALSE)
+
+    # FIXME some UI messaging here
 
   })
 
