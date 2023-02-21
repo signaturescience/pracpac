@@ -2,7 +2,7 @@
 #'
 #' Build a package tar.gz and move it into a user-specified location (default `docker/`)
 #'
-#' @param docker_dir Location for the built package tar.gz. Defaults to `docker/`
+#' @param path Path to the package directory
 #' @param build Logical; should the package actually be built? Default `TRUE`. Set to `FALSE` for debugging.
 #'
 #' @return A list of package info returned by [pkginfo], tar.gz source and destination file paths.
@@ -10,13 +10,16 @@
 #'
 #' @examples
 #' \dontrun{
-#' build_pkg(docker_dir="docker", build=FALSE)
-#' build_pkg(docker_dir="docker", build=TRUE)
+#' build_pkg(build=FALSE)
+#' build_pkg(build=TRUE)
 #' }
-build_pkg <- function(docker_dir="docker", build=TRUE) {
+build_pkg <- function(path=".", build=TRUE) {
+
+  # Construct path to the docker directory
+  docker_dir <- fs::path(path, "docker")
 
   # Create the target directory if it doesn't already exist
-  if (!fs::dir_exists(docker_dir)) fs::dir_create(docker_dir)
+  if (!fs::dir_exists(docker_dir)) create_docker_dir(path)
 
   # Get package information and construct filepaths to file built by R CMD build and eventual package tar.gz
   info <- pkginfo()
