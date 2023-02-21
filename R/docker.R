@@ -7,10 +7,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' create_ddir()
+#' create_docker_dir()
 #' }
 #'
-create_ddir <- function(path = ".") {
+create_docker_dir <- function(path = ".") {
   # Check that the path is a package, then create a docker directory inside the package
   info <- pkginfo()
   fs::dir_create(fs::path(path, "docker"))
@@ -50,7 +50,7 @@ add_dockerfile <- function(path = getwd(), base_image = "rocker/r-ver:latest", p
   ddir_path <- fs::path(path, "docker")
 
   if(!dir.exists(ddir_path)) {
-    create_ddir(path)
+    create_docker_dir(path)
   }
 
   ## create the dockerfile
