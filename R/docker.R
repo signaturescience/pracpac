@@ -91,7 +91,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   usecase_template <- paste0(readLines(usecase_template_fp), collapse = "\n")
 
   # FIXME: could additional params like this, e.g. 'myparam' be supplied as a list to the function call?
-  dockerfile_usecase <- glue::glue(usecase_template, myparam=glue::glue("hello world {Sys.time()}"))
+  dockerfile_usecase <- glue::glue(usecase_template)
   # FIXME: may not need this depending on how you handle fixme above. If you glue a NULL to a non-null, you get nothing. If null, make ""
   dockerfile_usecase <- ifelse(is.null(dockerfile_usecase), "", dockerfile_usecase)
 
