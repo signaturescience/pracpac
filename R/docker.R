@@ -37,7 +37,7 @@ create_docker_dir <- function(path = ".") {
 #' @param path Path to the package directory
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
-#' @param usecase FIXME
+#' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
 #'
 #' @return A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
@@ -46,9 +46,11 @@ create_docker_dir <- function(path = ".") {
 #' @examples
 #' \dontrun{
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
 #' }
-add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase="helloworld") {
+add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL) {
 
   # Get canonical path
   path <- fs::path_real(path)
@@ -83,20 +85,20 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 
   # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
   base_template <- paste0(readLines(base_template_fp), collapse = "\n")
-  dockerfile_base <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
+  base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
 
-  # Read in the use case template
-  # FIXME: make default NULL, deal with it here
-  usecase_template_fp <- system.file(glue::glue("templates/{usecase}.dockerfile"), package = "pracpac", mustWork = TRUE)
-  usecase_template <- paste0(readLines(usecase_template_fp), collapse = "\n")
-
-  # FIXME: could additional params like this, e.g. 'myparam' be supplied as a list to the function call?
-  dockerfile_usecase <- glue::glue(usecase_template)
-  # FIXME: may not need this depending on how you handle fixme above. If you glue a NULL to a non-null, you get nothing. If null, make ""
-  dockerfile_usecase <- ifelse(is.null(dockerfile_usecase), "", dockerfile_usecase)
+  # If usecase is NULL, no additional Dockerfile boilerplate is added.
+  # If defined, look in inst/templates and read in that template. Note these are not parameterized with glue {} params.
+  if (is.null(usecase)) {
+    usecase_dockerfile <- ""
+  } else {
+    # Read in the use case template
+    usecase_template_fp <- system.file(glue::glue("templates/{usecase}.dockerfile"), package = "pracpac", mustWork = TRUE)
+    usecase_dockerfile <- paste0(readLines(usecase_template_fp), collapse = "\n")
+  }
 
   # Stitch the base dockerfile and usecase dockerfile together
-  dockerfile_contents <- glue::glue(paste(dockerfile_base, dockerfile_usecase, sep="\n\n"))
+  dockerfile_contents <- glue::glue(paste(base_dockerfile, usecase_dockerfile, sep="\n\n"))
 
   # FIXME: need some UI messaging here
   write(dockerfile_contents, file = dockerfile_fp, append = FALSE)
