@@ -51,8 +51,11 @@ create_docker_dir <- function(path = ".") {
 #' }
 add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs = NULL, use_renv = TRUE) {
 
-  ddir_path <- fs::path(path, "docker")
+  # Check that path is a package
+  info <- pkginfo()
 
+  # Create docker dir if it doesn't exist
+  ddir_path <- fs::path(path, "docker")
   if(!dir.exists(ddir_path)) {
     create_docker_dir(path)
   }
