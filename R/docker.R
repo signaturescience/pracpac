@@ -81,7 +81,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
     template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
     tmpl <- paste0(readLines(template_fp), collapse = "\n")
-    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs)
+    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
   }
 
   # FIXME: need some UI messaging here
