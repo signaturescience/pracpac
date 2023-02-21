@@ -9,7 +9,8 @@ use_docker(
   use_renv = TRUE,
   base_image = "rocker/r-ver:latest",
   other_packages = NULL,
-  build = TRUE
+  build = TRUE,
+  repos = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ use_docker(
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 
 \item{build}{Logical as to wether or not the function should build the Docker image; default is \code{TRUE}}
+
+\item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }
 \value{
 (Invisible) A list with information about the package. Primarily called for side effect. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).
