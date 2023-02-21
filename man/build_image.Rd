@@ -4,10 +4,10 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(dir = "docker", build = TRUE, cache = TRUE)
+build_image(path = ".", build = TRUE, cache = TRUE)
 }
 \arguments{
-\item{dir}{Directory containing the Dockerfile built by FIXME}
+\item{path}{Path to a package directory containing a \code{docker} subdirectory, which contains the Dockerfile built by \link{add_dockerfile}}
 
 \item{build}{Logical; should the image actually be built? Default \code{TRUE}. Set to \code{FALSE} for debugging.}
 
