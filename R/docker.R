@@ -131,3 +131,35 @@ renv_deps <- function(path = ".", other_packages = NULL) {
   # FIXME some UI messaging here
 
 }
+
+
+#' Title
+#'
+#' @param path
+#' @param use_renv
+#' @param base_image
+#' @param other_packages
+#' @param build
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE) {
+
+  info <- pkginfo(path)
+
+  create_docker_dir(path)
+
+  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image)
+
+  if(use_renv) {
+    renv_deps(path = path, other_packages = other_packages)
+  }
+
+  build_pkg()
+  if(build) {
+    build_image()
+  }
+}
