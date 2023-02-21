@@ -1,3 +1,7 @@
 FROM {base_image}
 
-RUN "install.packages({pkgs})"
+# Domain-specific stuff here
+# RUN apt update && apt install -y yourpackages
+
+RUN Rscript -e 'install.packages("BiocManager")'
+RUN "BiocManager::install(c({pkgs}), update=FALSE, ask=FALSE)"
