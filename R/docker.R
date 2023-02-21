@@ -87,8 +87,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
 #' @param path Path to the package directory
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #'
-#' @return
-#' Side effect. Writes an `renv` lock file to the docker/ directory.
+#' @return A list with information about the package. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
@@ -98,6 +97,9 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", pkgs 
 #' renv_deps()
 #' }
 renv_deps <- function(path = ".", other_packages = NULL) {
+
+  # Check that path is a package
+  info <- pkginfo()
 
   ## get pkg_name from pkginfo helper
   pkg_name <- pkginfo()$pkgname
