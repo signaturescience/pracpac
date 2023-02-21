@@ -101,8 +101,8 @@ renv_deps <- function(path = ".", other_packages = NULL) {
   # Check that path is a package
   info <- pkginfo()
 
-  ## get pkg_name from pkginfo helper
-  pkg_name <- pkginfo()$pkgname
+  ## get pkgname from pkginfo helper
+  pkgname <- pkginfo()$pkgname
 
   ## establish out path for the renv lock file
   out_path <- fs::path(path, "docker", "renv.lock")
@@ -124,11 +124,11 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 
     ## create the temp dir and file path with a script that loads pkg ...
     ## ... and other_packages as specified
-    fs::dir_create(fs::path(tmp, pkg_name))
-    tmp_fp <- fs::path(tmp, pkg_name, "tmp.R")
+    fs::dir_create(fs::path(tmp, pkgname))
+    tmp_fp <- fs::path(tmp, pkgname, "tmp.R")
     fs::file_create(tmp_fp)
 
-    write(paste0("library(", pkg_name, ")"),
+    write(paste0("library(", pkgname, ")"),
           file = tmp_fp,
           append=TRUE)
 
@@ -146,9 +146,9 @@ renv_deps <- function(path = ".", other_packages = NULL) {
     ## NOTE: side effect to set the option to NOT use sandbox
     Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = FALSE)
     renv::consent(provided = TRUE)
-    renv::init(fs::path(tmp, pkg_name), force = TRUE, restart = FALSE)
+    renv::init(fs::path(tmp, pkgname), force = TRUE, restart = FALSE)
 
-    renv::snapshot(fs::path(tmp, pkg_name), lockfile = out_path, prompt = FALSE)
+    renv::snapshot(fs::path(tmp, pkgname), lockfile = out_path, prompt = FALSE)
 
   })
 
