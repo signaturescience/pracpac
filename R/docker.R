@@ -20,7 +20,11 @@ create_docker_dir <- function(path = ".") {
   ## that said lets chekc that the rbuildignore file is set up
   ignore_fp <- fs::path(path, ".Rbuildignore")
   if(file.exists(ignore_fp)) {
-    write("^docker$", file = ignore_fp, append=TRUE)
+    # Only append ^docker$ to .Rbuildignore if ^docker$ isn't already there
+    if (!any(grepl("\\^docker\\$", readLines(ignore_fp)))) {
+      message(glue::glue("Adding ^docker$ to {ignore_fp}"))
+      write("^docker$", file = ignore_fp, append=TRUE)
+    }
   } else {
     stop(glue::glue("The package at {path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
   }
