@@ -38,6 +38,7 @@ create_docker_dir <- function(path = ".") {
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
+#' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
@@ -50,7 +51,7 @@ create_docker_dir <- function(path = ".") {
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
 #' }
-add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL) {
+add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL, repos=NULL) {
 
   # Get canonical path
   path <- fs::path_real(path)
@@ -85,7 +86,12 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 
   # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
   base_template <- paste0(readLines(base_template_fp), collapse = "\n")
-  base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
+  ## NOTE: this step is important ...
+  ## the NULL option should NOT be quoted when glued into template ...
+  ## but the repo names should be quoted ..
+  ## so we need to add a double layer of quotes in this statement if you specify repos
+  repos <- ifelse(is.null(repos), 'NULL', paste0('"', repos, '"'))
+  base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver, repos = repos)
 
   # If usecase is NULL, no additional Dockerfile boilerplate is added.
   # If defined, look in inst/templates and read in that template. Note these are not parameterized with glue {} params.
@@ -158,6 +164,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
+#' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
@@ -166,7 +173,7 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE) {
+use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , repos = NULL) {
 
   ## check the package path
   info <- pkginfo(path)
@@ -180,7 +187,7 @@ use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:l
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image)
+  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image, repos = repos)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg()
