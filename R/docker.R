@@ -37,6 +37,7 @@ create_docker_dir <- function(path = ".") {
 #' @param path Path to the package directory
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
 #'
 #' @return A list with information about the package. Also called for side-effect, creates Dockerfile.
 #'
@@ -45,9 +46,11 @@ create_docker_dir <- function(path = ".") {
 #' @examples
 #' \dontrun{
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
 #' }
-add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE) {
+add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL) {
 
   # Get canonical path
   path <- fs::path_real(path)
@@ -68,21 +71,34 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   dockerfile_fp <- fs::path(ddir_path, "Dockerfile")
   invisible(fs::file_create(dockerfile_fp))
 
-  ## NOTE: conditionally pull different templates for renv or not
+  # Choose a different base template depending on whether you're using renv
   if(use_renv) {
-    message(glue::glue("Using renv. Dockerfile will build from renv.lock in {ddir_path}."))
     if (!fs::file_exists(fs::path(ddir_path, "renv.lock"))) {
       stop(glue::glue("use_renv=TRUE but no renv.lock file found in {ddir_path}. Run renv_deps() to generate."))
     }
-    template_fp <- system.file("templates/Dockerfile-renv.template", package = "pracpac")
-    tmpl <- paste0(readLines(template_fp), collapse = "\n")
-    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgname=info$pkgname, pkgver=info$pkgver)
+    message(glue::glue("Using renv. Dockerfile will build from renv.lock in {ddir_path}."))
+    base_template_fp <- system.file("templates/base-renv.dockerfile", package = "pracpac", mustWork = TRUE)
   } else {
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
-    template_fp <- system.file("templates/Dockerfile.template", package = "pracpac")
-    tmpl <- paste0(readLines(template_fp), collapse = "\n")
-    dockerfile_contents <- glue::glue(tmpl, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
+    base_template_fp <- system.file("templates/base.dockerfile", package = "pracpac", mustWork = TRUE)
   }
+
+  # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
+  base_template <- paste0(readLines(base_template_fp), collapse = "\n")
+  base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver)
+
+  # If usecase is NULL, no additional Dockerfile boilerplate is added.
+  # If defined, look in inst/templates and read in that template. Note these are not parameterized with glue {} params.
+  if (is.null(usecase)) {
+    usecase_dockerfile <- ""
+  } else {
+    # Read in the use case template
+    usecase_template_fp <- system.file(glue::glue("templates/{usecase}.dockerfile"), package = "pracpac", mustWork = TRUE)
+    usecase_dockerfile <- paste0(readLines(usecase_template_fp), collapse = "\n")
+  }
+
+  # Stitch the base dockerfile and usecase dockerfile together
+  dockerfile_contents <- glue::glue(paste(base_dockerfile, usecase_dockerfile, sep="\n\n"))
 
   # FIXME: need some UI messaging here
   write(dockerfile_contents, file = dockerfile_fp, append = FALSE)

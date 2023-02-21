@@ -4,7 +4,12 @@
 \alias{add_dockerfile}
 \title{Add a Dockerfile to the docker directory}
 \usage{
-add_dockerfile(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE)
+add_dockerfile(
+  path = ".",
+  base_image = "rocker/r-ver:latest",
+  use_renv = TRUE,
+  usecase = NULL
+)
 }
 \arguments{
 \item{path}{Path to the package directory}
@@ -12,6 +17,8 @@ add_dockerfile(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE)
 \item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
 
 \item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
+
+\item{usecase}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added.}
 }
 \value{
 A list with information about the package. Also called for side-effect, creates Dockerfile.
@@ -22,6 +29,8 @@ Add a Dockerfile to the docker directory
 \examples{
 \dontrun{
 add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
+add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
 add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
+add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
 }
 }
