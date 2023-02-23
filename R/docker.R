@@ -2,7 +2,7 @@
 #'
 #' @param path Path to the package directory
 #'
-#' @return (Invisible) A list with information about the package. Also called for side-effect, creates docker directory.
+#' @return (Invisible) A list of package info returned by [pkginfo]. Also called for side-effect, creates docker directory.
 #' @export
 #'
 #' @examples
@@ -11,9 +11,10 @@
 #' }
 #'
 create_docker_dir <- function(path = ".") {
-  # Check that the path is a package, then create a docker directory inside the package
+  # Check that the path is a package
   info <- pkginfo()
 
+  # Create a docker directory insode the package root
   docker_dir <- fs::path(path, "docker")
   if (fs::dir_exists(docker_dir)) {
     message(glue::glue("Directory already exists: {docker_dir}"))
@@ -47,7 +48,7 @@ create_docker_dir <- function(path = ".") {
 #' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
-#' @return (Invisible) A list with information about the package. Also called for side-effect, creates Dockerfile.
+#' @return (Invisible) A list of package info returned by [pkginfo]. Also called for side-effect, creates Dockerfile.
 #'
 #' @export
 #'
@@ -114,10 +115,11 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
   # Stitch the base dockerfile and usecase dockerfile together
   dockerfile_contents <- glue::glue(paste(base_dockerfile, usecase_dockerfile, sep="\n\n"))
 
-  # FIXME: need some UI messaging here
+  # Write dockerfile to disk
   message(glue::glue("Writing dockerfile: {dockerfile_fp}"))
   write(dockerfile_contents, file = dockerfile_fp, append = FALSE)
 
+  # Invisibly return pkg info
   return(invisible(info))
 }
 
@@ -126,7 +128,7 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 #' @param path Path to the package directory
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #'
-#' @return (Invisible) A list with information about the package. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
+#' @return (Invisible) A list of package info returned by [pkginfo]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
@@ -206,6 +208,7 @@ use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:l
     build_image()
   }
 
+  # Invisibly return package info
   return(invisible(info))
 
 }
