@@ -24,6 +24,7 @@ build_pkg <- function(path=".") {
   tarsrc <- file.path(glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
   tardst <- file.path(docker_dir, glue::glue("{info$pkgname}.tar.gz"))
 
+  # Build the package with a system command and move it into the docker directory
   message(glue::glue("Bulding package {info$pkgname} version {info$pkgver} in {docker_dir}/{tarsrc}"))
   system(paste("R CMD build", info$pkgroot), ignore.stdout=TRUE)
   fs::file_move(tarsrc, docker_dir)
@@ -68,6 +69,7 @@ build_image <- function(path=".", cache=TRUE) {
   message(buildcmd)
   system(buildcmd, ignore.stdout=TRUE)
 
+  # Return the build command as a character string (this is messaged)
   return(invisible(buildcmd))
 
 }
