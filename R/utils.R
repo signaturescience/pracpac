@@ -4,7 +4,12 @@
 #'
 #' @param path Directory path to a package root
 #' @param ... Arguments passed to [rprojroot::find_package_root_file]
-#' @return A list fixme
+#' @return A list of information about the package
+#' - `pkgroot`: Root directory of the package
+#' - `pkgdeps`: Package dependencies from `Imports` in the `DESCRIPTION`
+#' - `descfile`: File path to the `DESCRIPTION` file
+#' - `pkgname`: Package name
+#' - `pkgver`: Package version
 #' @export
 #' @examples
 #' \dontrun{
