@@ -28,8 +28,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL) {
 
   # Get package information and construct filepaths to file built by R CMD build and eventual package tar.gz
   info <- pkginfo(pkg_path)
-  tarsrc <- file.path(glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
-  tardst <- file.path(docker_dir, glue::glue("{info$pkgname}.tar.gz"))
+  tarsrc <- fs::path(pkg_path, glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
 
   # Build the package with a system command and move it into the docker directory
   message(glue::glue("Bulding package {info$pkgname} version {info$pkgver} in {docker_dir}/{tarsrc}"))

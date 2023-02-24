@@ -230,10 +230,10 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
   add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, repos = repos)
 
   ## build the package tar.gz and copy that to the docker dir/
-  build_pkg(pkg_path)
+  build_pkg(pkg_path = pkg_path, img_path = img_path)
   ## conditionally build the image
   if(build) {
-    build_image(docker_dir)
+    build_image(pkg_path = okg_path, img_path = img_path)
   }
 
   # Invisibly return package info
