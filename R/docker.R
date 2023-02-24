@@ -16,6 +16,8 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
   # Check that the path is a package
   info <- pkginfo(pkg_path)
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -23,6 +25,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
     docker_dir <- fs::path(img_path)
   }
 
+  ## if the directory already exists message that
   if (fs::dir_exists(docker_dir)) {
     message(glue::glue("Directory already exists: {docker_dir}"))
   } else {
@@ -78,6 +81,8 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
   # Turn the string vector: c("a", "b", "c") to the single element string "'a','b','c'"
   pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -85,6 +90,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
     docker_dir <- fs::path(img_path)
   }
 
+  ## if the docker_dir specified above doesnt exist ... create it with the helper
   if(!fs::dir_exists(docker_dir)) {
     create_docker_dir(pkg_path = pkg_path, img_path = img_path)
   }
@@ -162,6 +168,8 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
   ## get pkgname from pkginfo helper
   pkgname <- info$pkgname
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -169,6 +177,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
     docker_dir <- fs::path(img_path)
   }
 
+  ## if the docker_dir specified above doesnt exist ... create it with the helper
   if(!fs::dir_exists(docker_dir)) {
     create_docker_dir(pkg_path = pkg_path, img_path = img_path)
   }
@@ -210,6 +219,8 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
   ## check the package path
   info <- pkginfo(pkg_path)
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -217,6 +228,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
     docker_dir <- fs::path(img_path)
   }
 
+  ## if the docker_dir specified above doesnt exist ... create it with the helper
   if(!fs::dir_exists(docker_dir)) {
     create_docker_dir(pkg_path = pkg_path, img_path = img_path)
   }

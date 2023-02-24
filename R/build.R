@@ -14,6 +14,8 @@
 #' }
 build_pkg <- function(pkg_path=".", img_path = NULL) {
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -57,6 +59,8 @@ build_pkg <- function(pkg_path=".", img_path = NULL) {
 #' }
 build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE) {
 
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
   if(is.null(img_path)) {
     # Construct path to the docker directory
     docker_dir <- fs::path(pkg_path, "docker")
@@ -65,7 +69,7 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE) {
   }
 
   # Check that a dockerfile exists
-  dockerfilepath <- file.path(docker_dir, "Dockerfile")
+  dockerfilepath <- fs::path(docker_dir, "Dockerfile")
   if (!fs::file_exists(dockerfilepath)) stop(glue::glue("Dockerfile doesn't exist: {dockerfilepath}"))
 
   # Get package info
