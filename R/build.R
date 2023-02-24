@@ -32,10 +32,9 @@ build_pkg <- function(pkg_path=".", img_path = NULL) {
   info <- pkginfo(pkg_path)
   tarsrc <- fs::path(pkg_path, glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
 
-  # Build the package with a system command and move it into the docker directory
+  ## Build the package with pkgbuild::build
   message(glue::glue("Building package {info$pkgname} version {info$pkgver} in {tarsrc}"))
-  system(paste("R CMD build", info$pkgroot), ignore.stdout=TRUE)
-  fs::file_move(tarsrc, docker_dir)
+  pkgbuild::build(path = info$pkgroot, dest_path = docker_dir)
 
   # Return info
   return(invisible(list(info=info, tarsrc=tarsrc)))
