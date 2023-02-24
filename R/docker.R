@@ -58,6 +58,14 @@ create_docker_dir <- function(path = ".") {
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
+#'
+#' # Shiny
+#' # FIXME: pare down this example
+#' add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, usecase="shiny")
+#' fs::file_copy("inst/shiny/app.R", "docker", overwrite=TRUE)
+#' build_image(cache=FALSE)
+#' # Run container, go to <http://localhost:3838/>.
+#'
 #' }
 add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL, repos=NULL) {
 
