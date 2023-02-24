@@ -4,6 +4,7 @@
 #'
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
+#' @param ... Additional optional arguments passed to [pkgbuild::build]
 #'
 #' @return (Invisible) A list of package info returned by [pkginfo], tar.gz source and destination file paths.
 #' @export
@@ -12,7 +13,7 @@
 #' \dontrun{
 #' build_pkg()
 #' }
-build_pkg <- function(pkg_path=".", img_path = NULL) {
+build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -34,7 +35,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL) {
 
   ## Build the package with pkgbuild::build
   message(glue::glue("Building package {info$pkgname} version {info$pkgver} in {tarsrc}"))
-  pkgbuild::build(path = info$pkgroot, dest_path = docker_dir)
+  pkgbuild::build(path = info$pkgroot, dest_path = docker_dir, ...)
 
   # Return info
   return(invisible(list(info=info, tarsrc=tarsrc)))
