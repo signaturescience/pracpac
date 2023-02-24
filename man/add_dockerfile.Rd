@@ -5,7 +5,8 @@
 \title{Add a Dockerfile to the docker directory}
 \usage{
 add_dockerfile(
-  path = ".",
+  pkg_path = ".",
+  img_path = NULL,
   base_image = "rocker/r-ver:latest",
   use_renv = TRUE,
   usecase = NULL,
@@ -13,7 +14,9 @@ add_dockerfile(
 )
 }
 \arguments{
-\item{path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory}
+
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
 
 \item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
 
@@ -24,7 +27,7 @@ add_dockerfile(
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }
 \value{
-(Invisible) A list with information about the package. Also called for side-effect, creates Dockerfile.
+(Invisible) A list of package info returned by \link{pkginfo}. Also called for side-effect, creates Dockerfile.
 }
 \description{
 Add a Dockerfile to the docker directory

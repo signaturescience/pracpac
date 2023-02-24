@@ -4,15 +4,22 @@
 \alias{pkginfo}
 \title{Get information about the current package}
 \usage{
-pkginfo(path = ".", ...)
+pkginfo(pkg_path = ".", ...)
 }
 \arguments{
-\item{path}{Directory path to a package root}
+\item{pkg_path}{Path to the package directory}
 
 \item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}}
 }
 \value{
-A list fixme
+A list of information about the package
+\itemize{
+\item \code{pkgroot}: Root directory of the package
+\item \code{pkgdeps}: Package dependencies from \code{Imports} in the \code{DESCRIPTION}
+\item \code{descfile}: File path to the \code{DESCRIPTION} file
+\item \code{pkgname}: Package name
+\item \code{pkgver}: Package version
+}
 }
 \description{
 Returns information about the current package in a list which can be passed to other functions.

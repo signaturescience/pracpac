@@ -4,15 +4,17 @@
 \alias{renv_deps}
 \title{Get renv dependencies}
 \usage{
-renv_deps(path = ".", other_packages = NULL)
+renv_deps(pkg_path = ".", img_path = NULL, other_packages = NULL)
 }
 \arguments{
-\item{path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory}
+
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
 
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 }
 \value{
-(Invisible) A list with information about the package. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
+(Invisible) A list of package info returned by \link{pkginfo}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
 }
 \description{
 Get renv dependencies

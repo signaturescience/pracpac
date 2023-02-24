@@ -1,6 +1,7 @@
 #' Function to create docker directory
 #'
-#' @param path Path to the package directory
+#' @param pkg_path Path to the package directory
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #'
 #' @return (Invisible) A list of package info returned by [pkginfo]. Also called for side-effect, creates docker directory.
 #' @export
@@ -10,12 +11,18 @@
 #' create_docker_dir()
 #' }
 #'
-create_docker_dir <- function(path = ".") {
-  # Check that the path is a package
-  info <- pkginfo()
+create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 
-  # Create a docker directory insode the package root
-  docker_dir <- fs::path(path, "docker")
+  # Check that the path is a package
+  info <- pkginfo(pkg_path)
+
+  if(is.null(img_path)) {
+    # Construct path to the docker directory
+    docker_dir <- fs::path(pkg_path, "docker")
+  } else {
+    docker_dir <- fs::path(img_path)
+  }
+
   if (fs::dir_exists(docker_dir)) {
     message(glue::glue("Directory already exists: {docker_dir}"))
   } else {
@@ -25,7 +32,7 @@ create_docker_dir <- function(path = ".") {
 
   # Check that there's an .Rbuildignore
   # FIXME: if .Rbuildignore doesn't exist, perhaps we should create one
-  ignore_fp <- fs::path(path, ".Rbuildignore")
+  ignore_fp <- fs::path(pkg_path, ".Rbuildignore")
   if(file.exists(ignore_fp)) {
     # Only append ^docker$ to .Rbuildignore if ^docker$ isn't already there
     if (!any(grepl("\\^docker\\$", readLines(ignore_fp)))) {
@@ -33,7 +40,7 @@ create_docker_dir <- function(path = ".") {
       write("^docker$", file = ignore_fp, append=TRUE)
     }
   } else {
-    stop(glue::glue("The package at {path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
+    stop(glue::glue("The package at {pkg_path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
   }
 
   # Invisibly return package information
@@ -42,7 +49,8 @@ create_docker_dir <- function(path = ".") {
 
 #' Add a Dockerfile to the docker directory
 #'
-#' @param path Path to the package directory
+#' @param pkg_path Path to the package directory
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
@@ -59,33 +67,38 @@ create_docker_dir <- function(path = ".") {
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
 #' }
-add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL, repos=NULL) {
+add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL, repos=NULL) {
 
   # Get canonical path
-  path <- fs::path_real(path)
+  pkg_path <- fs::path_real(pkg_path)
 
   # Check that path is a package
-  info <- pkginfo()
+  info <- pkginfo(pkg_path)
 
   # Turn the string vector: c("a", "b", "c") to the single element string "'a','b','c'"
   pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
 
-  # Create docker dir if it doesn't exist
-  ddir_path <- fs::path(path, "docker")
-  if(!dir.exists(ddir_path)) {
-    create_docker_dir(path)
+  if(is.null(img_path)) {
+    # Construct path to the docker directory
+    docker_dir <- fs::path(pkg_path, "docker")
+  } else {
+    docker_dir <- fs::path(img_path)
+  }
+
+  if(!fs::dir_exists(docker_dir)) {
+    create_docker_dir(pkg_path = pkg_path, img_path = img_path)
   }
 
   ## create the dockerfile
-  dockerfile_fp <- fs::path(ddir_path, "Dockerfile")
+  dockerfile_fp <- fs::path(docker_dir, "Dockerfile")
   invisible(fs::file_create(dockerfile_fp))
 
   # Choose a different base template depending on whether you're using renv
   if(use_renv) {
-    if (!fs::file_exists(fs::path(ddir_path, "renv.lock"))) {
-      stop(glue::glue("use_renv=TRUE but no renv.lock file found in {ddir_path}. Run renv_deps() to generate."))
+    if (!fs::file_exists(fs::path(docker_dir, "renv.lock"))) {
+      stop(glue::glue("use_renv=TRUE but no renv.lock file found in {docker_dir}. Run renv_deps() to generate."))
     }
-    message(glue::glue("Using renv. Dockerfile will build from renv.lock in {ddir_path}."))
+    message(glue::glue("Using renv. Dockerfile will build from renv.lock in {docker_dir}."))
     base_template_fp <- system.file("templates/base-renv.dockerfile", package = "pracpac", mustWork = TRUE)
   } else {
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
@@ -125,7 +138,8 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 
 #' Get renv dependencies
 #'
-#' @param path Path to the package directory
+#' @param pkg_path Path to the package directory
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #'
 #' @return (Invisible) A list of package info returned by [pkginfo]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
@@ -137,25 +151,30 @@ add_dockerfile <- function(path = ".", base_image = "rocker/r-ver:latest", use_r
 #' \dontrun{
 #' renv_deps()
 #' }
-renv_deps <- function(path = ".", other_packages = NULL) {
+renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 
   # Get canonical path
-  path <- fs::path_real(path)
+  pkg_path <- fs::path_real(pkg_path)
 
   # Check that path is a package
-  info <- pkginfo(path)
+  info <- pkginfo(pkg_path)
 
   ## get pkgname from pkginfo helper
   pkgname <- info$pkgname
 
-  ## establish out path for the renv lock file
-  out_path <- fs::path(path, "docker", "renv.lock")
-
-  ## was thinking we should have a check that docker dir exists
-  ## TODO: think through if this is the best way to handle this check
-  if(!fs::dir_exists(fs::path(path, "docker"))) {
-    stop("The docker/ dir does not exist.")
+  if(is.null(img_path)) {
+    # Construct path to the docker directory
+    docker_dir <- fs::path(pkg_path, "docker")
+  } else {
+    docker_dir <- fs::path(img_path)
   }
+
+  if(!fs::dir_exists(docker_dir)) {
+    create_docker_dir(pkg_path = pkg_path, img_path = img_path)
+  }
+
+  ## establish out path for the renv lock file
+  out_path <- fs::path(docker_dir, "renv.lock")
 
   ## NOTE: need to pass a tempdir in otherwise renv can't find pkgname when run in current directory ...
   ## ... not sure exactly why that is but this seems to work
@@ -171,7 +190,8 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 
 #' Use docker packaging tools
 #'
-#' @param path Path to the package directory
+#' @param pkg_path Path to the package directory
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
@@ -185,27 +205,35 @@ renv_deps <- function(path = ".", other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(path = ".", use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , repos = NULL) {
 
   ## check the package path
-  info <- pkginfo(path)
+  info <- pkginfo(pkg_path)
 
-  ## create docker/ dir
-  create_docker_dir(path)
+  if(is.null(img_path)) {
+    # Construct path to the docker directory
+    docker_dir <- fs::path(pkg_path, "docker")
+  } else {
+    docker_dir <- fs::path(img_path)
+  }
+
+  if(!fs::dir_exists(docker_dir)) {
+    create_docker_dir(pkg_path = pkg_path, img_path = img_path)
+  }
 
   ## if using renv then make sure the renv_deps runs and outputs lockfile in docker/ dir
   if(use_renv) {
-    renv_deps(path = path, other_packages = other_packages)
+    renv_deps(pkg_path = pkg_path, img_path = img_path, other_packages = other_packages)
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(path = path, use_renv = use_renv, base_image = base_image, repos = repos)
+  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, repos = repos)
 
   ## build the package tar.gz and copy that to the docker dir/
-  build_pkg()
+  build_pkg(pkg_path)
   ## conditionally build the image
   if(build) {
-    build_image()
+    build_image(docker_dir)
   }
 
   # Invisibly return package info
