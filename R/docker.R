@@ -245,7 +245,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
   build_pkg(pkg_path = pkg_path, img_path = img_path)
   ## conditionally build the image
   if(build) {
-    build_image(pkg_path = okg_path, img_path = img_path)
+    build_image(pkg_path = pkg_path, img_path = img_path)
   }
 
   # Invisibly return package info
