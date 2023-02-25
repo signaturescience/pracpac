@@ -4,10 +4,10 @@
 \alias{pkginfo}
 \title{Get information about the current package}
 \usage{
-pkginfo(path = ".", ...)
+pkginfo(pkg_path = ".", ...)
 }
 \arguments{
-\item{path}{Directory path to a package root}
+\item{pkg_path}{Path to the package directory}
 
 \item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}}
 }
