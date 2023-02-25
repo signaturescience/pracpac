@@ -4,10 +4,12 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(path = ".", cache = TRUE)
+build_image(pkg_path = ".", img_path = NULL, cache = TRUE)
 }
 \arguments{
-\item{path}{Path to a package directory containing a \code{docker} subdirectory, which contains the Dockerfile built by \link{add_dockerfile}}
+\item{pkg_path}{Path to the package directory}
+
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
 
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
 }

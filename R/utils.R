@@ -2,7 +2,7 @@
 #'
 #' Returns information about the current package in a list which can be passed to other functions.
 #'
-#' @param path Directory path to a package root
+#' @param pkg_path Path to the package directory
 #' @param ... Arguments passed to [rprojroot::find_package_root_file]
 #' @return A list of information about the package
 #' - `pkgroot`: Root directory of the package
@@ -18,9 +18,9 @@
 #' # This will fail if this is not a package location
 #' pkginfo(tempdir())
 #' }
-pkginfo <- function(path=".", ...) {
+pkginfo <- function(pkg_path=".", ...) {
   # Find the package root
-  pkgroot <- pkgroot(path=path, ...)
+  pkgroot <- pkgroot(pkg_path=pkg_path, ...)
 
   # Find the description file
   descfile <- fs::path(pkgroot, "DESCRIPTION")
@@ -37,13 +37,13 @@ pkginfo <- function(path=".", ...) {
 }
 
 #' Find package root
-#' @param path Directory path to a package root
+#' @param pkg_path Path to the package directory
 #' @param ... Arguments passed to [rprojroot::find_package_root_file]
 #' @return A file path of the package root.
-pkgroot <- function(path=".", ...) {
-  root <- try(rprojroot::find_package_root_file(path=path, ...), silent=TRUE)
+pkgroot <- function(pkg_path=".", ...) {
+  root <- try(rprojroot::find_package_root_file(path=pkg_path, ...), silent=TRUE)
   if (inherits(root, "try-error")) {
-    stop(glue::glue("{fs::path_abs(path)} is not an R package."))
+    stop(glue::glue("{fs::path_abs(pkg_path)} is not an R package."))
   } else {
     return(root)
   }

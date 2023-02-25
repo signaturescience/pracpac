@@ -4,10 +4,14 @@
 \alias{build_pkg}
 \title{Build a package tar.gz}
 \usage{
-build_pkg(path = ".")
+build_pkg(pkg_path = ".", img_path = NULL, ...)
 }
 \arguments{
-\item{path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory}
+
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+
+\item{...}{Additional optional arguments passed to \link[pkgbuild:build]{pkgbuild::build}}
 }
 \value{
 (Invisible) A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
