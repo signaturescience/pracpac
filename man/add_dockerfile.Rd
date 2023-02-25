@@ -5,7 +5,8 @@
 \title{Add a Dockerfile to the docker directory}
 \usage{
 add_dockerfile(
-  path = ".",
+  pkg_path = ".",
+  img_path = NULL,
   base_image = "rocker/r-ver:latest",
   use_renv = TRUE,
   usecase = NULL,
@@ -13,7 +14,9 @@ add_dockerfile(
 )
 }
 \arguments{
-\item{path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory}
+
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
 
 \item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
 
