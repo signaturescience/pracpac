@@ -11,6 +11,7 @@ use_docker(
   base_image = "rocker/r-ver:latest",
   other_packages = NULL,
   build = TRUE,
+  usecase = NULL,
   repos = NULL
 )
 }
@@ -26,6 +27,8 @@ use_docker(
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 
 \item{build}{Logical as to wether or not the function should build the Docker image; default is \code{TRUE}}
+
+\item{usecase}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }

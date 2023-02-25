@@ -213,6 +213,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
+#' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
@@ -222,7 +223,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , usecase = NULL, repos = NULL) {
 
   ## check the package path
   info <- pkginfo(pkg_path)
@@ -247,7 +248,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, repos = repos)
+  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, usecase = usecase, repos = repos)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg(pkg_path = pkg_path, img_path = img_path)
