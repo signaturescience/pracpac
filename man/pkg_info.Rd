@@ -14,7 +14,7 @@ pkg_info(pkg_path = ".", ...)
 \value{
 A list of information about the package
 \itemize{
-\item \code{pkg_root}: Root directory of the package
+\item \code{pkgroot}: Root directory of the package
 \item \code{pkgdeps}: Package dependencies from \code{Imports} in the \code{DESCRIPTION}
 \item \code{descfile}: File path to the \code{DESCRIPTION} file
 \item \code{pkgname}: Package name
