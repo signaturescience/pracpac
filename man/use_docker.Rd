@@ -8,10 +8,10 @@ use_docker(
   pkg_path = ".",
   img_path = NULL,
   use_renv = TRUE,
-  base_image = "rocker/r-ver:latest",
+  use_case = NULL,
+  base_image = NULL,
   other_packages = NULL,
   build = FALSE,
-  use_case = NULL,
   repos = NULL
 )
 }
@@ -22,13 +22,13 @@ use_docker(
 
 \item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
 
-\item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
+\item{use_case}{Name of the use case. Defaults to \code{"default"}, which only uses the base boilerplate.}
+
+\item{base_image}{Name of the base image to start \code{FROM}. Default is \code{NULL} and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).}
 
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 
 \item{build}{Logical as to whether or not the function should build the Docker image; default is \code{FALSE}}
-
-\item{use_case}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }

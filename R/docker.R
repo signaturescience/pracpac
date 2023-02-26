@@ -54,9 +54,9 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #'
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
-#' @param use_case One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
+#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates Dockerfile.
@@ -78,7 +78,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #' # Run container, go to <http://localhost:3838/>.
 #'
 #' }
-add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker/r-ver:latest", use_renv = TRUE, use_case=NULL, repos=NULL) {
+add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case="default", base_image = NULL, repos=NULL) {
 
   # handle the use_case argument
   ## this first check if the use case is valid
@@ -122,6 +122,13 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
   } else {
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
     base_template_fp <- system.file("templates/base/base.dockerfile", package = "pracpac", mustWork = TRUE)
+  }
+
+  ## handle base image ...
+  ## using either the "base_image" argument (if not NULL) ...
+  ## or the base_image from use_case_specs
+  if(is.null(base_image)) {
+    base_image <- use_case_specs$base_image
   }
 
   # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
@@ -214,11 +221,11 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #'
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`
-#' @param use_case One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
@@ -228,7 +235,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = FALSE , use_case = NULL, repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
