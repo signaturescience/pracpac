@@ -9,7 +9,7 @@ add_dockerfile(
   img_path = NULL,
   base_image = "rocker/r-ver:latest",
   use_renv = TRUE,
-  usecase = NULL,
+  use_case = NULL,
   repos = NULL
 )
 }
@@ -22,12 +22,12 @@ add_dockerfile(
 
 \item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
 
-\item{usecase}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added.}
+\item{use_case}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added.}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkginfo}. Also called for side-effect, creates Dockerfile.
+(Invisible) A list of package info returned by \link{pkg_info}. Also called for side-effect, creates Dockerfile.
 }
 \description{
 Add a Dockerfile to the docker directory
@@ -35,13 +35,13 @@ Add a Dockerfile to the docker directory
 \examples{
 \dontrun{
 add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
+add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, use_case="helloworld")
 add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
+add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, use_case="helloworld")
 
 # Shiny
 # FIXME: pare down this example
-add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, usecase="shiny")
+add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, use_case="shiny")
 fs::file_copy("inst/shiny/app.R", "docker", overwrite=TRUE)
 build_image(cache=FALSE)
 # Run container, go to <http://localhost:3838/>.

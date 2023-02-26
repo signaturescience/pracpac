@@ -14,7 +14,7 @@ build_pkg(pkg_path = ".", img_path = NULL, ...)
 \item{...}{Additional optional arguments passed to \link[pkgbuild:build]{pkgbuild::build}}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkginfo}, tar.gz source and destination file paths.
+(Invisible) A list of package info returned by \link{pkg_info}, tar.gz source and destination file paths.
 }
 \description{
 Build a package tar.gz and move it into a user-specified location (default \verb{docker/})

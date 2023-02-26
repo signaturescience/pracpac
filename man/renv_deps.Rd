@@ -14,7 +14,7 @@ renv_deps(pkg_path = ".", img_path = NULL, other_packages = NULL)
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkginfo}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
+(Invisible) A list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
 }
 \description{
 Get renv dependencies
