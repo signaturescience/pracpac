@@ -6,3 +6,4 @@ pracpac_*.tar.gz
 pracpac.tar.gz
 ^CITATION\.cff$
 ^docker$
+^data-raw$
