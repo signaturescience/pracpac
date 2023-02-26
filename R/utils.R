@@ -5,7 +5,7 @@
 #' @param pkg_path Path to the package directory
 #' @param ... Arguments passed to [rprojroot::find_package_root_file]
 #' @return A list of information about the package
-#' - `pkg_root`: Root directory of the package
+#' - `pkgroot`: Root directory of the package
 #' - `pkgdeps`: Package dependencies from `Imports` in the `DESCRIPTION`
 #' - `descfile`: File path to the `DESCRIPTION` file
 #' - `pkgname`: Package name
@@ -33,7 +33,7 @@ pkg_info <- function(pkg_path=".", ...) {
   pkgver <- strsplit(grep("^Version:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
 
   # Return a list
-  return(list(pkg_root=pkg_root, pkgdeps=pkgdeps, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
+  return(list(pkgroot=pkg_root, pkgdeps=pkgdeps, descfile=descfile, pkgname=pkgname, pkgver=pkgver))
 }
 
 #' Find package root
