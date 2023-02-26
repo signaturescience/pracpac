@@ -3,7 +3,7 @@
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #'
-#' @return (Invisible) A list of package info returned by [pkginfo]. Also called for side-effect, creates docker directory.
+#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates docker directory.
 #' @export
 #'
 #' @examples
@@ -14,7 +14,7 @@
 create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 
   # Check that the path is a package
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -56,27 +56,35 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
-#' @param usecase One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
+#' @param use_case One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added.
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
-#' @return (Invisible) A list of package info returned by [pkginfo]. Also called for side-effect, creates Dockerfile.
+#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates Dockerfile.
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, use_case="helloworld")
 #' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
+#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, use_case="helloworld")
+#'
+#' # Shiny
+#' # FIXME: pare down this example
+#' add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, use_case="shiny")
+#' fs::file_copy("inst/shiny/app.R", "docker", overwrite=TRUE)
+#' build_image(cache=FALSE)
+#' # Run container, go to <http://localhost:3838/>.
+#'
 #' }
-add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker/r-ver:latest", use_renv = TRUE, usecase=NULL, repos=NULL) {
+add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker/r-ver:latest", use_renv = TRUE, use_case=NULL, repos=NULL) {
 
   # Get canonical path
   pkg_path <- fs::path_real(pkg_path)
 
   # Check that path is a package
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
 
   # Turn the string vector: c("a", "b", "c") to the single element string "'a','b','c'"
   pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
@@ -120,19 +128,19 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
   repos <- ifelse(is.null(repos), 'NULL', paste0('"', repos, '"'))
   base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver, repos = repos)
 
-  # If usecase is NULL, no additional Dockerfile boilerplate is added.
+  # If use_case is NULL, no additional Dockerfile boilerplate is added.
   # If defined, look in inst/templates and read in that template. Note these are not parameterized with glue {} params.
-  if (is.null(usecase)) {
-    usecase_dockerfile <- ""
+  if (is.null(use_case)) {
+    use_case_dockerfile <- ""
   } else {
     # Read in the use case template
-    message(glue::glue("Using template: {usecase}"))
-    usecase_template_fp <- system.file(glue::glue("templates/{usecase}.dockerfile"), package = "pracpac", mustWork = TRUE)
-    usecase_dockerfile <- paste0(readLines(usecase_template_fp), collapse = "\n")
+    message(glue::glue("Using template: {use_case}"))
+    use_case_template_fp <- system.file(glue::glue("templates/{use_case}.dockerfile"), package = "pracpac", mustWork = TRUE)
+    use_case_dockerfile <- paste0(readLines(use_case_template_fp), collapse = "\n")
   }
 
-  # Stitch the base dockerfile and usecase dockerfile together
-  dockerfile_contents <- glue::glue(paste(base_dockerfile, usecase_dockerfile, sep="\n\n"))
+  # Stitch the base dockerfile and use_case dockerfile together
+  dockerfile_contents <- glue::glue(paste(base_dockerfile, use_case_dockerfile, sep="\n\n"))
 
   # Write dockerfile to disk
   message(glue::glue("Writing dockerfile: {dockerfile_fp}"))
@@ -148,7 +156,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #'
-#' @return (Invisible) A list of package info returned by [pkginfo]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
+#' @return (Invisible) A list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
@@ -163,9 +171,9 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
   pkg_path <- fs::path_real(pkg_path)
 
   # Check that path is a package
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
 
-  ## get pkgname from pkginfo helper
+  ## get pkgname from pkg_info helper
   pkgname <- info$pkgname
 
   ## if the image path is not given then construct path as subdirectory of pkg
@@ -205,6 +213,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
+#' @param use_case One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
@@ -214,10 +223,10 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , use_case = NULL, repos = NULL) {
 
   ## check the package path
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -239,7 +248,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_im
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, repos = repos)
+  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, use_case = use_case, repos = repos)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg(pkg_path = pkg_path, img_path = img_path)

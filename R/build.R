@@ -6,7 +6,7 @@
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param ... Additional optional arguments passed to [pkgbuild::build]
 #'
-#' @return (Invisible) A list of package info returned by [pkginfo], tar.gz source and destination file paths.
+#' @return (Invisible) A list of package info returned by [pkg_info], tar.gz source and destination file paths.
 #' @export
 #'
 #' @examples
@@ -30,7 +30,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
   }
 
   # Get package information and construct filepaths to file built by R CMD build and eventual package tar.gz
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
   tarsrc <- fs::path(pkg_path, glue::glue("{info$pkgname}_{info$pkgver}.tar.gz"))
 
   ## Build the package with pkgbuild::build
@@ -73,7 +73,7 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE) {
   if (!fs::file_exists(dockerfilepath)) stop(glue::glue("Dockerfile doesn't exist: {dockerfilepath}"))
 
   # Get package info
-  info <- pkginfo(pkg_path)
+  info <- pkg_info(pkg_path)
 
   # Parse docker build options
   cache <- ifelse(cache, "", "--no-cache")
