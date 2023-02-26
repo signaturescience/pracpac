@@ -212,7 +212,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' @param base_image Name of base image to start `FROM` in Dockerfile
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
-#' @param build Logical as to wether or not the function should build the Docker image; default is `TRUE`
+#' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`
 #' @param use_case One of the use case templates in inst/templates. Defaults to `NULL` -- no additional Dockerfile boilerplate is added
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
@@ -223,7 +223,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = TRUE , use_case = NULL, repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, base_image = "rocker/r-ver:latest" , other_packages = NULL, build = FALSE , use_case = NULL, repos = NULL) {
 
   ## check the package path
   info <- pkg_info(pkg_path)

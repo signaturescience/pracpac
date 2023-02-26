@@ -10,7 +10,7 @@ use_docker(
   use_renv = TRUE,
   base_image = "rocker/r-ver:latest",
   other_packages = NULL,
-  build = TRUE,
+  build = FALSE,
   use_case = NULL,
   repos = NULL
 )
@@ -26,7 +26,7 @@ use_docker(
 
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
 
-\item{build}{Logical as to wether or not the function should build the Docker image; default is \code{TRUE}}
+\item{build}{Logical as to whether or not the function should build the Docker image; default is \code{FALSE}}
 
 \item{use_case}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added}
 
