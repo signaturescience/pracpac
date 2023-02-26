@@ -48,3 +48,50 @@ pkg_root <- function(pkg_path=".", ...) {
     return(root)
   }
 }
+
+#' Handle the use case
+#'
+#' This unexported helper function internally handles the provided use case
+#'
+#' @param use_case The specified use case
+#'
+#' @return
+#'
+#' List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by `;` if there are multiple and `NA` if there are none).
+#'
+#' @examples
+#' \dontrun{
+#' handle_use_case("default")
+#' handle_use_case("pipeline")
+#' handle_use_case("shiny")
+#' handle_use_case("rstudio")
+#' handle_use_case("no-such-use-case")
+#' }
+#'
+handle_use_case <- function(use_case) {
+
+  ## remove possible casing issues
+  use_case <- tolower(use_case)
+
+  ## define possible use cases based on the use_cases internal data object
+  all_use_cases <- use_cases$use_case
+  ## created a collapsed string for messaging below if needed
+  all_collapsed <- paste0(all_use_cases, collapse  = ",")
+
+  ## validate that use case is among list of possible use cases supported
+  if(!use_case %in% all_use_cases) {
+    stop(glue::glue("Use case must be one of: {all_collapsed}"))
+  }
+
+  ## get use case specifications from internal data object
+  use_case_specs <- use_cases[use_cases$use_case == use_case, ]
+  return(
+    list(
+      use_case = use_case_specs$use_case,
+      template = use_case_specs$template,
+      base_image = use_case_specs$base_image,
+      assets = use_case_specs$assets
+    )
+  )
+
+}

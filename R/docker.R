@@ -80,6 +80,11 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #' }
 add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker/r-ver:latest", use_renv = TRUE, use_case=NULL, repos=NULL) {
 
+  # handle the use_case argument
+  ## this first check if the use case is valid
+  ## then will pull out relevant specs (stored as a named list) that we can use later to construct dockerfile
+  use_case_specs <- handle_use_case(use_case)
+
   # Get canonical path
   pkg_path <- fs::path_real(pkg_path)
 
@@ -113,10 +118,10 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
       stop(glue::glue("use_renv=TRUE but no renv.lock file found in {docker_dir}. Run renv_deps() to generate."))
     }
     message(glue::glue("Using renv. Dockerfile will build from renv.lock in {docker_dir}."))
-    base_template_fp <- system.file("templates/base-renv.dockerfile", package = "pracpac", mustWork = TRUE)
+    base_template_fp <- system.file("templates/base/base-renv.dockerfile", package = "pracpac", mustWork = TRUE)
   } else {
     message(glue::glue("Not using renv. Pulling package dependencies from description file: c({pkgs})"))
-    base_template_fp <- system.file("templates/base.dockerfile", package = "pracpac", mustWork = TRUE)
+    base_template_fp <- system.file("templates/base/base.dockerfile", package = "pracpac", mustWork = TRUE)
   }
 
   # Read in the base template and create the dockerfile base using glue to pull in base image, other pkgs, pkg name and version
@@ -128,19 +133,19 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, base_image = "rocker
   repos <- ifelse(is.null(repos), 'NULL', paste0('"', repos, '"'))
   base_dockerfile <- glue::glue(base_template, base_image = base_image, pkgs = pkgs, pkgname=info$pkgname, pkgver=info$pkgver, repos = repos)
 
-  # If use_case is NULL, no additional Dockerfile boilerplate is added.
-  # If defined, look in inst/templates and read in that template. Note these are not parameterized with glue {} params.
-  if (is.null(use_case)) {
-    use_case_dockerfile <- ""
+  ## check the use case in use_case_specs (see above for parsing with handle_use_case)
+  ## if it is default then just use the base dockerfile
+  ## if not then find the template and append that to the base dockerfile
+  if (use_case_specs$use_case == "default") {
+    dockerfile_contents <- base_dockerfile
   } else {
     # Read in the use case template
-    message(glue::glue("Using template: {use_case}"))
-    use_case_template_fp <- system.file(glue::glue("templates/{use_case}.dockerfile"), package = "pracpac", mustWork = TRUE)
+    message(glue::glue("Using template for the specified use case: {use_case_specs$use_case}"))
+    use_case_template_fp <- system.file(use_case_specs$template, package = "pracpac", mustWork = TRUE)
     use_case_dockerfile <- paste0(readLines(use_case_template_fp), collapse = "\n")
+    # Stitch the base dockerfile and use_case dockerfile together
+    dockerfile_contents <- glue::glue(paste(base_dockerfile, use_case_dockerfile, sep="\n\n"))
   }
-
-  # Stitch the base dockerfile and use_case dockerfile together
-  dockerfile_contents <- glue::glue(paste(base_dockerfile, use_case_dockerfile, sep="\n\n"))
 
   # Write dockerfile to disk
   message(glue::glue("Writing dockerfile: {dockerfile_fp}"))
