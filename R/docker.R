@@ -217,6 +217,83 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 }
 
 
+#' Add assets for the specified use case
+#'
+#' @param pkg_path Path to the package directory
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
+#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
+#' @param overwrite Logical as to whether or not existing assets should be overwitten; default is `TRUE`
+#' @return
+#'
+#' FIXME: side-effect returns invisible assets per [handle_use_case]
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_assets
+#' }
+add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", overwrite = TRUE) {
+
+  # handle the use_case argument
+  ## this first check if the use case is valid
+  ## then will pull out relevant specs (stored as a named list) that we can use later to construct dockerfile
+  use_case_specs <- handle_use_case(use_case)
+
+  # Get canonical path
+  pkg_path <- fs::path_real(pkg_path)
+
+  # Check that path is a package
+  info <- pkg_info(pkg_path)
+
+  ## if the image path is not given then construct path as subdirectory of pkg
+  ## otherwise use the specified image path
+  if(is.null(img_path)) {
+    # Construct path to the docker directory
+    docker_dir <- fs::path(pkg_path, "docker")
+  } else {
+    docker_dir <- fs::path(img_path)
+  }
+
+  ## if the docker_dir specified above doesnt exist ... create it with the helper
+  if(!fs::dir_exists(docker_dir)) {
+    create_docker_dir(pkg_path = pkg_path, img_path = img_path)
+  }
+
+  ## if there are no assets then output a message saying so
+  if(is.na(use_case_specs$assets)) {
+    message(glue::glue("No assets to add for the specfied use case: {use_case_specs$use_case}"))
+  } else {
+    ## otherwise split assets string (separated by ";" if there is more than one)
+    assets <- strsplit(use_case_specs$assets, split = ";")[[1]]
+
+    assets_dir <- fs::path(docker_dir, "assets")
+
+    ## create the assets subdirectory in docker dir if it is not already there
+    if(!fs::dir_exists(assets_dir)) {
+      message(glue::glue("The directory will be created at {assets_dir} \nAssets for the specified use case ({use_case_specs$use_case}) will be copied there."))
+      fs::dir_create(assets_dir)
+    } else {
+      message(glue::glue("The assets directory already exists at {assets_dir} \nAssets for the specified use case ({use_case_specs$use_case}) will be copied there."))
+    }
+
+    ## copy each asset to a subdirectory of docker dir called assets
+    for(i in 1:length(assets)) {
+      ## get path to the asset
+      tmp_asset <- assets[i]
+      ## get basename to make it easier to construct destination path
+      tmp_asset_bn <- basename(tmp_asset)
+      message(glue::glue("The specified use case ({use_case_specs$use_case}) includes the following asset: {tmp_asset_bn}"))
+      ## copy the asset from the installed pracpac package files to the destination dir
+      fs::file_copy(system.file(tmp_asset, package = "pracpac", mustWork = TRUE), fs::path(docker_dir, "assets", tmp_asset_bn), overwrite = overwrite)
+    }
+
+  }
+
+  # Invisibly return package information
+  return(invisible(use_case_specs$assets))
+
+}
+
 #' Use docker packaging tools
 #'
 #' @param pkg_path Path to the package directory
@@ -227,6 +304,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
 #' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
+#' @param overwrite_assets Logical as to whether or not existing asset files should be overwritten; default is `TRUE`
 #'
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
@@ -235,7 +313,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -261,6 +339,9 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_cas
 
   ## add the dockerfile to the docker/ dir
   add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, use_case = use_case, repos = repos)
+
+  ## add the assets
+  add_assets(pkg_path = pkg_path, img_path = img_path,use_case = use_case, overwrite = overwrite_assets)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg(pkg_path = pkg_path, img_path = img_path)
