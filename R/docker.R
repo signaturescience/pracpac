@@ -167,7 +167,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
-#'
+#' @param overwrite Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`
 #' @return (Invisible) A list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
@@ -177,7 +177,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' \dontrun{
 #' renv_deps()
 #' }
-renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
+renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, overwrite = TRUE) {
 
   # Get canonical path
   pkg_path <- fs::path_real(pkg_path)
@@ -205,9 +205,18 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL) {
   ## establish out path for the renv lock file
   out_path <- fs::path(docker_dir, "renv.lock")
 
+  ## check if existing lockfile should be retained
+  if(fs::file_exists(out_path)) {
+    if(!overwrite) {
+      message(glue::glue("Overwrite option is set to FALSE and lock file exists: {out_path}"))
+      return(invisible(info))
+    } else {
+      message(glue::glue("Overwrite option is set to TRUE and existing lock file will be written: {out_path}"))
+    }
+  }
   ## NOTE: need to pass a tempdir in otherwise renv can't find pkgname when run in current directory ...
   ## ... not sure exactly why that is but this seems to work
-  message(glue::glue("Creating renv.lockfile with renv::snapshot: {out_path}"))
+  message(glue::glue("Creating renv lock file with renv::snapshot: {out_path}"))
   if (!is.null(other_packages)) message(glue::glue("With additional packages: {paste(other_packages, collapse=', ')}"))
   renv::snapshot(project = tempdir(), packages = c(info$pkgdeps, other_packages), lockfile = out_path, prompt = FALSE, update = TRUE)
 
@@ -310,7 +319,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #' @param overwrite_assets Logical as to whether or not existing asset files should be overwritten; default is `TRUE`
-#'
+#' @param overwrite_renv Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`; ignored if `use_renv = TRUE`
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
 #'
@@ -318,7 +327,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE, overwrite_renv = TRUE) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -339,7 +348,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_cas
 
   ## if using renv then make sure the renv_deps runs and outputs lockfile in docker/ dir
   if(use_renv) {
-    renv_deps(pkg_path = pkg_path, img_path = img_path, other_packages = other_packages)
+    renv_deps(pkg_path = pkg_path, img_path = img_path, other_packages = other_packages, overwrite = overwrite_renv)
   }
 
   ## add the dockerfile to the docker/ dir
