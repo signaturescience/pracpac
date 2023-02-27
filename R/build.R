@@ -49,7 +49,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
-#'
+#' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info]
 #' @return (Invisible) The `docker build` command. Called for its side effects, which runs the `docker build` as a system command.
 #' @export
 #'
@@ -57,7 +57,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' \dontrun{
 #' build_image()
 #' }
-build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE) {
+build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag = NULL) {
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -78,8 +78,15 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE) {
   # Parse docker build options
   cache <- ifelse(cache, "", "--no-cache")
 
+  if(is.null(tag)) {
+    image_tag1 <- paste0(info$pkgname, ":latest")
+    image_tag2 <- paste0(info$pkgname, ":", info$pkgver)
+    buildcmd <- glue::glue("docker build {cache} --tag {image_tag1} --tag {image_tag2} {docker_dir}")
+  } else {
+    image_tag <- tag
+    buildcmd <- glue::glue("docker build {cache} --tag {image_tag} {docker_dir}")
+  }
   # Construct and run the build command as a system command
-  buildcmd <- glue::glue("docker build {cache} --tag {info$pkgname}:latest --tag {info$pkgname}:{info$pkgver} {docker_dir}")
   message("Building docker image...")
   message(buildcmd)
   system(buildcmd, ignore.stdout=TRUE)

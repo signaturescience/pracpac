@@ -4,7 +4,7 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(pkg_path = ".", img_path = NULL, cache = TRUE)
+build_image(pkg_path = ".", img_path = NULL, cache = TRUE, tag = NULL)
 }
 \arguments{
 \item{pkg_path}{Path to the package directory}
@@ -12,6 +12,8 @@ build_image(pkg_path = ".", img_path = NULL, cache = TRUE)
 \item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
 
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
+
+\item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}}
 }
 \value{
 (Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
