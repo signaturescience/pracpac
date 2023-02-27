@@ -13,7 +13,8 @@ use_docker(
   other_packages = NULL,
   build = FALSE,
   repos = NULL,
-  overwrite_assets = TRUE
+  overwrite_assets = TRUE,
+  overwrite_renv = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ use_docker(
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 
 \item{overwrite_assets}{Logical as to whether or not existing asset files should be overwritten; default is \code{TRUE}}
+
+\item{overwrite_renv}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}; ignored if \code{use_renv = TRUE}}
 }
 \value{
 (Invisible) A list with information about the package. Primarily called for side effect. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).
