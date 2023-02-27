@@ -285,6 +285,11 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
       message(glue::glue("The specified use case ({use_case_specs$use_case}) includes the following asset: {tmp_asset_bn}"))
       ## copy the asset from the installed pracpac package files to the destination dir
       fs::file_copy(system.file(tmp_asset, package = "pracpac", mustWork = TRUE), fs::path(docker_dir, "assets", tmp_asset_bn), overwrite = overwrite)
+      ## insert pkg name in R files
+      if(grepl("\\.[rR]$", fs::path(docker_dir, "assets", tmp_asset_bn))) {
+        tmp_r <- paste0(readLines(fs::path(docker_dir, "assets", tmp_asset_bn)),  collapse="\n")
+        write(paste0("library(", info$pkgname, ")\n", tmp_r), file = fs::path(docker_dir, "assets", tmp_asset_bn), append = FALSE)
+      }
     }
 
   }
