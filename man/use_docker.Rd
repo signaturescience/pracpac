@@ -14,7 +14,8 @@ use_docker(
   build = FALSE,
   repos = NULL,
   overwrite_assets = TRUE,
-  overwrite_renv = TRUE
+  overwrite_renv = TRUE,
+  ...
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ use_docker(
 \item{overwrite_assets}{Logical as to whether or not existing asset files should be overwritten; default is \code{TRUE}}
 
 \item{overwrite_renv}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}; ignored if \code{use_renv = TRUE}}
+
+\item{...}{Additional arguments passed to \link{build_image}; ignored if \code{build = FALSE}}
 }
 \value{
 (Invisible) A list with information about the package. Primarily called for side effect. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).

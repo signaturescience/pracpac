@@ -320,6 +320,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #' @param overwrite_assets Logical as to whether or not existing asset files should be overwritten; default is `TRUE`
 #' @param overwrite_renv Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`; ignored if `use_renv = TRUE`
+#' @param ... Additional arguments passed to [build_image]; ignored if `build = FALSE`
 #' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
 #' @export
 #'
@@ -327,7 +328,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE, overwrite_renv = TRUE) {
+use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE, overwrite_renv = TRUE, ...) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -361,7 +362,7 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_cas
   build_pkg(pkg_path = pkg_path, img_path = img_path)
   ## conditionally build the image
   if(build) {
-    build_image(pkg_path = pkg_path, img_path = img_path)
+    build_image(pkg_path = pkg_path, img_path = img_path, ...)
   }
 
   # Invisibly return package info

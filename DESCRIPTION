@@ -24,6 +24,7 @@ Imports:
     fs,
     rprojroot,
     renv,
-    pkgbuild
+    pkgbuild,
+    stevedore
 Depends: 
     R (>= 2.10)
