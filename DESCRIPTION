@@ -14,7 +14,7 @@ Authors@R:
       person("Signature Science, LLC.",
              role = "cph"))
 Description: This package streamlines the creation of Docker images with R packages and dependencies embedded. It provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
