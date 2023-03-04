@@ -1,0 +1,62 @@
+---
+title: "Basic Usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{basic-usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pracpac)
+```
+
+
+## Overview
+
+R packages are the fundamental units of reproducible code in R. Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
+
+We have developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the complexity and technical burden of R package development. With `pracpac`, users can specific can nimbly create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
+
+## Using `pracpac`
+
+The `prapcac` package is designed to do two things:
+
+1. Stub out files and directory structure needed to build a Docker image that contains an R package
+2. Build the Docker image
+
+These features are delivered in the `use_docker()` and `build_image()` functions.
+
+### `use_docker()`
+
+```
+.
+├── DESCRIPTION
+├── LICENSE
+├── LICENSE.md
+├── NAMESPACE
+├── R
+│   └── hello.R
+├── docker
+│   ├── Dockerfile
+│   ├── assets
+│   │   ├── post.R
+│   │   ├── pre.R
+│   │   └── run.sh
+│   ├── hellow_0.1.0.tar.gz
+│   └── renv.lock
+├── hellow.Rproj
+└── man
+    └── isay.Rd
+```
+
+### `build_image()`
+
+
