@@ -1,6 +1,7 @@
-Package: pracpac
-Title: Practical R Packaging in Docker
-Version: 0.0.0.9000
+Package: hellow
+Type: Package
+Title: Says hello
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Stephen",
              family = "Turner",
@@ -13,21 +14,10 @@ Authors@R:
              comment = c(ORCID = "0000-0003-0060-566X")),
       person("Signature Science, LLC.",
              role = "cph"))
-Description: This package streamlines the creation of Docker images with R packages and dependencies embedded. It provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
+Description: This package says 'hello' or 'hi' or something else.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+LazyData: true
 RoxygenNote: 7.2.3
-Imports: 
-    magrittr,
-    glue,
-    fs,
-    rprojroot,
-    renv,
-    pkgbuild
-Depends: 
-    R (>= 2.10)
-Suggests: 
-    rmarkdown,
-    knitr
-VignetteBuilder: knitr
+Imports:
+  praise
