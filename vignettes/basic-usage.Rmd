@@ -23,21 +23,43 @@ library(pracpac)
 
 R packages are the fundamental units of reproducible code in R. Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
 
-We have developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the complexity and technical burden of R package development. With `pracpac`, users can specific can nimbly create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
+We have developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the technical burden of R package development. With `pracpac`, users can easily create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
 
 ## Using `pracpac`
 
 The `prapcac` package is designed to do two things:
 
-1. Stub out files and directory structure needed to build a Docker image that contains an R package
+1. Template files/directories for a Docker image containing an R package
 2. Build the Docker image
 
 These features are delivered in the `use_docker()` and `build_image()` functions.
 
 ### `use_docker()`
 
+The `pracpac` package includes individual functions to add a template Dockerfile, build the source of an R package to be added to the Docker image, and define dependencies for that package in an `renv` lock file. All files created are moved to the Docker directory specified by the user, which as a default is set to a `docker/` subdirectory of the R package. For convenience, the `pracpac` functionality is wrapped into the `use_docker()` function.
+
+The example that follows uses the `hellow` R package that ships with `pracpac`. To motivate the basic usage we will assume that the developer is working within the `hellow` R project (i.e., with the working directory at the package root):
+
 ```
-.
+├── DESCRIPTION
+├── LICENSE
+├── LICENSE.md
+├── NAMESPACE
+├── R
+│   └── hello.R
+├── hellow.Rproj
+└── man
+    └── isay.Rd
+```
+
+From the root of this directory, the developer could use `use_docker()` to create the template for a Docker image that contains the `hellow` R package:
+
+```{r, eval=FALSE}
+use_docker()
+```
+
+
+```
 ├── DESCRIPTION
 ├── LICENSE
 ├── LICENSE.md
@@ -46,10 +68,6 @@ These features are delivered in the `use_docker()` and `build_image()` functions
 │   └── hello.R
 ├── docker
 │   ├── Dockerfile
-│   ├── assets
-│   │   ├── post.R
-│   │   ├── pre.R
-│   │   └── run.sh
 │   ├── hellow_0.1.0.tar.gz
 │   └── renv.lock
 ├── hellow.Rproj
@@ -57,6 +75,106 @@ These features are delivered in the `use_docker()` and `build_image()` functions
     └── isay.Rd
 ```
 
+Where the contents of the `Dockerfile` are:
+
+```
+FROM rocker/r-ver:latest
+
+## copy the renv.lock into the image
+COPY renv.lock /renv.lock
+
+## install renv and biocmanager
+RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos="https://cloud.r-project.org")'
+
+## set the renv path var to the renv lib
+ENV RENV_PATHS_LIBRARY renv/library
+
+## restore packages from renv.lock
+RUN Rscript -e 'renv::restore(lockfile = "/renv.lock", repos = NULL)'
+
+## copy in built R package
+COPY hellow_0.1.0.tar.gz /hellow_0.1.0.tar.gz
+
+## run script to install built R package from source
+RUN Rscript -e "install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NULL)"
+```
+
+And the contents of the `renv.lock` are:
+
+```
+{
+  "R": {
+    "Version": "4.0.2",
+    "Repositories": [
+      {
+        "Name": "CRAN",
+        "URL": "https://cran.rstudio.com"
+      }
+    ]
+  },
+  "Packages": {
+    "praise": {
+      "Package": "praise",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a555924add98c99d2f411e37e7d25e9f",
+      "Requirements": []
+    }
+  }
+}
+```
+
+The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more details in "Use Cases" vignettes). Another option is to specify an "img_path" defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
+
+<!-- TODO: check that this works on Windows -->
+```{r, eval = FALSE}
+use_docker(pkg_path = ".", img_path = "../.")
+```
+
+```
+├── Dockerfile
+├── hellow
+│   ├── DESCRIPTION
+│   ├── LICENSE
+│   ├── LICENSE.md
+│   ├── NAMESPACE
+│   ├── R
+│   │   └── hello.R
+│   ├── hellow.Rproj
+│   └── man
+│       └── isay.Rd
+├── hellow_0.1.0.tar.gz
+```
+
+For a full list of options see `?use_docker`.
+
+<!--
+```{r}
+library(pracpac)
+library(fs)
+
+## specify the temp directory
+tmp <- tempdir()
+## create a subdirectory of temp called "example"
+dir_create(path = path(tmp, "example"))
+## copy the example hellow package to the temp directory
+dir_copy(path = system.file("hellow", package = "pracpac"), new_path = path(tmp, "example"))
+
+```
+
+
+```{r}
+fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
+```
+
+```{r}
+use_docker(pkg_path = path(tmp, "example", "hellow"), )
+```
+
+```{r}
+fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
+```
+-->
+
 ### `build_image()`
-
-
