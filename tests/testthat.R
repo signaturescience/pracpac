@@ -1,0 +1,5 @@
+library(testthat)
+library(pracpac)
+library(withr)
+library(fs)
+test_check("pracpac")
