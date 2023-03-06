@@ -14,11 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(pracpac)
-```
-
-
 ## Overview
 
 R packages are the fundamental units of reproducible code in R. Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
@@ -169,7 +164,7 @@ fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
 ```
 
 ```{r}
-use_docker(pkg_path = path(tmp, "example", "hellow"), )
+use_docker(pkg_path = path(tmp, "example", "hellow"))
 ```
 
 ```{r}
@@ -178,3 +173,24 @@ fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
 -->
 
 ### `build_image()`
+
+The `use_docker()` function includes an option to "build_image". By default this parameter is set to `FALSE`. The `pracpac` templates are likely to require some editing by the developer. However, after editing the `Dockerfile` and any constituent files to be added the user can call `build_image()` to build the Docker image:
+
+```{r, eval=FALSE}
+build_image()
+```
+
+Note that if the user has specified a different "img_path" in `use_docker()`, then the same path needs to be used with `build_image()`.
+
+By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
+
+```{r}
+system("docker images | grep 'hellow'")
+```
+
+```
+hellow                            0.1.0        e1a9bc2ebbb5   15 seconds ago   828MB
+hellow                            latest       e1a9bc2ebbb5   15 seconds ago   828MB
+```
+
+The tagging scheme can be altered with the "tag" argument. The `build_image()` function also includes a parameter to "cache" the Docker build. For more details see `?build_image`. To use additional build parameters the user can call the Docker daemon directly on the host or use a client like [`stevedore`](https://CRAN.R-project.org/package=stevedore).
