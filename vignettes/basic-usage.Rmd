@@ -33,7 +33,13 @@ These features are delivered in the `use_docker()` and `build_image()` functions
 
 The `pracpac` package includes individual functions to add a template Dockerfile, build the source of an R package to be added to the Docker image, and define dependencies for that package in an `renv` lock file. All files created are moved to the Docker directory specified by the user, which as a default is set to a `docker/` subdirectory of the R package. For convenience, the `pracpac` functionality is wrapped into the `use_docker()` function.
 
-The example that follows uses the `hellow` R package that ships with `pracpac`. To motivate the basic usage we will assume that the developer is working within the `hellow` R project (i.e., with the working directory at the package root):
+The example that follows uses the `hellow` R package that ships with `pracpac`. With `pracpac` installed, the `hellow` source code can be found with the following command:
+
+```{r, eval=FALSE}
+system.file("hellow", package = "pracpac")
+```
+
+To motivate the basic usage we will assume that the developer is working within the `hellow` R project (i.e., with the working directory at the package root):
 
 ```
 ├── DESCRIPTION
@@ -70,7 +76,7 @@ use_docker()
     └── isay.Rd
 ```
 
-Where the contents of the `Dockerfile` are:
+With defaults set, this function will create a `Dockerfile` with the following contents:
 
 ```
 FROM rocker/r-ver:latest
@@ -94,7 +100,7 @@ COPY hellow_0.1.0.tar.gz /hellow_0.1.0.tar.gz
 RUN Rscript -e "install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NULL)"
 ```
 
-And the contents of the `renv.lock` are:
+And an `renv.lock` with the dependencies of `hellow` (in this case just the `praise` package):
 
 ```
 {
