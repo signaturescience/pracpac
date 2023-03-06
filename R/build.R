@@ -44,7 +44,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 
 #' Build a Docker image
 #'
-#' Build a Docker image created by FIXME function name.
+#' Build a Docker image created by [use_docker] or [add_dockerfile].
 #'
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"

@@ -64,18 +64,10 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, use_case="helloworld")
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
-#' add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, use_case="helloworld")
-#'
-#' # Shiny
-#' # FIXME: pare down this example
-#' add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, use_case="shiny")
-#' fs::file_copy("inst/shiny/app.R", "docker", overwrite=TRUE)
-#' build_image(cache=FALSE)
-#' # Run container, go to <http://localhost:3838/>.
-#'
+#' add_dockerfile()
+#' add_dockerfile(use_case="shiny")
+#' add_dockerfile(use_case="pipeline", use_renv=FALSE)
+#' add_dockerfile(use_case="rstudio", base_image="rocker/rstudio:4.2.2")
 #' }
 add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case="default", base_image = NULL, repos=NULL) {
 
@@ -231,14 +223,15 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
 #' @param overwrite Logical as to whether or not existing assets should be overwitten; default is `TRUE`
-#' @return
 #'
-#' FIXME: side-effect returns invisible assets per [handle_use_case]
+#' @return Invisibly returns assets per [handle_use_case]. Called primarily for its side effects.
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' add_assets
+#' add_assets(use_case="shiny")
+#' add_assets(use_case="pipeline")
 #' }
 add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", overwrite = TRUE) {
 

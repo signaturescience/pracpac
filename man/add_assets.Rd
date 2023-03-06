@@ -21,13 +21,14 @@ add_assets(
 \item{overwrite}{Logical as to whether or not existing assets should be overwitten; default is \code{TRUE}}
 }
 \value{
-FIXME: side-effect returns invisible assets per \link{handle_use_case}
+Invisibly returns assets per \link{handle_use_case}. Called primarily for its side effects.
 }
 \description{
 Add assets for the specified use case
 }
 \examples{
 \dontrun{
-add_assets
+add_assets(use_case="shiny")
+add_assets(use_case="pipeline")
 }
 }

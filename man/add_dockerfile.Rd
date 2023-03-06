@@ -34,17 +34,9 @@ Add a Dockerfile to the docker directory
 }
 \examples{
 \dontrun{
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, use_case="helloworld")
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, use_case="helloworld")
-
-# Shiny
-# FIXME: pare down this example
-add_dockerfile(base_image="rocker/shiny:4.2.2", use_renv=FALSE, use_case="shiny")
-fs::file_copy("inst/shiny/app.R", "docker", overwrite=TRUE)
-build_image(cache=FALSE)
-# Run container, go to <http://localhost:3838/>.
-
+add_dockerfile()
+add_dockerfile(use_case="shiny")
+add_dockerfile(use_case="pipeline", use_renv=FALSE)
+add_dockerfile(use_case="rstudio", base_image="rocker/rstudio:4.2.2")
 }
 }

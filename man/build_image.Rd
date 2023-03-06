@@ -19,7 +19,7 @@ build_image(pkg_path = ".", img_path = NULL, cache = TRUE, tag = NULL)
 (Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
 }
 \description{
-Build a Docker image created by FIXME function name.
+Build a Docker image created by \link{use_docker} or \link{add_dockerfile}.
 }
 \examples{
 \dontrun{
