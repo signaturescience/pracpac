@@ -46,18 +46,22 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #'
 #' Build a Docker image created by [use_docker] or [add_dockerfile].
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
+#' @param pkg_path Path to the package directory.
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
-#' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info]
+#' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info].
+#' @param dry_run Default `FALSE`; if `TRUE`, the `docker build` command will be messaged and invisibly returned. Setting `dry_run=TRUE` could be useful if additional `docker build` options or different tags are desired.
+#'
 #' @return (Invisible) The `docker build` command. Called for its side effects, which runs the `docker build` as a system command.
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' build_image()
+#' build_image(dry_run=TRUE)
 #' }
-build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag = NULL) {
+build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_run=FALSE) {
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -89,7 +93,11 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag = NULL) {
   # Construct and run the build command as a system command
   message("Building docker image...")
   message(buildcmd)
-  system(buildcmd, ignore.stdout=TRUE)
+
+  # Build the image with a system command
+  if (!dry_run) {
+    system(buildcmd, ignore.stdout=TRUE)
+  }
 
   # Return the build command as a character string (this is messaged)
   return(invisible(buildcmd))
