@@ -78,18 +78,21 @@ test_that("The base image override option works", {
 
 test_that("The other packages option works", {
 
+  # packages passed to other_packages=... must actually be installed. Check this first.
+  expect_true("palmerpenguins" %in% rownames(installed.packages()))
+
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
     ## NOTE: have to set use_renv = TRUE for this one ...
-    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = TRUE, other_packages = "twoxtwo")
+    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = TRUE, other_packages = "palmerpenguins")
   },
   tmpdir = tmp)
 
   ## check the base image
   renvlock <- readLines(path(tmp, "test", "hellow", "docker", "renv.lock"))
-  expect_true(any(sapply(renvlock, function(x) grepl("twoxtwo", x))))
+  expect_true(any(sapply(renvlock, function(x) grepl("palmerpenguins", x))))
 
   ## clean up
   dir_delete(path(tmp, "test"))
