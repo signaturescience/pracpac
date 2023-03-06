@@ -1,4 +1,6 @@
 
+library(fs)
+library(withr)
 tmp <- tempdir()
 
 test_that("use_docker pipeline creates expected directories and files with defaults", {
