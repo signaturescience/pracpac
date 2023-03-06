@@ -1,10 +1,10 @@
 #' Build a package tar.gz
 #'
-#' Build a package tar.gz and move it into a user-specified location (default `docker/`)
+#' Builds a package source tar.gz using [pkgbuild::build] and moves it into a user-specified location (default `docker/`).
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param ... Additional optional arguments passed to [pkgbuild::build]
+#' @param pkg_path Path to the package directory.
+#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
+#' @param ... Additional optional arguments passed to [pkgbuild::build].
 #'
 #' @return (Invisible) A list of package info returned by [pkg_info], tar.gz source and destination file paths.
 #' @export
