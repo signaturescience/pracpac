@@ -8,6 +8,13 @@
 \description{
 This package streamlines the creation of Docker images with R packages and dependencies embedded. It provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://signaturescience.github.io/pracpac/}
+}
+
+}
 \author{
 \strong{Maintainer}: VP Nagraj \email{nagraj@nagraj.net} (\href{https://orcid.org/0000-0003-0060-566X}{ORCID})
 
