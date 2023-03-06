@@ -1,4 +1,6 @@
-#' Function to create docker directory
+#' Create Docker directory
+#'
+#' Creates a `docker/` directory for a given package. By default, assumes that `docker/` should be a subdirectory of the specified package path.
 #'
 #' @param pkg_path Path to the package directory
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
