@@ -33,17 +33,16 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
     fs::dir_create(docker_dir)
   }
 
-  # Check that there's an .Rbuildignore
-  # FIXME: if .Rbuildignore doesn't exist, perhaps we should create one
+  # If .Rbuildignore doesn't exist, perhaps we should create one
   ignore_fp <- fs::path(pkg_path, ".Rbuildignore")
-  if(file.exists(ignore_fp)) {
-    # Only append ^docker$ to .Rbuildignore if ^docker$ isn't already there
-    if (!any(grepl("\\^docker\\$", readLines(ignore_fp)))) {
-      message(glue::glue("Adding ^docker$ to {ignore_fp}"))
-      write("^docker$", file = ignore_fp, append=TRUE)
-    }
-  } else {
-    stop(glue::glue("The package at {pkg_path} is not configured to include a .Rbuildignore. docker directory cannot be ignored."))
+  if(!file.exists(ignore_fp)) {
+    fs::file_create(ignore_fp)
+    message(glue::glue("Created {ignore_fp} in package {pkg_path}."))
+  }
+  # Only append ^docker$ to .Rbuildignore if ^docker$ isn't already there
+  if (!any(grepl("\\^docker\\$", readLines(ignore_fp)))) {
+    message(glue::glue("Adding ^docker$ to {ignore_fp}"))
+    write("^docker$", file = ignore_fp, append=TRUE)
   }
 
   # Invisibly return package information
