@@ -120,7 +120,7 @@ And the contents of the `renv.lock` are:
 }
 ```
 
-The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more details in "Use Cases" vignettes). Another option is to specify an "img_path" defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
+The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more detail in the "use case" vignettes). Another option is to specify an "img_path" defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
 
 <!-- TODO: check that this works on Windows -->
 ```{r, eval = FALSE}
@@ -144,34 +144,6 @@ use_docker(pkg_path = ".", img_path = "../.")
 
 For a full list of options see `?use_docker`.
 
-<!--
-```{r}
-library(pracpac)
-library(fs)
-
-## specify the temp directory
-tmp <- tempdir()
-## create a subdirectory of temp called "example"
-dir_create(path = path(tmp, "example"))
-## copy the example hellow package to the temp directory
-dir_copy(path = system.file("hellow", package = "pracpac"), new_path = path(tmp, "example"))
-
-```
-
-
-```{r}
-fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
-```
-
-```{r}
-use_docker(pkg_path = path(tmp, "example", "hellow"))
-```
-
-```{r}
-fs::dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
-```
--->
-
 ### `build_image()`
 
 The `use_docker()` function includes an option to "build_image". By default this parameter is set to `FALSE`. The `pracpac` templates are likely to require some editing by the developer. However, after editing the `Dockerfile` and any constituent files to be added the user can call `build_image()` to build the Docker image:
@@ -184,6 +156,7 @@ Note that if the user has specified a different "img_path" in `use_docker()`, th
 
 By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
 
+<!-- TODO: check that this works on Windows -->
 ```{r}
 system("docker images | grep 'hellow'")
 ```
@@ -193,4 +166,4 @@ hellow                            0.1.0        e1a9bc2ebbb5   15 seconds ago   8
 hellow                            latest       e1a9bc2ebbb5   15 seconds ago   828MB
 ```
 
-The tagging scheme can be altered with the "tag" argument. The `build_image()` function also includes a parameter to "cache" the Docker build. For more details see `?build_image`. To use additional build parameters the user can call the Docker daemon directly on the host or use a client like [`stevedore`](https://CRAN.R-project.org/package=stevedore).
+The tagging scheme can be altered with the "tag" argument. The `build_image()` function also includes a parameter to leverage the Docker build "cache" feature. For more details see `?build_image`. To use additional build parameters the user can call the Docker daemon directly on the host or use a client like [`stevedore`](https://CRAN.R-project.org/package=stevedore).
