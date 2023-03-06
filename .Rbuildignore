@@ -7,3 +7,5 @@ pracpac.tar.gz
 ^CITATION\.cff$
 ^docker$
 ^data-raw$
+^doc$
+^Meta$
