@@ -19,9 +19,9 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 ## Overview
 
-R packages are the fundamental units of reproducible code in R.[^rpkgs] Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
+R packages are the fundamental units of reproducible code in R.[^rpkgs] Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre- and post-process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
 
-We have developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the technical burden of R package development. With `pracpac`, users can easily create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
+We developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the technical burden of R package development. With `pracpac`, users can easily create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
 
 [^rpkgs]: Hadley Wickham and Jenny Bryan. _R Packages (2e)_. <https://r-pkgs.org/>.
 
@@ -131,7 +131,7 @@ And an `renv.lock` with the dependencies of `hellow` (in this case just the `pra
 }
 ```
 
-The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more detail in the "use case" vignettes). Another option is to specify an "img_path" defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
+The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more detail in other vignettes). Another option is to specify an `img_path` defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
 
 <!-- TODO: check that this works on Windows -->
 ```{r, eval = FALSE}
@@ -163,7 +163,7 @@ The `use_docker()` function includes an option to "build_image". By default this
 build_image()
 ```
 
-Note that if the user has specified a different "img_path" in `use_docker()`, then the same path needs to be used with `build_image()`.
+Note that if the user has specified a different `img_path` in `use_docker()`, then the same path needs to be used with `build_image()`.
 
 By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
 
