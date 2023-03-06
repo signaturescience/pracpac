@@ -9,7 +9,7 @@ Authors@R:
       person(given = "VP",
              family = "Nagraj",
              role = c("cre", "aut"),
-             email="pnagraj@signaturescience.com",
+             email="nagraj@nagraj.net",
              comment = c(ORCID = "0000-0003-0060-566X")),
       person("Signature Science, LLC.",
              role = "cph"))
