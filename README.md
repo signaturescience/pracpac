@@ -4,6 +4,8 @@
 # pracpac
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/signaturescience/pracpac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/signaturescience/pracpac/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of pracpac is to …
@@ -32,14 +34,4 @@ build_image()
 
 ``` sh
 docker run --rm pracpac Rscript -e 'sapply(c("rprojroot", "glue", "pracpac"), packageVersion); R.version.string'
-#> $rprojroot
-#> [1] 2 0 3
-#> 
-#> $glue
-#> [1] 1 6 2
-#> 
-#> $pracpac
-#> [1]    0    0    0 9000
-#> 
-#> [1] "R version 4.2.2 (2022-10-31)"
 ```
