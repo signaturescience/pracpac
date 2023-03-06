@@ -5,3 +5,6 @@
 pracpac_*.tar.gz
 pracpac.tar.gz
 docker/
+inst/doc
+/doc/
+/Meta/
