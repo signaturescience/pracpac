@@ -163,7 +163,7 @@ Note that if the user has specified a different "img_path" in `use_docker()`, th
 By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
 
 <!-- TODO: check that this works on Windows -->
-```{r}
+```{r, eval=FALSE}
 system("docker images | grep 'hellow'")
 ```
 
