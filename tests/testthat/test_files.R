@@ -1,4 +1,5 @@
-
+library(fs)
+library(withr)
 tmp <- tempdir()
 
 test_that("use_docker pipeline creates expected directories and files with defaults", {
@@ -81,13 +82,13 @@ test_that("The other packages option works", {
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
     ## NOTE: have to set use_renv = TRUE for this one ...
-    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = TRUE, other_packages = "twoxtwo")
+    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = TRUE, other_packages = "withr")
   },
   tmpdir = tmp)
 
   ## check the base image
   renvlock <- readLines(path(tmp, "test", "hellow", "docker", "renv.lock"))
-  expect_true(any(sapply(renvlock, function(x) grepl("twoxtwo", x))))
+  expect_true(any(sapply(renvlock, function(x) grepl("withr", x))))
 
   ## clean up
   dir_delete(path(tmp, "test"))
