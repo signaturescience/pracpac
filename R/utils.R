@@ -2,14 +2,14 @@
 #'
 #' Returns information about the current package in a list which can be passed to other functions.
 #'
-#' @param pkg_path Path to the package directory
-#' @param ... Arguments passed to [rprojroot::find_package_root_file]
-#' @return A list of information about the package
-#' - `pkgroot`: Root directory of the package
-#' - `pkgdeps`: Package dependencies from `Imports` in the `DESCRIPTION`
-#' - `descfile`: File path to the `DESCRIPTION` file
-#' - `pkgname`: Package name
-#' - `pkgver`: Package version
+#' @param pkg_path Path to the package directory.
+#' @param ... Arguments passed to [rprojroot::find_package_root_file].
+#' @return A list of information about the package.
+#' - `pkgroot`: Root directory of the package.
+#' - `pkgdeps`: Package dependencies from `Imports` in the `DESCRIPTION`.
+#' - `descfile`: File path to the `DESCRIPTION` file.
+#' - `pkgname`: Package name.
+#' - `pkgver`: Package version.
 #' @export
 #' @examples
 #' \dontrun{
@@ -37,8 +37,8 @@ pkg_info <- function(pkg_path=".", ...) {
 }
 
 #' Find package root
-#' @param pkg_path Path to the package directory
-#' @param ... Arguments passed to [rprojroot::find_package_root_file]
+#' @param pkg_path Path to the package directory.
+#' @param ... Arguments passed to [rprojroot::find_package_root_file].
 #' @return A file path of the package root.
 pkg_root <- function(pkg_path=".", ...) {
   root <- try(rprojroot::find_package_root_file(path=pkg_path, ...), silent=TRUE)
@@ -53,11 +53,9 @@ pkg_root <- function(pkg_path=".", ...) {
 #'
 #' This unexported helper function internally handles the provided use case
 #'
-#' @param use_case The specified use case
+#' @param use_case The specified use case.
 #'
-#' @return
-#'
-#' List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by `;` if there are multiple and `NA` if there are none).
+#' @return List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by `;` if there are multiple and `NA` if there are none).
 #'
 #' @examples
 #' \dontrun{
