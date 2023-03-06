@@ -82,6 +82,7 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_r
   # Parse docker build options
   cache <- ifelse(cache, "", "--no-cache")
 
+  # Construct tags and build command
   if(is.null(tag)) {
     image_tag1 <- paste0(info$pkgname, ":latest")
     image_tag2 <- paste0(info$pkgname, ":", info$pkgver)
@@ -90,11 +91,10 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_r
     image_tag <- tag
     buildcmd <- glue::glue("docker build {cache} --tag {image_tag} {docker_dir}")
   }
-  # Construct and run the build command as a system command
+
+  # Message build command and run as a system command if not using a dry run
   message("Building docker image...")
   message(buildcmd)
-
-  # Build the image with a system command
   if (!dry_run) {
     system(buildcmd, ignore.stdout=TRUE)
   }
