@@ -18,9 +18,9 @@ use_docker(
 )
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
 \item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
 
@@ -28,15 +28,15 @@ use_docker(
 
 \item{base_image}{Name of the base image to start \code{FROM}. Default is \code{NULL} and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).}
 
-\item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
+\item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}.}
 
-\item{build}{Logical as to whether or not the function should build the Docker image; default is \code{FALSE}}
+\item{build}{Logical as to whether or not the function should build the Docker image; default is \code{FALSE}.}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 
-\item{overwrite_assets}{Logical as to whether or not existing asset files should be overwritten; default is \code{TRUE}}
+\item{overwrite_assets}{Logical as to whether or not existing asset files should be overwritten; default is \code{TRUE}.}
 
-\item{overwrite_renv}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}; ignored if \code{use_renv = TRUE}}
+\item{overwrite_renv}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}; ignored if \code{use_renv = TRUE}.}
 }
 \value{
 (Invisible) A list with information about the package. Primarily called for side effect. Creates \verb{docker/} directory, identifies renv dependencies and creates lock file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz, moves all relevant assets to the \verb{docker/} directory, and builds Docker image (if \code{build = TRUE}).

@@ -2,20 +2,20 @@
 % Please edit documentation in R/docker.R
 \name{create_docker_dir}
 \alias{create_docker_dir}
-\title{Function to create docker directory}
+\title{Create Docker directory}
 \usage{
 create_docker_dir(pkg_path = ".", img_path = NULL)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 }
 \value{
 (Invisible) A list of package info returned by \link{pkg_info}. Also called for side-effect, creates docker directory.
 }
 \description{
-Function to create docker directory
+Creates a \verb{docker/} directory for a given package. By default, assumes that \verb{docker/} should be a subdirectory of the specified package path.
 }
 \examples{
 \dontrun{

@@ -12,13 +12,13 @@ renv_deps(
 )
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
-\item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}}
+\item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}.}
 
-\item{overwrite}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}}
+\item{overwrite}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}.}
 }
 \value{
 (Invisible) A list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
@@ -27,7 +27,6 @@ renv_deps(
 Get renv dependencies
 }
 \examples{
-
 \dontrun{
 renv_deps()
 }

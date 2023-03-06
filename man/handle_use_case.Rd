@@ -7,7 +7,7 @@
 handle_use_case(use_case)
 }
 \arguments{
-\item{use_case}{The specified use case}
+\item{use_case}{The specified use case.}
 }
 \value{
 List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by \verb{;} if there are multiple and \code{NA} if there are none).

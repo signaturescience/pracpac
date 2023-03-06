@@ -12,13 +12,13 @@ add_assets(
 )
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
 \item{use_case}{Name of the use case. Defaults to \code{"default"}, which only uses the base boilerplate.}
 
-\item{overwrite}{Logical as to whether or not existing assets should be overwitten; default is \code{TRUE}}
+\item{overwrite}{Logical as to whether or not existing assets should be overwitten; default is \code{TRUE}.}
 }
 \value{
 Invisibly returns assets per \link{handle_use_case}. Called primarily for its side effects.

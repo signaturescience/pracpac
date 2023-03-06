@@ -4,16 +4,24 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(pkg_path = ".", img_path = NULL, cache = TRUE, tag = NULL)
+build_image(
+  pkg_path = ".",
+  img_path = NULL,
+  cache = TRUE,
+  tag = NULL,
+  dry_run = FALSE
+)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
 
-\item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}}
+\item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}.}
+
+\item{dry_run}{Default \code{FALSE}; if \code{TRUE}, the \verb{docker build} command will be messaged and invisibly returned. Setting \code{dry_run=TRUE} could be useful if additional \verb{docker build} options or different tags are desired.}
 }
 \value{
 (Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
@@ -24,5 +32,6 @@ Build a Docker image created by \link{use_docker} or \link{add_dockerfile}.
 \examples{
 \dontrun{
 build_image()
+build_image(dry_run=TRUE)
 }
 }

@@ -7,9 +7,9 @@
 pkg_root(pkg_path = ".", ...)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}}
+\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}.}
 }
 \value{
 A file path of the package root.

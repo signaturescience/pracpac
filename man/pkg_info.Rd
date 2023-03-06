@@ -7,18 +7,18 @@
 pkg_info(pkg_path = ".", ...)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory.}
 
-\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}}
+\item{...}{Arguments passed to \link[rprojroot:find_root_file]{rprojroot::find_package_root_file}.}
 }
 \value{
-A list of information about the package
+A list of information about the package.
 \itemize{
-\item \code{pkgroot}: Root directory of the package
-\item \code{pkgdeps}: Package dependencies from \code{Imports} in the \code{DESCRIPTION}
-\item \code{descfile}: File path to the \code{DESCRIPTION} file
-\item \code{pkgname}: Package name
-\item \code{pkgver}: Package version
+\item \code{pkgroot}: Root directory of the package.
+\item \code{pkgdeps}: Package dependencies from \code{Imports} in the \code{DESCRIPTION}.
+\item \code{descfile}: File path to the \code{DESCRIPTION} file.
+\item \code{pkgname}: Package name.
+\item \code{pkgver}: Package version.
 }
 }
 \description{
