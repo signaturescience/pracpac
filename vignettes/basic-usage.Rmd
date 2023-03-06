@@ -19,9 +19,11 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 ## Overview
 
-R packages are the fundamental units of reproducible code in R. Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
+R packages are the fundamental units of reproducible code in R.[^rpkgs] Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre/post process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
 
 We have developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the technical burden of R package development. With `pracpac`, users can easily create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
+
+[^rpkgs]: Hadley Wickham and Jenny Bryan. _R Packages (2e)_. <https://r-pkgs.org/>.
 
 ## Using `pracpac`
 
