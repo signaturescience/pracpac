@@ -69,7 +69,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
-#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate. See `vignette("use-cases", package="pracpac")` for other use cases (e.g., `shiny`, `rstudio`, `pipeline`).
 #' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case.` Optionally override this by setting the name of the base image (including tag if desired).
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
@@ -196,7 +196,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
-#' @param overwrite Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`.
+#' @param overwrite Logical; should an existing lock file should be overwitten? Default is `TRUE`.
 #'
 #' @return (Invisible) A list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
@@ -282,7 +282,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param overwrite Logical as to whether or not existing assets should be overwitten; default is `TRUE`.
+#' @param overwrite Logical; should existing assets should be overwitten? Default is `TRUE`.
 #'
 #' @return Invisibly returns assets per [handle_use_case]. Called primarily for its side effects.
 #'
@@ -377,16 +377,18 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' `docker build` command, and return that string in `$buildcmd` in the
 #' invisibly returned output.
 #'
+#' See `vignette("use-cases", package="pracpac")` for details on use cases.
+#'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
-#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case`. Optionally override this by setting the name of the base image (including tag if desired).
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
-#' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`.
+#' @param build Logical; should the function should build the Docker image? Default is `FALSE`.
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
-#' @param overwrite_assets Logical as to whether or not existing asset files should be overwritten; default is `TRUE`.
-#' @param overwrite_renv Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`; ignored if `use_renv = TRUE`.
+#' @param overwrite_assets Logical; should existing asset files should be overwritten? Default is `TRUE`.
+#' @param overwrite_renv Logical; should an existing lock file should be overwitten? Default is `TRUE`; ignored if `use_renv = TRUE`.
 #'
 #' @return (Invisible) A list with information about the package (`$info`) and
 #'   the `docker build` command (`$buildcmd`). Primarily called for side effect.
