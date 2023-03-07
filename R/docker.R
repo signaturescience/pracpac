@@ -57,11 +57,17 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 
 #' Add a Dockerfile to the docker directory
 #'
+#' Adds a Dockerfile to the docker directory created by [create_docker_dir].
+#' Allows for specification of several preset use cases, whether or not use use
+#' renv to manage dependencies, and optional overriding the base image.
+#'
+#' @details See `vignette("use-cases", package="pracpac")` for details on use cases.
+#'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
-#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
+#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate. See `vignette("use-cases", package="pracpac")` for other use cases (e.g., `shiny`, `rstudio`, `pipeline`).
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case.` Optionally override this by setting the name of the base image (including tag if desired).
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
 #' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates Dockerfile.
@@ -70,10 +76,16 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #'
 #' @examples
 #' \dontrun{
+#' # Default: FROM rocker/r-ver:latest with no additional template
 #' add_dockerfile()
+#' # Specify tidyverse frozen at a specific version
+#' add_dockerfile(base_image="rocker/tidyverse:4.2.2")
+#' # RStudio template
 #' add_dockerfile(use_case="shiny")
-#' add_dockerfile(use_case="pipeline", use_renv=FALSE)
-#' add_dockerfile(use_case="rstudio", base_image="rocker/rstudio:4.2.2")
+#' # Shiny template, NOT using renv
+#' add_dockerfile(use_case="shiny", use_renv=FALSE)
+#' # Pipeline template, changing the default repos
+#' add_dockerfile(use_case="pipeline", repos="https://cloud.r-project.org")
 #' }
 add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case="default", base_image = NULL, repos=NULL) {
 
