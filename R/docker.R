@@ -173,9 +173,19 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
   return(invisible(info))
 }
 
-#' Get renv dependencies
+#' Get depdencies using renv
 #'
-#' Get renv dependencies
+#' Get depdencies using renv. This function will inspect your package specified
+#' at `pkg_path` (default `.`), and create an renv lock file (`renv.lock`) in
+#' the `docker/` directory. This `renv.lock` file will capture all your
+#' package's dependencies (and all their dependencies) at the current version
+#' installed on your system at the time this function is run. When using the
+#' default `use_renv=TRUE` in [use_docker] or [add_dockerfile], the resulting
+#' `Dockerfile` will install packages from this `renv.lock` file using
+#' [renv::restore]. This ensures that versions of dependencies in the image
+#' mirror what is installed on your system at the time of image creation, rather
+#' than potentially newer versions on CRAN, which may come with breaking changes
+#' that you are unaware of at the time of package development.
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
@@ -189,7 +199,10 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #'
 #' @examples
 #' \dontrun{
+#' # Run using defaults: only gets current package dependencies
 #' renv_deps()
+#' # Add additional packages not explicitly required by your package
+#' renv_deps(other_packages=c("shiny", "knitr"))
 #' }
 renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, overwrite = TRUE) {
 
