@@ -25,6 +25,15 @@ We developed `pracpac` with a goal of providing intuitive functions for develope
 
 [^rpkgs]: Hadley Wickham and Jenny Bryan. _R Packages (2e)_. <https://r-pkgs.org/>.
 
+## Terminology
+
+It may be useful to clarify Docker terminology used throughout:
+
+- **Image**: Snapshot built to define *container* contents
+- **Container**: Instantiated *image* that can be run on the host
+
+For more information on Docker installation, terminology, and usage see [https://docs.docker.com/](https://docs.docker.com/).
+
 ## Using `pracpac`
 
 The `prapcac` package is designed to do two things:
