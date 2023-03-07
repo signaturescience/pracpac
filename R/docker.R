@@ -380,7 +380,16 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' \dontrun{
 #' use_docker()
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE, overwrite_renv = TRUE) {
+use_docker <- function(pkg_path = ".",
+                       img_path = NULL,
+                       use_renv = TRUE,
+                       use_case = "default",
+                       base_image = NULL,
+                       other_packages = NULL,
+                       build = FALSE,
+                       repos = NULL,
+                       overwrite_assets = TRUE,
+                       overwrite_renv = TRUE) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -405,13 +414,22 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_cas
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, use_case = use_case, repos = repos)
+  add_dockerfile(pkg_path = pkg_path,
+                 img_path = img_path,
+                 use_renv = use_renv,
+                 base_image = base_image,
+                 use_case = use_case,
+                 repos = repos)
 
   ## add the assets
-  add_assets(pkg_path = pkg_path, img_path = img_path,use_case = use_case, overwrite = overwrite_assets)
+  add_assets(pkg_path = pkg_path,
+             img_path = img_path,
+             use_case = use_case,
+             overwrite = overwrite_assets)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg(pkg_path = pkg_path, img_path = img_path)
+
   ## conditionally build the image
   if(build) {
     build_image(pkg_path = pkg_path, img_path = img_path)
