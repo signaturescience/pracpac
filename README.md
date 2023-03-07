@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# pracpac
+# pracpac <a href='https://github.com/signaturescience/pracpac'><img src='man/figures/logo.png' align="right" height="150" /></a>
 
 <!-- badges: start -->
 
