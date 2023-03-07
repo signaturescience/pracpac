@@ -11,7 +11,10 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Assuming current directory is the package directory, and create docker/ here
 #' create_docker_dir()
+#' # R package directory is not here, but create docker/ here
+#' create_docker_dir(pkg_path="./packages/myrpackage", img_path="./docker")
 #' }
 #'
 create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
