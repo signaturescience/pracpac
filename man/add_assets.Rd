@@ -18,13 +18,31 @@ add_assets(
 
 \item{use_case}{Name of the use case. Defaults to \code{"default"}, which only uses the base boilerplate.}
 
-\item{overwrite}{Logical as to whether or not existing assets should be overwitten; default is \code{TRUE}.}
+\item{overwrite}{Logical; should existing assets should be overwritten? Default is \code{TRUE}.}
 }
 \value{
 Invisibly returns assets per \link{handle_use_case}. Called primarily for its side effects.
 }
 \description{
-Add assets for the specified use case
+Add template assets for the use case specified in \link{add_dockerfile} or \link{use_docker}.
+}
+\details{
+Example #1: the \code{"shiny"} use case requires than an \code{app.R} file moved into
+\verb{/srv/shiny-server/} in the container image. \code{add_assets(use_case="shiny")}
+(or when using the \code{"shiny"} use case in \link{add_dockerfile} or \link{use_docker})
+will create a placeholder \code{assets/app.R} into the \verb{docker/} directory. The
+Dockerfile for the \code{"shiny"} use case will place \verb{COPY assets/app.R/srv/shiny-server} into the Dockerfile.
+
+Example #2: the \code{"pipeline"} use case creates boilerplate for moving pre- and
+post-processing R and shell scripts into the container at
+\code{add_assets(use_case="pipeline")} (or when using the \code{"pipeline"} use case in
+\link{add_dockerfile} or \link{use_docker}) will create a placeholder \code{assets/pre.R},
+\code{assets/post.R}, and \code{assets/run.sh} into the \code{docker/assets} directory. The
+Dockerfile for the \code{"pipeline"} use case will place \verb{COPY assets/run.sh /run.sh} into the Dockerfile.
+
+This function is run as part of \link{use_docker} but can be used on its own.
+
+See \code{vignette("use-cases", package="pracpac")} for details on use cases.
 }
 \examples{
 \dontrun{

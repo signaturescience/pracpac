@@ -2,7 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{renv_deps}
 \alias{renv_deps}
-\title{Get renv dependencies}
+\title{Get dependencies using renv}
 \usage{
 renv_deps(
   pkg_path = ".",
@@ -18,16 +18,34 @@ renv_deps(
 
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}.}
 
-\item{overwrite}{Logical as to whether or not an existing lock file should be overwitten; default is \code{TRUE}.}
+\item{overwrite}{Logical; should an existing lock file should be overwritten? Default is \code{TRUE}.}
 }
 \value{
 (Invisible) A list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
 }
 \description{
-Get renv dependencies
+Get dependencies using renv. This function will inspect your package specified
+at \code{pkg_path} (default \code{.}), and create an renv lock file (\code{renv.lock}) in
+the \verb{docker/} directory. See Details.
+}
+\details{
+This \code{renv.lock} file will capture all your package's dependencies (and all
+their dependencies) at the current version installed on your system at the
+time this function is run. When using the default \code{use_renv=TRUE} in
+\link{use_docker} or \link{add_dockerfile}, the resulting \code{Dockerfile} will install
+packages from this \code{renv.lock} file using \link[renv:restore]{renv::restore}. This ensures that
+versions of dependencies in the image mirror what is installed on your system
+at the time of image creation, rather than potentially newer versions on
+CRAN, which may come with breaking changes that you are unaware of at the
+time of package development.
+
+This function is run as part of \link{use_docker} but can be used on its own.
 }
 \examples{
 \dontrun{
+# Run using defaults: only gets current package dependencies
 renv_deps()
+# Add additional packages not explicitly required by your package
+renv_deps(other_packages=c("shiny", "knitr"))
 }
 }

@@ -17,9 +17,15 @@ create_docker_dir(pkg_path = ".", img_path = NULL)
 \description{
 Creates a \verb{docker/} directory for a given package. By default, assumes that \verb{docker/} should be a subdirectory of the specified package path.
 }
+\details{
+This function is run as part of \link{use_docker} but can be used on its own.
+}
 \examples{
 \dontrun{
+# Assuming current directory is the package directory, and create docker/ here
 create_docker_dir()
+# R package directory is not here, but create docker/ here
+create_docker_dir(pkg_path="./packages/myrpackage", img_path="./docker")
 }
 
 }
