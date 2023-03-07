@@ -1,6 +1,7 @@
 #' Create Docker directory
 #'
 #' Creates a `docker/` directory for a given package. By default, assumes that `docker/` should be a subdirectory of the specified package path.
+#' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
@@ -60,6 +61,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #' Adds a Dockerfile to the docker directory created by [create_docker_dir].
 #' Allows for specification of several preset use cases, whether or not use use
 #' renv to manage dependencies, and optional overriding the base image.
+#' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' @details See `vignette("use-cases", package="pracpac")` for details on use cases.
 #'
@@ -173,6 +175,9 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 
 #' Get renv dependencies
 #'
+#' Get renv dependencies
+#' This function is run as part of [use_docker] but can be used on its own.
+#'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
@@ -236,6 +241,9 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 
 
 #' Add assets for the specified use case
+#'
+#' Add assets for the specified use case
+#' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.

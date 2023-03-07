@@ -45,6 +45,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' Build a Docker image
 #'
 #' Build a Docker image created by [use_docker] or [add_dockerfile].
+#' This function is run as part of [use_docker] when `build = TRUE` is set, but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
