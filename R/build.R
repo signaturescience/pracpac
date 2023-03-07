@@ -35,7 +35,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 
   ## Build the package with pkgbuild::build
   message(glue::glue("Building package {info$pkgname} version {info$pkgver} in {tarsrc}"))
-  pkgbuild::build(path = info$pkgroot, dest_path = docker_dir, ...)
+  pkgbuild::build(path = info$pkgroot, dest_path = docker_dir, quiet=TRUE, ...)
 
   # Return info
   return(invisible(list(info=info, tarsrc=tarsrc)))
@@ -94,9 +94,10 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_r
   }
 
   # Message build command and run as a system command if not using a dry run
-  message("Building docker image...")
+  message("docker build command:")
   message(buildcmd)
   if (!dry_run) {
+    message("Building docker image...")
     system(buildcmd, ignore.stdout=TRUE)
   }
 
