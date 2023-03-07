@@ -255,8 +255,24 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 
 #' Add assets for the specified use case
 #'
-#' Add assets for the specified use case
+#' Add template assets for the use case specified in [add_dockerfile] or [use_docker].
+#'
+#' Example #1: the `"shiny"` use case requires than an `app.R` file moved into
+#' `/srv/shiny-server/` in the container image. `add_assets(use_case="shiny")`
+#' (or when using the `"shiny"` use case in [add_dockerfile] or [use_docker])
+#' will create a placeholder `assets/app.R` into the `docker/` directory. The
+#' Dockerfile for the `"shiny"` use case will place `COPY assets/app.R/srv/shiny-server` into the Dockerfile.
+#'
+#' Example #2: the `"pipeline"` use case creates boilerplate for moving pre- and
+#' post-processing R and shell scripts into the container at
+#' `add_assets(use_case="pipeline")` (or when using the `"pipeline"` use case in
+#' [add_dockerfile] or [use_docker]) will create a placeholder `assets/pre.R`,
+#' `assets/post.R`, and `assets/run.sh` into the `docker/assets` directory. The
+#' Dockerfile for the `"pipeline"` use case will place `COPY assets/run.sh /run.sh` into the Dockerfile.
+#'
 #' This function is run as part of [use_docker] but can be used on its own.
+#'
+#' See `vignette("use-cases", package="pracpac")` for details on use cases.
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
