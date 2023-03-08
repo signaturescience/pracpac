@@ -2,24 +2,30 @@
 % Please edit documentation in R/docker.R
 \name{create_docker_dir}
 \alias{create_docker_dir}
-\title{Function to create docker directory}
+\title{Create Docker directory}
 \usage{
 create_docker_dir(pkg_path = ".", img_path = NULL)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory. Default is \code{"."} for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a subdirectory of the \code{pkg_path}.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkg_info}. Also called for side-effect, creates docker directory.
+Invisibly returns a list of package info returned by \link{pkg_info}. Primarily called for side-effect to create docker directory.
 }
 \description{
-Function to create docker directory
+Creates a \verb{docker/} directory for a given package. By default, assumes that \verb{docker/} should be a subdirectory of the specified package path.
+}
+\details{
+This function is run as part of \link{use_docker} but can be used on its own.
 }
 \examples{
 \dontrun{
+# Assuming current directory is the package directory, and create docker/ here
 create_docker_dir()
+# R package directory is not here, but create docker/ here
+create_docker_dir(pkg_path="./packages/myrpackage", img_path="./docker")
 }
 
 }

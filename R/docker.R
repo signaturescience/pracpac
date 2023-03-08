@@ -1,14 +1,23 @@
-#' Function to create docker directory
+#' Create Docker directory
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
+#' @description
+#' Creates a `docker/` directory for a given package. By default, assumes that `docker/` should be a subdirectory of the specified package path.
 #'
-#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates docker directory.
+#' @details
+#' This function is run as part of [use_docker] but can be used on its own.
+#'
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side-effect to create docker directory.
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' # Assuming current directory is the package directory, and create docker/ here
 #' create_docker_dir()
+#' # R package directory is not here, but create docker/ here
+#' create_docker_dir(pkg_path="./packages/myrpackage", img_path="./docker")
 #' }
 #'
 create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
@@ -51,23 +60,39 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 
 #' Add a Dockerfile to the docker directory
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
-#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
+#' @description
+#' Adds a Dockerfile to the docker directory created by [create_docker_dir].
+#' Allows for specification of several preset use cases, whether or not use use
+#' renv to manage dependencies, and optional overriding the base image.
+#'
+#' @details
+#' This function is run as part of [use_docker] but can be used on its own.
+#'
+#' See `vignette("use-cases", package="pracpac")` for details on use cases.
+#'
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
+#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate. See `vignette("use-cases", package="pracpac")` for other use cases (e.g., `shiny`, `rstudio`, `pipeline`).
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case.` Optionally override this by setting the name of the base image (including tag if desired).
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
-#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates Dockerfile.
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side-effect to create Dockerfile.
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' # Default: FROM rocker/r-ver:latest with no additional template
 #' add_dockerfile()
+#' # Specify tidyverse frozen at a specific version
+#' add_dockerfile(base_image="rocker/tidyverse:4.2.2")
+#' # RStudio template
 #' add_dockerfile(use_case="shiny")
-#' add_dockerfile(use_case="pipeline", use_renv=FALSE)
-#' add_dockerfile(use_case="rstudio", base_image="rocker/rstudio:4.2.2")
+#' # Shiny template, NOT using renv
+#' add_dockerfile(use_case="shiny", use_renv=FALSE)
+#' # Pipeline template, changing the default repos
+#' add_dockerfile(use_case="pipeline", repos="https://cloud.r-project.org")
 #' }
 add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case="default", base_image = NULL, repos=NULL) {
 
@@ -153,20 +178,43 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
   return(invisible(info))
 }
 
-#' Get renv dependencies
+#' Get dependencies using renv
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
-#' @param overwrite Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`
-#' @return (Invisible) A list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
+#' @description
+#' Get dependencies using renv. This function will inspect your package specified
+#' at `pkg_path` (default is current working directory, `.`), and create an renv lock file (`renv.lock`) in
+#' the `docker/` directory. More information about the `renv` implementation is provided in the Details section.
+#
+#' @details
+#' The `renv.lock` file will capture all your package's dependencies (and all
+#' their dependencies) at the current version installed on your system at the
+#' time this function is run. When using the default `use_renv=TRUE` in
+#' [use_docker] or [add_dockerfile], the resulting `Dockerfile` will install
+#' packages from this `renv.lock` file using [renv::restore]. This ensures that
+#' versions of dependencies in the image mirror what is installed on your system
+#' at the time of image creation, rather than potentially newer versions on package repositories like
+#' CRAN or Bioconductor, which may come with breaking changes that you are unaware of at the
+#' time of package development.
+#'
+#' If there are additional R packages that may be useful for the Docker image you plan to build (but may not be captured under your package dependencies), then you can add these packages to the `renv` procedure with the "other_packages" argument.
+#'
+#' This function is run as part of [use_docker] but can be used on its own.
+#'
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
+#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
+#' @param overwrite Logical; should an existing lock file should be overwritten? Default is `TRUE`.
+#'
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
 #' @examples
-#'
 #' \dontrun{
+#' # Run using defaults: only gets current package dependencies
 #' renv_deps()
+#' # Add additional packages not explicitly required by your package
+#' renv_deps(other_packages=c("shiny", "knitr"))
 #' }
 renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, overwrite = TRUE) {
 
@@ -219,10 +267,31 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 
 #' Add assets for the specified use case
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
+#' @description
+#' Add template assets for the use case specified in [add_dockerfile] or [use_docker].
+#'
+#' @details
+#' Example #1: the `"shiny"` use case requires than an `app.R` file moved into
+#' `/srv/shiny-server/` in the container image. Using `add_assets(use_case="shiny")`
+#' (or when using the `"shiny"` use case in [add_dockerfile] or [use_docker])
+#' will create a placeholder `assets/app.R` in the `docker/` directory. The
+#' Dockerfile for the `"shiny"` use case will place `COPY assets/app.R/srv/shiny-server` into the Dockerfile.
+#'
+#' Example #2: the `"pipeline"` use case creates boilerplate for moving pre- and
+#' post-processing R and shell scripts into the container at
+#' `add_assets(use_case="pipeline")` (or when using the `"pipeline"` use case in
+#' [add_dockerfile] or [use_docker]) will create a placeholder `assets/pre.R`,
+#' `assets/post.R`, and `assets/run.sh` into the `docker/assets` directory. The
+#' Dockerfile for the `"pipeline"` use case will place `COPY assets/run.sh /run.sh` into the Dockerfile.
+#'
+#' This function is run as part of [use_docker] but can be used on its own.
+#'
+#' See `vignette("use-cases", package="pracpac")` for details on use cases.
+#'
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param overwrite Logical as to whether or not existing assets should be overwitten; default is `TRUE`
+#' @param overwrite Logical; should existing assets should be overwritten? Default is `TRUE`.
 #'
 #' @return Invisibly returns assets per [handle_use_case]. Called primarily for its side effects.
 #'
@@ -302,24 +371,60 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 
 #' Use docker packaging tools
 #'
-#' @param pkg_path Path to the package directory
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the "pkg_path"
-#' @param use_renv Logical as to whether or not to use renv. Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @description
+#' Wrapper function around other `pracpac` functions. See help for the functions linked below for detail on individual functions.
+#' All arguments to `use_docker()` are passed to downstream functions. `use_docker()` will sequentially run:
+#' 1. [pkg_info] to get information about the current R package.
+#' 1. [create_docker_dir] to create the `docker/` directory in the specified location, if it doesn't already exist.
+#' 1. [renv_deps] (if `use_renv=TRUE`, the default) to capture package dependencies with renv and create an `renv.lock` file
+#' 1. [add_dockerfile] to create a Dockerfile using template specified by `use_case`
+#' 1. [add_assets] depending on the `use_case`
+#' 1. [build_pkg] to build the current R package source .tar.gz, and place it into the `docker/` directory
+#' 1. [build_image] optional, default `FALSE`; if TRUE, will build the Docker image.
+#'
+#' The default `build=FALSE` means that everything up to `build_image()` is run,
+#' but the image is not actually built. Instead, `use_docker()` will message the
+#' `docker build` command, and return that string in `$buildcmd` in the
+#' invisibly returned output.
+#'
+#' See `vignette("use-cases", package="pracpac")` for details on use cases.
+#'
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
+#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file without version information.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
-#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on "use_case". Optionally override this by setting the name of the base image (including tag if desired).
-#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`
-#' @param build Logical as to whether or not the function should build the Docker image; default is `FALSE`
+#' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case`. Optionally override this by setting the name of the base image (including tag if desired).
+#' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
+#' @param build Logical as to whether or not the image should be built. Default is `TRUE`, and if `FALSE` the `docker build` command will be messaged.  Setting `build=FALSE` could be useful if additional `docker build` options or different tags are desired. In either case the `docker build` command will be returned invisibly.
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
-#' @param overwrite_assets Logical as to whether or not existing asset files should be overwritten; default is `TRUE`
-#' @param overwrite_renv Logical as to whether or not an existing lock file should be overwitten; default is `TRUE`; ignored if `use_renv = TRUE`
-#' @return (Invisible) A list with information about the package. Primarily called for side effect. Creates `docker/` directory, identifies renv dependencies and creates lock file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz, moves all relevant assets to the `docker/` directory, and builds Docker image (if `build = TRUE`).
+#' @param overwrite_assets Logical; should existing asset files should be overwritten? Default is `TRUE`.
+#' @param overwrite_renv Logical; should an existing lock file should be overwritten? Default is `TRUE`; ignored if `use_renv = TRUE`.
+#'
+#' @return Invisibly returns a list with information about the package (`$info`) and
+#'   the `docker build` command (`$buildcmd`). Primarily called for side effect.
+#'   Creates `docker/` directory, identifies renv dependencies and creates lock
+#'   file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz,
+#'   moves all relevant assets to the `docker/` directory, and builds Docker
+#'   image (if `build = TRUE`).
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' use_docker()
+#' use_docker(use_renv=FALSE)
+#' use_docker(use_renv=FALSE, use_case="pipeline", base_image="rocker/tidyverse:4.2.2")
 #' }
-use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_case = "default", base_image = NULL, other_packages = NULL, build = FALSE, repos = NULL, overwrite_assets = TRUE, overwrite_renv = TRUE) {
+use_docker <- function(pkg_path = ".",
+                       img_path = NULL,
+                       use_renv = TRUE,
+                       use_case = "default",
+                       base_image = NULL,
+                       other_packages = NULL,
+                       build = FALSE,
+                       repos = NULL,
+                       overwrite_assets = TRUE,
+                       overwrite_renv = TRUE) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -344,19 +449,26 @@ use_docker <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use_cas
   }
 
   ## add the dockerfile to the docker/ dir
-  add_dockerfile(pkg_path = pkg_path, img_path = img_path, use_renv = use_renv, base_image = base_image, use_case = use_case, repos = repos)
+  add_dockerfile(pkg_path = pkg_path,
+                 img_path = img_path,
+                 use_renv = use_renv,
+                 base_image = base_image,
+                 use_case = use_case,
+                 repos = repos)
 
   ## add the assets
-  add_assets(pkg_path = pkg_path, img_path = img_path,use_case = use_case, overwrite = overwrite_assets)
+  add_assets(pkg_path = pkg_path,
+             img_path = img_path,
+             use_case = use_case,
+             overwrite = overwrite_assets)
 
   ## build the package tar.gz and copy that to the docker dir/
   build_pkg(pkg_path = pkg_path, img_path = img_path)
+
   ## conditionally build the image
-  if(build) {
-    build_image(pkg_path = pkg_path, img_path = img_path)
-  }
+  buildcmd <- build_image(pkg_path = pkg_path, img_path = img_path, build = build)
 
   # Invisibly return package info
-  return(invisible(info))
+  return(invisible(list(info=info, buildcmd=buildcmd)))
 
 }

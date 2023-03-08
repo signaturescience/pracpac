@@ -17,9 +17,21 @@ test_that("use_docker pipeline creates expected directories and files with defau
   expect_true(file_exists(path(tmp, "test", "hellow", "docker", "renv.lock")))
   expect_true(file_exists(path(tmp, "test", "hellow", "docker", "hellow_0.1.0.tar.gz")))
 
+})
+
+test_that("build_image returns build command as expected", {
+
+  # Check build command
+  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), build=FALSE))
+  expect_identical(as.character(buildcmd), paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test", "hellow", "docker")))
+
   ## clean up
+  ## NOTE: this clean up is not performed in the test prior to this ...
+  ## lets us retain the files to check build command
+  ## but now we can cleanup
   dir_delete(path(tmp, "test"))
 })
+
 
 test_that("Option to ignore renv works", {
 
@@ -52,7 +64,18 @@ test_that("Alternative directory structure works", {
   expect_false(file_exists(path(tmp, "test", "renv.lock")))
   expect_true(file_exists(path(tmp, "test", "hellow_0.1.0.tar.gz")))
 
+})
+
+test_that("build_image returns build command as expected with alternative directory", {
+
+  # Check build command
+  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), img_path = path(tmp, "test"), build=FALSE))
+  expect_identical(as.character(buildcmd), paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test")))
+
   ## clean up
+  ## NOTE: this clean up is not performed in the test prior to this ...
+  ## lets us retain the files to check build command
+  ## but now we can cleanup
   dir_delete(path(tmp, "test"))
 })
 
