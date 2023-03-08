@@ -22,7 +22,7 @@ use_docker(
 
 \item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
-\item{use_renv}{Logical; use renv? Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
+\item{use_renv}{Logical; use renv? Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file without version information.}
 
 \item{use_case}{Name of the use case. Defaults to \code{"default"}, which only uses the base boilerplate.}
 
@@ -30,7 +30,7 @@ use_docker(
 
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}.}
 
-\item{build}{Logical; should the function should build the Docker image? Default is \code{FALSE}.}
+\item{build}{Logical as to whether or not the image should be built. Default is \code{TRUE}, and if \code{FALSE} the \verb{docker build} command will be messaged.  Setting \code{build=FALSE} could be useful if additional \verb{docker build} options or different tags are desired. In either case the \verb{docker build} command will be returned invisibly.}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 
@@ -39,7 +39,7 @@ use_docker(
 \item{overwrite_renv}{Logical; should an existing lock file should be overwritten? Default is \code{TRUE}; ignored if \code{use_renv = TRUE}.}
 }
 \value{
-(Invisible) A list with information about the package (\verb{$info}) and
+Invisibly returns a list with information about the package (\verb{$info}) and
 the \verb{docker build} command (\verb{$buildcmd}). Primarily called for side effect.
 Creates \verb{docker/} directory, identifies renv dependencies and creates lock
 file (if \code{use_renv = TRUE}), writes Dockerfile, builds package tar.gz,
@@ -47,7 +47,7 @@ moves all relevant assets to the \verb{docker/} directory, and builds Docker
 image (if \code{build = TRUE}).
 }
 \description{
-Wrapper function around other pracpac tools. See help for the functions linked below for detail on individual functions.
+Wrapper function around other \code{pracpac} functions. See help for the functions linked below for detail on individual functions.
 All arguments to \code{use_docker()} are passed to downstream functions. \code{use_docker()} will sequentially run:
 \enumerate{
 \item \link{pkg_info} to get information about the current R package.
@@ -58,8 +58,7 @@ All arguments to \code{use_docker()} are passed to downstream functions. \code{u
 \item \link{build_pkg} to build the current R package source .tar.gz, and place it into the \verb{docker/} directory
 \item \link{build_image} optional, default \code{FALSE}; if TRUE, will build the Docker image.
 }
-}
-\details{
+
 The default \code{build=FALSE} means that everything up to \code{build_image()} is run,
 but the image is not actually built. Instead, \code{use_docker()} will message the
 \verb{docker build} command, and return that string in \verb{$buildcmd} in the

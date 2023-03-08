@@ -371,7 +371,8 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 
 #' Use docker packaging tools
 #'
-#' Wrapper function around other pracpac tools. See help for the functions linked below for detail on individual functions.
+#' @description
+#' Wrapper function around other `pracpac` functions. See help for the functions linked below for detail on individual functions.
 #' All arguments to `use_docker()` are passed to downstream functions. `use_docker()` will sequentially run:
 #' 1. [pkg_info] to get information about the current R package.
 #' 1. [create_docker_dir] to create the `docker/` directory in the specified location, if it doesn't already exist.
@@ -390,16 +391,16 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
-#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
+#' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file without version information.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
 #' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case`. Optionally override this by setting the name of the base image (including tag if desired).
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
-#' @param build Logical; should the function should build the Docker image? Default is `FALSE`.
+#' @param build Logical as to whether or not the image should be built. Default is `TRUE`, and if `FALSE` the `docker build` command will be messaged.  Setting `build=FALSE` could be useful if additional `docker build` options or different tags are desired. In either case the `docker build` command will be returned invisibly.
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #' @param overwrite_assets Logical; should existing asset files should be overwritten? Default is `TRUE`.
 #' @param overwrite_renv Logical; should an existing lock file should be overwritten? Default is `TRUE`; ignored if `use_renv = TRUE`.
 #'
-#' @return (Invisible) A list with information about the package (`$info`) and
+#' @return Invisibly returns a list with information about the package (`$info`) and
 #'   the `docker build` command (`$buildcmd`). Primarily called for side effect.
 #'   Creates `docker/` directory, identifies renv dependencies and creates lock
 #'   file (if `use_renv = TRUE`), writes Dockerfile, builds package tar.gz,
