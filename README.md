@@ -61,7 +61,7 @@ is shown in the figure below.
 
 For example, running `use_docker()` in the example package included in
 pracpac at
-[inst/hellow](https://github.com/signaturescience/pracpac/tree/dev/inst/hellow)
+[inst/hellow](https://github.com/signaturescience/pracpac/tree/main/inst/hellow)
 will produce a Dockerfile with the following contents:
 
 ``` dockerfile

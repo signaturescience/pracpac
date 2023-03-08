@@ -49,7 +49,7 @@ In the most simple example, running `use_docker()` inside of a package directory
 
 ![Pracpac workflow](man/figures/pracpac-workflow.png)
 
-For example, running `use_docker()` in the example package included in pracpac at [inst/hellow](https://github.com/signaturescience/pracpac/tree/dev/inst/hellow) will produce a Dockerfile with the following contents:
+For example, running `use_docker()` in the example package included in pracpac at [inst/hellow](https://github.com/signaturescience/pracpac/tree/main/inst/hellow) will produce a Dockerfile with the following contents:
 
 ```Dockerfile
 FROM rocker/r-ver:latest
