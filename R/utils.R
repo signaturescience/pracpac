@@ -1,5 +1,6 @@
 #' Get information about the current package
 #'
+#' @description
 #' Returns information about the current package in a list which can be passed to other functions.
 #'
 #' @param pkg_path Path to the package directory.
