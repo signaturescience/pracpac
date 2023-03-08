@@ -10,6 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
   comment = ""
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
@@ -33,7 +35,7 @@ To demonstrate this use case we use the `hellow` R package source code that ship
 
 We will first move the example `hellow` package to temporary location:
 
-```{r, warning=FALSE,message=FALSE}
+```{r}
 library(pracpac)
 library(fs)
 
@@ -53,7 +55,7 @@ dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
 
 We can use `use_docker(..., use_case="pipeline")` to create the template of files for building the Docker image:
 
-```{r, message=FALSE, warning=FALSE, results='hide'}
+```{r, results='hide'}
 use_docker(pkg_path = path(tmp, "example", "hellow"), use_case = "pipeline")
 ```
 
