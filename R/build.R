@@ -44,6 +44,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 
 #' Build a Docker image
 #'
+#' @description
 #' Build a Docker image created by [use_docker] or [add_dockerfile].
 #' This function is run as part of [use_docker] when `build = TRUE` is set, but can be used on its own.
 #'
@@ -51,9 +52,9 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
 #' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info].
-#' @param build Default `TRUE`; if `FALSE`, the `docker build` command will be messaged and invisibly returned. Setting `build=FALSE` could be useful if additional `docker build` options or different tags are desired.
+#' @param build Logical as to whether or not the image should be built. Default is `TRUE`, and if `FALSE` the `docker build` command will be messaged.  Setting `build=FALSE` could be useful if additional `docker build` options or different tags are desired. In either case the `docker build` command will be returned invisibly.
 #'
-#' @return (Invisible) The `docker build` command. Called for its side effects, which runs the `docker build` as a system command.
+#' @return Invisibly returns the `docker build` command. Primarily called for its side effects, which runs the `docker build` as a system command.
 #'
 #' @export
 #'

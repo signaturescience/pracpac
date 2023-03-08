@@ -21,10 +21,10 @@ build_image(
 
 \item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}.}
 
-\item{build}{Default \code{TRUE}; if \code{FALSE}, the \verb{docker build} command will be messaged and invisibly returned. Setting \code{build=FALSE} could be useful if additional \verb{docker build} options or different tags are desired.}
+\item{build}{Logical as to whether or not the image should be built. Default is \code{TRUE}, and if \code{FALSE} the \verb{docker build} command will be messaged.  Setting \code{build=FALSE} could be useful if additional \verb{docker build} options or different tags are desired. In either case the \verb{docker build} command will be returned invisibly.}
 }
 \value{
-(Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
+Invisibly returns the \verb{docker build} command. Primarily called for its side effects, which runs the \verb{docker build} as a system command.
 }
 \description{
 Build a Docker image created by \link{use_docker} or \link{add_dockerfile}.
