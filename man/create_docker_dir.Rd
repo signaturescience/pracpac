@@ -7,7 +7,7 @@
 create_docker_dir(pkg_path = ".", img_path = NULL)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory.}
+\item{pkg_path}{Path to the package directory. Default is \code{"."} for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.}
 
 \item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a subdirectory of the \code{pkg_path}.}
 }

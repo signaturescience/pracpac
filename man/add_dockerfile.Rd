@@ -14,9 +14,9 @@ add_dockerfile(
 )
 }
 \arguments{
-\item{pkg_path}{Path to the package directory.}
+\item{pkg_path}{Path to the package directory. Default is \code{"."} for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
+\item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a subdirectory of the \code{pkg_path}.}
 
 \item{use_renv}{Logical; use renv? Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
 
