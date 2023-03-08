@@ -38,9 +38,21 @@ pkg_info <- function(pkg_path=".", ...) {
 }
 
 #' Find package root
+#'
+#' @description
+#' Unexported helper to find the root of the R package. Returns an error if the path specified is not an R package.
+#'
 #' @param pkg_path Path to the package directory.
 #' @param ... Arguments passed to [rprojroot::find_package_root_file].
-#' @return A file path of the package root.
+#' @return A file path of the package root. If no package is found at the root then the function will `stop` with an error message.
+#'
+#' @examples
+#' \dontrun{
+#' # This will succeed if this is a package
+#' pkg_root()
+#' # This will fail if this is not a package location
+#' pkg_root(tempdir())
+#' }
 pkg_root <- function(pkg_path=".", ...) {
   root <- try(rprojroot::find_package_root_file(path=pkg_path, ...), silent=TRUE)
   if (inherits(root, "try-error")) {
