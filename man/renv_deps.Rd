@@ -21,23 +21,25 @@ renv_deps(
 \item{overwrite}{Logical; should an existing lock file should be overwritten? Default is \code{TRUE}.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
+Invisibly returns a list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.
 }
 \description{
 Get dependencies using renv. This function will inspect your package specified
-at \code{pkg_path} (default \code{.}), and create an renv lock file (\code{renv.lock}) in
-the \verb{docker/} directory. See Details.
+at \code{pkg_path} (default is current working directory, \code{.}), and create an renv lock file (\code{renv.lock}) in
+the \verb{docker/} directory. More information about the \code{renv} implementation is provided in the Details section.
 }
 \details{
-This \code{renv.lock} file will capture all your package's dependencies (and all
+The \code{renv.lock} file will capture all your package's dependencies (and all
 their dependencies) at the current version installed on your system at the
 time this function is run. When using the default \code{use_renv=TRUE} in
 \link{use_docker} or \link{add_dockerfile}, the resulting \code{Dockerfile} will install
 packages from this \code{renv.lock} file using \link[renv:restore]{renv::restore}. This ensures that
 versions of dependencies in the image mirror what is installed on your system
-at the time of image creation, rather than potentially newer versions on
-CRAN, which may come with breaking changes that you are unaware of at the
+at the time of image creation, rather than potentially newer versions on package repositories like
+CRAN or Bioconductor, which may come with breaking changes that you are unaware of at the
 time of package development.
+
+If there are additional R packages that may be useful for the Docker image you plan to build (but may not be captured under your package dependencies), then you can add these packages to the \code{renv} procedure with the "other_packages" argument.
 
 This function is run as part of \link{use_docker} but can be used on its own.
 }

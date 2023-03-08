@@ -180,19 +180,23 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 
 #' Get dependencies using renv
 #'
+#' @description
 #' Get dependencies using renv. This function will inspect your package specified
-#' at `pkg_path` (default `.`), and create an renv lock file (`renv.lock`) in
-#' the `docker/` directory. See Details.
-#'
-#' This `renv.lock` file will capture all your package's dependencies (and all
+#' at `pkg_path` (default is current working directory, `.`), and create an renv lock file (`renv.lock`) in
+#' the `docker/` directory. More information about the `renv` implementation is provided in the Details section.
+#
+#' @details
+#' The `renv.lock` file will capture all your package's dependencies (and all
 #' their dependencies) at the current version installed on your system at the
 #' time this function is run. When using the default `use_renv=TRUE` in
 #' [use_docker] or [add_dockerfile], the resulting `Dockerfile` will install
 #' packages from this `renv.lock` file using [renv::restore]. This ensures that
 #' versions of dependencies in the image mirror what is installed on your system
-#' at the time of image creation, rather than potentially newer versions on
-#' CRAN, which may come with breaking changes that you are unaware of at the
+#' at the time of image creation, rather than potentially newer versions on package repositories like
+#' CRAN or Bioconductor, which may come with breaking changes that you are unaware of at the
 #' time of package development.
+#'
+#' If there are additional R packages that may be useful for the Docker image you plan to build (but may not be captured under your package dependencies), then you can add these packages to the `renv` procedure with the "other_packages" argument.
 #'
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
@@ -201,7 +205,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
 #' @param overwrite Logical; should an existing lock file should be overwritten? Default is `TRUE`.
 #'
-#' @return (Invisible) A list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
 #' @export
 #'
