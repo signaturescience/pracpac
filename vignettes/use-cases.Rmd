@@ -114,6 +114,19 @@ dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
 
 The files need to be edited as follows:
 
+```{r, eval=FALSE, echo=FALSE}
+# actually make those changes! don't echo and don't eval. because you're
+# creating the file at tmp from the template, which includes post.R, you can't
+# just run this code interactively because post.R won't exist, the actual
+# dockerfile at tmp remains unchanged so copy in the "final" dockerfile and
+# assets into the tmp dir so the docker build works properly below when running
+# interactively, without having to actually monkey with the files in tmp, and so
+# after the container is built it actually has the assets, entrypoint, etc.
+file_copy(system.file("example/hellow/Dockerfile", package = "pracpac"), path(tmp, "example/hellow/docker/Dockerfile"), overwrite=TRUE)
+file_copy(system.file("example/hellow/pre.R", package = "pracpac"), path(tmp, "example/hellow/docker/assets/pre.R"), overwrite=TRUE)
+file_copy(system.file("example/hellow/run.sh", package = "pracpac"), path(tmp, "example/hellow/docker/assets/run.sh"), overwrite=TRUE)
+```
+
 #### `Dockerfile`
 
 ```{bash eval=FALSE, echo=TRUE, code=readLines(system.file("example", "hellow", "Dockerfile", package = "pracpac"))}
