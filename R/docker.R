@@ -1,13 +1,14 @@
 #' Create Docker directory
 #'
+#' @description
 #' Creates a `docker/` directory for a given package. By default, assumes that `docker/` should be a subdirectory of the specified package path.
 #'
+#' @details
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
-#'
-#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates docker directory.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side-effect to create docker directory.
 #'
 #' @export
 #'
