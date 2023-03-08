@@ -28,9 +28,9 @@ Add template assets for the use case specified in \link{add_dockerfile} or \link
 }
 \details{
 Example #1: the \code{"shiny"} use case requires than an \code{app.R} file moved into
-\verb{/srv/shiny-server/} in the container image. \code{add_assets(use_case="shiny")}
+\verb{/srv/shiny-server/} in the container image. Using \code{add_assets(use_case="shiny")}
 (or when using the \code{"shiny"} use case in \link{add_dockerfile} or \link{use_docker})
-will create a placeholder \code{assets/app.R} into the \verb{docker/} directory. The
+will create a placeholder \code{assets/app.R} in the \verb{docker/} directory. The
 Dockerfile for the \code{"shiny"} use case will place \verb{COPY assets/app.R/srv/shiny-server} into the Dockerfile.
 
 Example #2: the \code{"pipeline"} use case creates boilerplate for moving pre- and

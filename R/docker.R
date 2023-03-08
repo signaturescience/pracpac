@@ -260,12 +260,14 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 
 #' Add assets for the specified use case
 #'
+#' @description
 #' Add template assets for the use case specified in [add_dockerfile] or [use_docker].
 #'
+#' @details
 #' Example #1: the `"shiny"` use case requires than an `app.R` file moved into
-#' `/srv/shiny-server/` in the container image. `add_assets(use_case="shiny")`
+#' `/srv/shiny-server/` in the container image. Using `add_assets(use_case="shiny")`
 #' (or when using the `"shiny"` use case in [add_dockerfile] or [use_docker])
-#' will create a placeholder `assets/app.R` into the `docker/` directory. The
+#' will create a placeholder `assets/app.R` in the `docker/` directory. The
 #' Dockerfile for the `"shiny"` use case will place `COPY assets/app.R/srv/shiny-server` into the Dockerfile.
 #'
 #' Example #2: the `"pipeline"` use case creates boilerplate for moving pre- and
