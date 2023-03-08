@@ -14,7 +14,8 @@ use_docker(
   build = FALSE,
   repos = NULL,
   overwrite_assets = TRUE,
-  overwrite_renv = TRUE
+  overwrite_renv = TRUE,
+  consent_renv = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ use_docker(
 \item{overwrite_assets}{Logical; should existing asset files should be overwritten? Default is \code{TRUE}.}
 
 \item{overwrite_renv}{Logical; should an existing lock file should be overwritten? Default is \code{TRUE}; ignored if \code{use_renv = TRUE}.}
+
+\item{consent_renv}{Logical; give renv consent in this session with \code{options(renv.consent = TRUE)}? Default is \code{TRUE}. See \link[renv:consent]{renv::consent} for details.}
 }
 \value{
 Invisibly returns a list with information about the package (\verb{$info}) and
