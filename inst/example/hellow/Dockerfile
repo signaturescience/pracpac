@@ -3,8 +3,8 @@ FROM rocker/r-ver:latest
 ## copy the renv.lock into the image
 COPY renv.lock /renv.lock
 
-## install renv and biocmanager
-RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos="https://cloud.r-project.org")'
+## install renv
+RUN Rscript -e 'install.packages(c("renv"), repos="https://cloud.r-project.org")'
 
 ## set the renv path var to the renv lib
 ENV RENV_PATHS_LIBRARY renv/library
