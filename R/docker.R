@@ -59,10 +59,12 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 
 #' Add a Dockerfile to the docker directory
 #'
+#' @description
 #' Adds a Dockerfile to the docker directory created by [create_docker_dir].
 #' Allows for specification of several preset use cases, whether or not use use
 #' renv to manage dependencies, and optional overriding the base image.
 #'
+#' @details
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
 #' See `vignette("use-cases", package="pracpac")` for details on use cases.
@@ -74,7 +76,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #' @param base_image Name of the base image to start `FROM`. Default is `NULL` and the base image will be derived based on `use_case.` Optionally override this by setting the name of the base image (including tag if desired).
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #'
-#' @return (Invisible) A list of package info returned by [pkg_info]. Also called for side-effect, creates Dockerfile.
+#' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side-effect to create Dockerfile.
 #'
 #' @export
 #'

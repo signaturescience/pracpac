@@ -27,7 +27,7 @@ add_dockerfile(
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkg_info}. Also called for side-effect, creates Dockerfile.
+Invisibly returns a list of package info returned by \link{pkg_info}. Primarily called for side-effect to create Dockerfile.
 }
 \description{
 Adds a Dockerfile to the docker directory created by \link{create_docker_dir}.
