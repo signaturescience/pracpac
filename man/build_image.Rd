@@ -27,8 +27,7 @@ build_image(
 Invisibly returns the \verb{docker build} command. Primarily called for its side effects, which runs the \verb{docker build} as a system command.
 }
 \description{
-Build a Docker image created by \link{use_docker} or \link{add_dockerfile}.
-This function is run as part of \link{use_docker} when \code{build = TRUE} is set, but can be used on its own.
+Builds a Docker image created by \link{use_docker} or \link{add_dockerfile}. This function is run as part of \link{use_docker} when \code{build = TRUE} is set, but can be used on its own.
 }
 \examples{
 \dontrun{

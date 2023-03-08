@@ -1,12 +1,13 @@
 #' Build a package tar.gz
 #'
+#' @description
 #' Builds a package source tar.gz using [pkgbuild::build] and moves it into a user-specified location (default `docker/`).
 #'
 #' @param pkg_path Path to the package directory.
-#' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
+#' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param ... Additional optional arguments passed to [pkgbuild::build].
 #'
-#' @return (Invisible) A list of package info returned by [pkg_info], tar.gz source and destination file paths.
+#' @return Invisibly returns a list of package info returned by [pkg_info], tar.gz source and destination file paths.
 #' @export
 #'
 #' @examples
@@ -45,8 +46,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' Build a Docker image
 #'
 #' @description
-#' Build a Docker image created by [use_docker] or [add_dockerfile].
-#' This function is run as part of [use_docker] when `build = TRUE` is set, but can be used on its own.
+#' Builds a Docker image created by [use_docker] or [add_dockerfile]. This function is run as part of [use_docker] when `build = TRUE` is set, but can be used on its own.
 #'
 #' @param pkg_path Path to the package directory.
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.

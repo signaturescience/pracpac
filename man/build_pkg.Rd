@@ -9,12 +9,12 @@ build_pkg(pkg_path = ".", img_path = NULL, ...)
 \arguments{
 \item{pkg_path}{Path to the package directory.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
+\item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a sub-directory of the \code{pkg_path}.}
 
 \item{...}{Additional optional arguments passed to \link[pkgbuild:build]{pkgbuild::build}.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkg_info}, tar.gz source and destination file paths.
+Invisibly returns a list of package info returned by \link{pkg_info}, tar.gz source and destination file paths.
 }
 \description{
 Builds a package source tar.gz using \link[pkgbuild:build]{pkgbuild::build} and moves it into a user-specified location (default \verb{docker/}).
