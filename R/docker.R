@@ -6,7 +6,7 @@
 #' @details
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side-effect to create docker directory.
 #'
@@ -70,7 +70,7 @@ create_docker_dir <- function(pkg_path = ".", img_path = NULL) {
 #'
 #' See `vignette("use-cases", package="pracpac")` for details on use cases.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file and the most recent versions will be installed in the image.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate. See `vignette("use-cases", package="pracpac")` for other use cases (e.g., `shiny`, `rstudio`, `pipeline`).
@@ -200,7 +200,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #'
 #' This function is run as part of [use_docker] but can be used on its own.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
 #' @param overwrite Logical; should an existing lock file should be overwritten? Default is `TRUE`.
@@ -288,7 +288,7 @@ renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, ov
 #'
 #' See `vignette("use-cases", package="pracpac")` for details on use cases.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.
 #' @param overwrite Logical; should existing assets should be overwritten? Default is `TRUE`.
@@ -389,7 +389,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #'
 #' See `vignette("use-cases", package="pracpac")` for details on use cases.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param use_renv Logical; use renv? Defaults to `TRUE`. If `FALSE`, package dependencies are scraped from the `DESCRIPTION` file without version information.
 #' @param use_case Name of the use case. Defaults to `"default"`, which only uses the base boilerplate.

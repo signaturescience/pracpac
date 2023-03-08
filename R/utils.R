@@ -3,7 +3,7 @@
 #' @description
 #' Returns information about the current package in a list which can be passed to other functions.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param ... Arguments passed to [rprojroot::find_package_root_file].
 #' @return A list of information about the package.
 #' - `pkgroot`: Root directory of the package.
@@ -42,7 +42,7 @@ pkg_info <- function(pkg_path=".", ...) {
 #' @description
 #' Unexported helper to find the root of the R package. Returns an error if the path specified is not an R package.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param ... Arguments passed to [rprojroot::find_package_root_file].
 #' @return A file path of the package root. If no package is found at the root then the function will `stop` with an error message.
 #'

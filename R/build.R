@@ -3,7 +3,7 @@
 #' @description
 #' Builds a package source tar.gz using [pkgbuild::build] and moves it into a user-specified location (default `docker/`).
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param ... Additional optional arguments passed to [pkgbuild::build].
 #'
@@ -48,7 +48,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' @description
 #' Builds a Docker image created by [use_docker] or [add_dockerfile]. This function is run as part of [use_docker] when `build = TRUE` is set, but can be used on its own.
 #'
-#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as neeeded.
+#' @param pkg_path Path to the package directory. Default is `"."` for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
 #' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info].
