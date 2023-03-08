@@ -92,7 +92,7 @@ use_docker()
 
 With defaults set, this function will create a `Dockerfile` with the following contents:
 
-```
+```Dockerfile
 FROM rocker/r-ver:latest
 
 ## copy the renv.lock into the image
@@ -116,7 +116,7 @@ RUN Rscript -e "install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NU
 
 And an `renv.lock` with the dependencies of `hellow` (in this case just the `praise` package):
 
-```
+```json
 {
   "R": {
     "Version": "4.0.2",
