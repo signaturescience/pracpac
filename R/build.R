@@ -51,7 +51,7 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' @param img_path Path to the write the docker image definition contents; default `NULL` will use `docker/` as a sub-directory of the `pkg_path`.
 #' @param cache Logical; should caching be used? Default `TRUE`. Set to `FALSE` to use `--no-cache` in `docker build`.
 #' @param tag Image tag to use; default is `NULL` and the image will be tagged with package name version from [pkg_info].
-#' @param dry_run Default `FALSE`; if `TRUE`, the `docker build` command will be messaged and invisibly returned. Setting `dry_run=TRUE` could be useful if additional `docker build` options or different tags are desired.
+#' @param build Default `TRUE`; if `FALSE`, the `docker build` command will be messaged and invisibly returned. Setting `build=FALSE` could be useful if additional `docker build` options or different tags are desired.
 #'
 #' @return (Invisible) The `docker build` command. Called for its side effects, which runs the `docker build` as a system command.
 #'
@@ -60,9 +60,9 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #' @examples
 #' \dontrun{
 #' build_image()
-#' build_image(dry_run=TRUE)
+#' build_image(build=FALSE)
 #' }
-build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_run=FALSE) {
+build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, build=TRUE) {
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
@@ -96,7 +96,7 @@ build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, dry_r
   # Message build command and run as a system command if not using a dry run
   message("docker build command:")
   message(buildcmd)
-  if (!dry_run) {
+  if (build) {
     message("Building docker image...")
     system(buildcmd, ignore.stdout=TRUE)
   }

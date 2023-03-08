@@ -18,7 +18,7 @@ test_that("use_docker pipeline creates expected directories and files with defau
   expect_true(file_exists(path(tmp, "test", "hellow", "docker", "hellow_0.1.0.tar.gz")))
 
   # Check build command
-  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), dry_run=TRUE))
+  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), build=FALSE))
   expect_identical(buildcmd, paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test", "hellow", "docker")))
 
   ## clean up
@@ -57,7 +57,7 @@ test_that("Alternative directory structure works", {
   expect_true(file_exists(path(tmp, "test", "hellow_0.1.0.tar.gz")))
 
   # Check build command
-  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), img_path = path(tmp, "test"), dry_run=TRUE))
+  buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), img_path = path(tmp, "test"), build=FALSE))
   expect_identical(buildcmd, paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test")))
 
   ## clean up

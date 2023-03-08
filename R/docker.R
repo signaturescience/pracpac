@@ -456,7 +456,7 @@ use_docker <- function(pkg_path = ".",
   build_pkg(pkg_path = pkg_path, img_path = img_path)
 
   ## conditionally build the image
-  buildcmd <- build_image(pkg_path = pkg_path, img_path = img_path, dry_run = !build)
+  buildcmd <- build_image(pkg_path = pkg_path, img_path = img_path, build = build)
 
   # Invisibly return package info
   return(invisible(list(info=info, buildcmd=buildcmd)))

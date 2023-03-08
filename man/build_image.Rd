@@ -9,7 +9,7 @@ build_image(
   img_path = NULL,
   cache = TRUE,
   tag = NULL,
-  dry_run = FALSE
+  build = TRUE
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ build_image(
 
 \item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}.}
 
-\item{dry_run}{Default \code{FALSE}; if \code{TRUE}, the \verb{docker build} command will be messaged and invisibly returned. Setting \code{dry_run=TRUE} could be useful if additional \verb{docker build} options or different tags are desired.}
+\item{build}{Default \code{TRUE}; if \code{FALSE}, the \verb{docker build} command will be messaged and invisibly returned. Setting \code{build=FALSE} could be useful if additional \verb{docker build} options or different tags are desired.}
 }
 \value{
 (Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
@@ -33,6 +33,6 @@ This function is run as part of \link{use_docker} when \code{build = TRUE} is se
 \examples{
 \dontrun{
 build_image()
-build_image(dry_run=TRUE)
+build_image(build=FALSE)
 }
 }
