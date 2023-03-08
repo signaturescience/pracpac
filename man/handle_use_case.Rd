@@ -13,7 +13,7 @@ handle_use_case(use_case)
 List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by \verb{;} if there are multiple and \code{NA} if there are none).
 }
 \description{
-This unexported helper function internally handles the provided use case
+This unexported helper function internally handles the provided use case.
 }
 \examples{
 \dontrun{

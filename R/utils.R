@@ -51,7 +51,8 @@ pkg_root <- function(pkg_path=".", ...) {
 
 #' Handle the use case
 #'
-#' This unexported helper function internally handles the provided use case
+#' @description
+#' This unexported helper function internally handles the provided use case.
 #'
 #' @param use_case The specified use case.
 #'
