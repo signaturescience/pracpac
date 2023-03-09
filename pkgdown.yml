@@ -1,0 +1,11 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  basic-usage: basic-usage.html
+  use-cases: use-cases.html
+last_built: 2023-03-09T13:25Z
+urls:
+  reference: https://signaturescience.github.io/pracpac/reference
+  article: https://signaturescience.github.io/pracpac/articles
+
