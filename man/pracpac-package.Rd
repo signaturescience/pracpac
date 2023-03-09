@@ -14,6 +14,8 @@ Streamline the creation of Docker images with R packages and dependencies embedd
 Useful links:
 \itemize{
   \item \url{https://signaturescience.github.io/pracpac/}
+  \item \url{https://github.com/signaturescience/pracpac/}
+  \item Report bugs at \url{https://github.com/signaturescience/pracpac/issues}
 }
 
 }

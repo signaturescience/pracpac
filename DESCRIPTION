@@ -34,4 +34,5 @@ Suggests:
     withr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://signaturescience.github.io/pracpac/
+URL: https://signaturescience.github.io/pracpac/, https://github.com/signaturescience/pracpac/
+BugReports: https://github.com/signaturescience/pracpac/issues
