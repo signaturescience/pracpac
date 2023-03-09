@@ -159,7 +159,7 @@ build_image(pkg_path = path(tmp, "example", "hellow"))
 In this case, the image will be built with `build_image()` default behavior of tagging with the package name and version:
 
 ```{r, eval=FALSE}
-system("docker images | grep 'hellow'")
+system("docker images")
 ```
 
 ```

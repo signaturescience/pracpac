@@ -142,7 +142,6 @@ And an `renv.lock` with the dependencies of `hellow` (in this case just the `pra
 
 The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more detail in other vignettes). Another option is to specify an `img_path` defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
 
-<!-- TODO: check that this works on Windows -->
 ```{r, eval = FALSE}
 use_docker(pkg_path = ".", img_path = "../.")
 ```
@@ -176,9 +175,8 @@ Note that if the user has specified a different `img_path` in `use_docker()`, th
 
 By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
 
-<!-- TODO: check that this works on Windows -->
 ```{r, eval=FALSE}
-system("docker images | grep 'hellow'")
+system("docker images")
 ```
 
 ```
