@@ -7,36 +7,49 @@
 add_dockerfile(
   pkg_path = ".",
   img_path = NULL,
-  base_image = "rocker/r-ver:latest",
   use_renv = TRUE,
-  usecase = NULL,
+  use_case = "default",
+  base_image = NULL,
   repos = NULL
 )
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory. Default is \code{"."} for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a subdirectory of the \code{pkg_path}.}
 
-\item{base_image}{Name of base image to start \code{FROM} in Dockerfile}
+\item{use_renv}{Logical; use renv? Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
 
-\item{use_renv}{Logical as to whether or not to use renv. Defaults to \code{TRUE}. If \code{FALSE}, package dependencies are scraped from the \code{DESCRIPTION} file and the most recent versions will be installed in the image.}
+\item{use_case}{Name of the use case. Defaults to \code{"default"}, which only uses the base boilerplate. See \code{vignette("use-cases", package="pracpac")} for other use cases (e.g., \code{shiny}, \code{rstudio}, \code{pipeline}).}
 
-\item{usecase}{One of the use case templates in inst/templates. Defaults to \code{NULL} -- no additional Dockerfile boilerplate is added.}
+\item{base_image}{Name of the base image to start \code{FROM}. Default is \code{NULL} and the base image will be derived based on \code{use_case.} Optionally override this by setting the name of the base image (including tag if desired).}
 
 \item{repos}{Option to override the repos used for installing packages with \code{renv} by passing name of repository. Only used if \code{use_renv = TRUE}. Default is \code{NULL} meaning that the repos specified in \code{renv} lockfile will remain as-is and not be overridden.}
 }
 \value{
-(Invisible) A list of package info returned by \link{pkginfo}. Also called for side-effect, creates Dockerfile.
+Invisibly returns a list of package info returned by \link{pkg_info}. Primarily called for side-effect to create Dockerfile.
 }
 \description{
-Add a Dockerfile to the docker directory
+Adds a Dockerfile to the docker directory created by \link{create_docker_dir}.
+Allows for specification of several preset use cases, whether or not use use
+renv to manage dependencies, and optional overriding the base image.
+}
+\details{
+This function is run as part of \link{use_docker} but can be used on its own.
+
+See \code{vignette("use-cases", package="pracpac")} for details on use cases.
 }
 \examples{
 \dontrun{
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=TRUE, usecase="helloworld")
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE)
-add_dockerfile(base_image="rocker/r-ver:4.2.2", use_renv=FALSE, usecase="helloworld")
+# Default: FROM rocker/r-ver:latest with no additional template
+add_dockerfile()
+# Specify tidyverse frozen at a specific version
+add_dockerfile(base_image="rocker/tidyverse:4.2.2")
+# RStudio template
+add_dockerfile(use_case="shiny")
+# Shiny template, NOT using renv
+add_dockerfile(use_case="shiny", use_renv=FALSE)
+# Pipeline template, changing the default repos
+add_dockerfile(use_case="pipeline", repos="https://cloud.r-project.org")
 }
 }

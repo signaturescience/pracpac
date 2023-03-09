@@ -4,23 +4,34 @@
 \alias{build_image}
 \title{Build a Docker image}
 \usage{
-build_image(pkg_path = ".", img_path = NULL, cache = TRUE)
+build_image(
+  pkg_path = ".",
+  img_path = NULL,
+  cache = TRUE,
+  tag = NULL,
+  build = TRUE
+)
 }
 \arguments{
-\item{pkg_path}{Path to the package directory}
+\item{pkg_path}{Path to the package directory. Default is \code{"."} for the current working directory, which assumes developer is working in R package root. However, this can be set to another path as needed.}
 
-\item{img_path}{Path to the write the docker image definition contents; default \code{NULL} will use \verb{docker/} as a sub-directory of the "pkg_path"}
+\item{img_path}{Path to the write the docker image definition contents. The default \code{NULL} will use \verb{docker/} as a subdirectory of the \code{pkg_path}.}
 
 \item{cache}{Logical; should caching be used? Default \code{TRUE}. Set to \code{FALSE} to use \code{--no-cache} in \verb{docker build}.}
+
+\item{tag}{Image tag to use; default is \code{NULL} and the image will be tagged with package name version from \link{pkg_info}.}
+
+\item{build}{Logical as to whether or not the image should be built. Default is \code{TRUE}, and if \code{FALSE} the \verb{docker build} command will be messaged.  Setting \code{build=FALSE} could be useful if additional \verb{docker build} options or different tags are desired. In either case the \verb{docker build} command will be returned invisibly.}
 }
 \value{
-(Invisible) The \verb{docker build} command. Called for its side effects, which runs the \verb{docker build} as a system command.
+Invisibly returns the \verb{docker build} command. Primarily called for its side effects, which runs the \verb{docker build} as a system command.
 }
 \description{
-Build a Docker image created by FIXME function name.
+Builds a Docker image created by \link{use_docker} or \link{add_dockerfile}. This function is run as part of \link{use_docker} when \code{build = TRUE} is set, but can be used on its own.
 }
 \examples{
 \dontrun{
 build_image()
+build_image(build=FALSE)
 }
 }

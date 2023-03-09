@@ -1,6 +1,6 @@
 Package: pracpac
 Title: Practical R Packaging in Docker
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Stephen",
              family = "Turner",
@@ -9,12 +9,12 @@ Authors@R:
       person(given = "VP",
              family = "Nagraj",
              role = c("cre", "aut"),
-             email="pnagraj@signaturescience.com",
+             email="nagraj@nagraj.net",
              comment = c(ORCID = "0000-0003-0060-566X")),
       person("Signature Science, LLC.",
              role = "cph"))
-Description: This package streamlines the creation of Docker images with R packages and dependencies embedded. It provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
-License: GPL (>= 3)
+Description: Streamline the creation of Docker images with R packages and dependencies embedded. The pracpac package provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -25,3 +25,13 @@ Imports:
     rprojroot,
     renv,
     pkgbuild
+Depends: 
+    R (>= 2.10)
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0),
+    withr
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://signaturescience.github.io/pracpac/

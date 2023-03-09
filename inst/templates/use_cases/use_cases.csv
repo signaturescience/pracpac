@@ -1,0 +1,5 @@
+use_case,template,base_image,assets
+default,NA,rocker/r-ver:latest,NA
+pipeline,templates/use_cases/pipeline/pipeline.dockerfile,rocker/r-ver:latest,templates/use_cases/pipeline/assets/run.sh;templates/use_cases/pipeline/assets/pre.R;templates/use_cases/pipeline/assets/post.R
+shiny,templates/use_cases/shiny/shiny.dockerfile,rocker/shiny:latest,templates/use_cases/shiny/assets/app.R
+rstudio,templates/use_cases/rstudio/rstudio.dockerfile,rocker/rstudio:latest,NA

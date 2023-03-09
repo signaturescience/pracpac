@@ -1,0 +1,187 @@
+---
+title: "Basic Usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{basic-usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+## Overview
+
+R packages are the fundamental units of reproducible code in R.[^rpkgs] Docker is a virtualization technology that can be used to bundle an application and all its dependencies in a virtual container that can be distributed and deployed to run reproducibly on any Windows, Linux or MacOS operating system. When used in tandem, these tools can help developers deliver software with an inherently reproducible set of dependencies, including specific dependent R packages. An R package developer may consider building a docker image that contains their R package. This approach can be useful in various scenarios, one of which is a case where the R package includes functions to pre- and post-process data that is also processed by a domain-specific tool written in another language (i.e., something that couldn't be included as an R package dependency). 
+
+We developed `pracpac` with a goal of providing intuitive functions for developers to use custom R packages and Docker together. The `pracpac` package is conceptually inspired by packages like `devtools` and `usethis`, which dramatically reduce the technical burden of R package development. With `pracpac`, users can easily create templates of the necessary files and directory structure to build a Docker image that contains their R package and specific dependency packages, with versions optionally frozen via `renv`.
+
+[^rpkgs]: Hadley Wickham and Jenny Bryan. _R Packages (2e)_. <https://r-pkgs.org/>.
+
+## Terminology
+
+It may be useful to clarify Docker terminology used throughout:
+
+- **Image**: Snapshot built to define *container* contents
+- **Container**: Instantiated *image* that can be run on the host
+
+For more information on Docker installation, terminology, and usage see [https://docs.docker.com/](https://docs.docker.com/).
+
+## Using `pracpac`
+
+The `prapcac` package is designed to do two things:
+
+1. Template files/directories for a Docker image containing an R package
+2. Build the Docker image
+
+These features are delivered in the `use_docker()` and `build_image()` functions.
+
+### `use_docker()`
+
+The `pracpac` package includes individual functions to add a template Dockerfile, build the source of an R package to be added to the Docker image, and define dependencies for that package in an `renv` lock file. All files created are moved to the Docker directory specified by the user, which as a default is set to a `docker/` subdirectory of the R package. For convenience, the `pracpac` functionality is wrapped into the `use_docker()` function.
+
+The example that follows uses the `hellow` R package that ships with `pracpac`. With `pracpac` installed, the `hellow` source code can be found with the following command:
+
+```{r, eval=FALSE}
+system.file("hellow", package = "pracpac")
+```
+
+To motivate the basic usage we will assume that the developer is working within the `hellow` R project (i.e., with the working directory at the package root):
+
+```
+├── DESCRIPTION
+├── LICENSE
+├── LICENSE.md
+├── NAMESPACE
+├── R
+│   └── hello.R
+├── hellow.Rproj
+└── man
+    └── isay.Rd
+```
+
+From the root of this directory, the developer could use `use_docker()` to create the template for a Docker image that contains the `hellow` R package:
+
+```{r, eval=FALSE}
+use_docker()
+```
+
+
+```
+├── DESCRIPTION
+├── LICENSE
+├── LICENSE.md
+├── NAMESPACE
+├── R
+│   └── hello.R
+├── docker
+│   ├── Dockerfile
+│   ├── hellow_0.1.0.tar.gz
+│   └── renv.lock
+├── hellow.Rproj
+└── man
+    └── isay.Rd
+```
+
+With defaults set, this function will create a `Dockerfile` with the following contents:
+
+```Dockerfile
+FROM rocker/r-ver:latest
+
+## copy the renv.lock into the image
+COPY renv.lock /renv.lock
+
+## install renv and biocmanager
+RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos="https://cloud.r-project.org")'
+
+## set the renv path var to the renv lib
+ENV RENV_PATHS_LIBRARY renv/library
+
+## restore packages from renv.lock
+RUN Rscript -e 'renv::restore(lockfile = "/renv.lock", repos = NULL)'
+
+## copy in built R package
+COPY hellow_0.1.0.tar.gz /hellow_0.1.0.tar.gz
+
+## run script to install built R package from source
+RUN Rscript -e "install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NULL)"
+```
+
+And an `renv.lock` with the dependencies of `hellow` (in this case just the `praise` package):
+
+```json
+{
+  "R": {
+    "Version": "4.0.2",
+    "Repositories": [
+      {
+        "Name": "CRAN",
+        "URL": "https://cran.rstudio.com"
+      }
+    ]
+  },
+  "Packages": {
+    "praise": {
+      "Package": "praise",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a555924add98c99d2f411e37e7d25e9f",
+      "Requirements": []
+    }
+  }
+}
+```
+
+The `use_docker()` defaults will produce the behavior described above. However, the functionality can be customized further. For example, the user can optionally specify a use case to create variants of template files (described in more detail in other vignettes). Another option is to specify an `img_path` defining where the files used to build the Docker image should be written, which may be useful for developers who prefer not to build images within the R package root. The following shows how this could be used to write the Docker template files to the directory above the package root:
+
+```{r, eval = FALSE}
+use_docker(pkg_path = ".", img_path = "../.")
+```
+
+```
+├── Dockerfile
+├── hellow
+│   ├── DESCRIPTION
+│   ├── LICENSE
+│   ├── LICENSE.md
+│   ├── NAMESPACE
+│   ├── R
+│   │   └── hello.R
+│   ├── hellow.Rproj
+│   └── man
+│       └── isay.Rd
+├── hellow_0.1.0.tar.gz
+```
+
+For a full list of options see `?use_docker`.
+
+### `build_image()`
+
+The `use_docker()` function includes an option to "build_image". By default this parameter is set to `FALSE`. The `pracpac` templates are likely to require some editing by the developer. However, after editing the `Dockerfile` and any constituent files to be added the user can call `build_image()` to build the Docker image:
+
+```{r, eval=FALSE}
+build_image()
+```
+
+Note that if the user has specified a different `img_path` in `use_docker()`, then the same path needs to be used with `build_image()`.
+
+By default the image will be built and tagged with the name of the R package and a "latest" and version suffix:
+
+```{r, eval=FALSE}
+system("docker images")
+```
+
+```
+hellow                            0.1.0        e1a9bc2ebbb5   15 seconds ago   828MB
+hellow                            latest       e1a9bc2ebbb5   15 seconds ago   828MB
+```
+
+The tagging scheme can be altered with the "tag" argument. The `build_image()` function also includes a parameter to leverage the Docker build "cache" feature. For more details see `?build_image`. To use additional build parameters the user can call the Docker daemon directly on the host or use a client like [`stevedore`](https://CRAN.R-project.org/package=stevedore).

@@ -6,3 +6,11 @@ pracpac_*.tar.gz
 pracpac.tar.gz
 ^CITATION\.cff$
 ^docker$
+^data-raw$
+^doc$
+^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^cran-comments\.md$

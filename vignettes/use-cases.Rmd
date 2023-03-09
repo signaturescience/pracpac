@@ -1,0 +1,213 @@
+---
+title: "Use Cases"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{use-cases}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = ""
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+## Overview
+
+The `pracpac` package enables developers to easily incorporate R packages into Docker images. What follows is a reproducible demonstration of select `pracpac` use cases. Note that this vignette is by no means exhaustive, and the pattern of delivering an R package within a Docker image[^terminology] may prove useful in other scenarios as well.
+
+[^terminology]: Note that we discuss Docker terminology in the "Basic Usage" vignette: `vignette("basic-usage", package = "pracpac")`
+
+## Pipeline
+
+The "pipeline" use case describes a scenario where a developer may want to use functions from a custom R package to perform processing on the input and/or output of a domain-specific tool. There are countless software packages that will not be implemented directly in R. Developers who want to leverage these tools in a reproducible context may choose to do so by using Docker. If the tool(s) in the workflow require(s) upstream or downstream processing that is best suited to R code, then the developer could write an R package and distribute everything together in Docker. Besides defining reproducible dependencies, Docker allows the developer to pass "instructions" for how the container should behave. These can include scripts to run when the container is launched.
+
+To demonstrate this use case we use the `hellow` R package source code that ships with `pracpac`. We write a pipeline to use the `isay()` function from `hellow` to randomly select a flavor of "Hello". The output is piped to a command-line tool called `translate-shell`[^ts] that translates the text to another language specified by the user (by default French). When the container runs, the pipeline is executed and outputs the translated results.
+
+[^ts]: https://github.com/soimort/translate-shell
+
+### Setting up Docker template
+
+We will first move the example `hellow` package to temporary location:
+
+```{r, eval=FALSE}
+library(pracpac)
+library(fs)
+
+## specify the temp directory
+tmp <- tempdir()
+## create a subdirectory of temp called "example"
+dir_create(path = path(tmp, "example"))
+## copy the example hellow package to the temp directory
+dir_copy(path = system.file("hellow", package = "pracpac"), new_path = path(tmp, "example"))
+```
+
+The new directory includes the R package source contents of `hellow`:
+
+<!-- NOTE: eval=FALSE to use precooked results in the verbatim chunk that follows -->
+<!-- NOTE: We will need to re-run and update this with future changes in the code -->
+
+```{r, eval=FALSE}
+dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
+```
+
+```
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── hello.R
+└── man
+    └── isay.Rd
+```
+
+We can use `use_docker(..., use_case="pipeline")` to create the template of files for building the Docker image:
+
+<!-- NOTE: eval=FALSE to use precooked results in the verbatim chunk that follows -->
+<!-- NOTE: We will need to re-run and update this with future changes in the code -->
+
+```{r, results='hide', eval=FALSE}
+use_docker(pkg_path = path(tmp, "example", "hellow"), use_case = "pipeline")
+```
+
+```
+Using renv. Dockerfile will build from renv.lock in /tmp/RtmpsMexB6/example/hellow/docker.
+Using template for the specified use case: pipeline
+Writing dockerfile: /tmp/RtmpsMexB6/example/hellow/docker/Dockerfile
+The directory will be created at /tmp/RtmpsMexB6/example/hellow/docker/assets 
+Assets for the specified use case (pipeline) will be copied there.
+The specified use case (pipeline) includes the following asset: run.sh
+The specified use case (pipeline) includes the following asset: pre.R
+The specified use case (pipeline) includes the following asset: post.R
+Building package hellow version 0.1.0 in /tmp/RtmpsMexB6/example/hellow/hellow_0.1.0.tar.gz
+```
+
+The directory now contains the `docker/` subdirectory, which has another subdirectory called `assets/` for the templated pipeline scripts:
+
+<!-- NOTE: eval=FALSE to use precooked results in the verbatim chunk that follows -->
+<!-- NOTE: We will need to re-run and update this with future changes in the code -->
+
+```{r, eval=FALSE}
+dir_tree(path(tmp, "example", "hellow"), recurse = TRUE)
+```
+
+```
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── hello.R
+├── docker
+│   ├── Dockerfile
+│   ├── assets
+│   │   ├── post.R
+│   │   ├── pre.R
+│   │   └── run.sh
+│   ├── hellow_0.1.0.tar.gz
+│   └── renv.lock
+└── man
+    └── isay.Rd
+```
+
+The files need to be edited as follows:
+
+```{r, eval=FALSE, echo=FALSE}
+# actually make those changes! don't echo and don't eval. because you're
+# creating the file at tmp from the template, which includes post.R, you can't
+# just run this code interactively because post.R won't exist, the actual
+# dockerfile at tmp remains unchanged so copy in the "final" dockerfile and
+# assets into the tmp dir so the docker build works properly below when running
+# interactively, without having to actually monkey with the files in tmp, and so
+# after the container is built it actually has the assets, entrypoint, etc.
+file_copy(system.file("example/hellow/Dockerfile", package = "pracpac"), path(tmp, "example/hellow/docker/Dockerfile"), overwrite=TRUE)
+file_copy(system.file("example/hellow/pre.R", package = "pracpac"), path(tmp, "example/hellow/docker/assets/pre.R"), overwrite=TRUE)
+file_copy(system.file("example/hellow/run.sh", package = "pracpac"), path(tmp, "example/hellow/docker/assets/run.sh"), overwrite=TRUE)
+```
+
+#### `Dockerfile`
+
+```{bash eval=FALSE, echo=TRUE, code=readLines(system.file("example", "hellow", "Dockerfile", package = "pracpac"))}
+```
+
+#### `run.sh`
+
+```{bash eval=FALSE, echo=TRUE, code=readLines(system.file("example", "hellow", "run.sh", package = "pracpac"))}
+```
+
+#### `pre.R`
+
+```{r eval=FALSE, echo=TRUE, code=readLines(system.file("example", "hellow", "pre.R", package = "pracpac"))}
+```
+
+Note that in this case the `docker/assets/post.R` template is not necessary, so we can delete it:
+
+```{r, eval=FALSE}
+file_delete(path(tmp, "example", "hellow", "docker", "assets", "post.R"))
+```
+
+### Building the image
+
+With the template files created and edited as described above, we can build the image:
+
+```{r, eval=FALSE}
+build_image(pkg_path = path(tmp, "example", "hellow"))
+```
+
+In this case, the image will be built with `build_image()` default behavior of tagging with the package name and version:
+
+```{r, eval=FALSE}
+system("docker images")
+```
+
+```
+hellow                            0.1.0        e1a9bc2ebbb5   15 seconds ago   959MB
+hellow                            latest       e1a9bc2ebbb5   15 seconds ago   959MB
+```
+
+### Running the container
+
+Now we can run the container, either from a Docker client directly on the host or from within R:
+
+```{r, eval = FALSE}
+system("docker run --rm hellow:latest")
+```
+
+```
+You are peachy!
+[1] "Hello"
+
+[1] "Bonjour"
+
+Translations of [1] "Hello"
+[ English -> Français ]
+
+[1] "Hello"
+    [1] "Bonjour", [1] "Salut"
+```
+
+```{r, eval = FALSE}
+system("docker run --rm hellow:latest :es")
+```
+
+```
+You are groundbreaking!
+[1] "What's up?"
+
+[1] "¿Qué pasa?"
+
+Translations of [1] "What's up?"
+[ English -> Español ]
+
+[1] "What's up?"
+    [1] "¿Qué pasa?", [1] "¿Qué hay de nuevo?"
+```
+
+```{r, echo=FALSE, eval=FALSE}
+## cleanup needed in case on vignette rebuild the same tmp directory is picked
+dir_delete(path = path(tmp, "example"))
+```
+
+
