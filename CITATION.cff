@@ -6,11 +6,11 @@
 cff-version: 1.2.0
 message: 'To cite package "pracpac" in publications use:'
 type: software
-license: GPL-3.0-or-later
+license: MIT
 title: 'pracpac: Practical R Packaging in Docker'
-version: 0.0.0.9000
-abstract: This package streamlines the creation of Docker images with R packages and
-  dependencies embedded. It provides a usethis-like interface to creating Dockerfiles
+version: 0.1.0
+abstract: Streamline the creation of Docker images with R packages and dependencies
+  embedded. The pracpac package provides a usethis-like interface to creating Dockerfiles
   with dependencies managed by renv.
 authors:
 - family-names: Turner
@@ -18,12 +18,13 @@ authors:
   orcid: https://orcid.org/0000-0001-9140-9028
 - family-names: Nagraj
   given-names: VP
-  email: pnagraj@signaturescience.com
+  email: nagraj@nagraj.net
   orcid: https://orcid.org/0000-0003-0060-566X
+url: https://signaturescience.github.io/pracpac/
 contact:
 - family-names: Nagraj
   given-names: VP
-  email: pnagraj@signaturescience.com
+  email: nagraj@nagraj.net
   orcid: https://orcid.org/0000-0003-0060-566X
 references:
 - type: software
@@ -82,4 +83,130 @@ references:
     given-names: Kirill
     email: krlmlr+r@mailbox.org
     orcid: https://orcid.org/0000-0002-1416-3412
+  year: '2023'
+- type: software
+  title: renv
+  abstract: 'renv: Project Environments'
+  notes: Imports
+  url: https://rstudio.github.io/renv/
+  repository: https://CRAN.R-project.org/package=renv
+  authors:
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@rstudio.com
+  year: '2023'
+- type: software
+  title: pkgbuild
+  abstract: 'pkgbuild: Find Tools Needed to Build R Packages'
+  notes: Imports
+  url: https://github.com/r-lib/pkgbuild
+  repository: https://CRAN.R-project.org/package=pkgbuild
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2023'
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+  version: '>= 2.10'
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/rmarkdown/
+  repository: https://CRAN.R-project.org/package=rmarkdown
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@rstudio.com
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@rstudio.com
+  - family-names: Luraschi
+    given-names: Javier
+    email: javier@rstudio.com
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@rstudio.com
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@rstudio.com
+  - family-names: Chang
+    given-names: Winston
+    email: winston@rstudio.com
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@rstudio.com
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2023'
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2023'
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'
+  version: '>= 3.0.0'
+- type: software
+  title: withr
+  abstract: 'withr: Run Code ''With'' Temporarily Modified Global State'
+  notes: Suggests
+  url: https://withr.r-lib.org
+  repository: https://CRAN.R-project.org/package=withr
+  authors:
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  - family-names: Müller
+    given-names: Kirill
+    email: krlmlr+r@mailbox.org
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevinushey@gmail.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Chang
+    given-names: Winston
   year: '2023'
