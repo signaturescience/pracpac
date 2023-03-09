@@ -13,3 +13,4 @@ pracpac.tar.gz
 ^docs$
 ^pkgdown$
 ^\.github$
+^cran-comments\.md$
