@@ -8,7 +8,8 @@ renv_deps(
   pkg_path = ".",
   img_path = NULL,
   other_packages = NULL,
-  overwrite = TRUE
+  overwrite = TRUE,
+  consent_renv = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ renv_deps(
 \item{other_packages}{Vector of other packages to be included in \code{renv} lock file; default is \code{NULL}.}
 
 \item{overwrite}{Logical; should an existing lock file should be overwritten? Default is \code{TRUE}.}
+
+\item{consent_renv}{Logical; give renv consent in this session with \code{options(renv.consent = TRUE)}? Default is \code{TRUE}. See \link[renv:consent]{renv::consent} for details.}
 }
 \value{
 Invisibly returns a list of package info returned by \link{pkg_info}. Primarily called for side effect. Writes an \code{renv} lock file to the docker/ directory.

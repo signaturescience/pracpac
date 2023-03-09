@@ -204,6 +204,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' @param img_path Path to the write the docker image definition contents. The default `NULL` will use `docker/` as a subdirectory of the `pkg_path`.
 #' @param other_packages Vector of other packages to be included in `renv` lock file; default is `NULL`.
 #' @param overwrite Logical; should an existing lock file should be overwritten? Default is `TRUE`.
+#' @param consent_renv Logical; give renv consent in this session with `options(renv.consent = TRUE)`? Default is `TRUE`. See [renv::consent] for details.
 #'
 #' @return Invisibly returns a list of package info returned by [pkg_info]. Primarily called for side effect. Writes an `renv` lock file to the docker/ directory.
 #'
@@ -216,7 +217,12 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
 #' # Add additional packages not explicitly required by your package
 #' renv_deps(other_packages=c("shiny", "knitr"))
 #' }
-renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, overwrite = TRUE) {
+renv_deps <- function(pkg_path = ".", img_path = NULL, other_packages = NULL, overwrite = TRUE, consent_renv=TRUE) {
+
+  # Consent renv
+  if (consent_renv) {
+    options(renv.consent = TRUE)
+  }
 
   # Get canonical path
   pkg_path <- fs::path_real(pkg_path)
@@ -399,6 +405,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' @param repos Option to override the repos used for installing packages with `renv` by passing name of repository. Only used if `use_renv = TRUE`. Default is `NULL` meaning that the repos specified in `renv` lockfile will remain as-is and not be overridden.
 #' @param overwrite_assets Logical; should existing asset files should be overwritten? Default is `TRUE`.
 #' @param overwrite_renv Logical; should an existing lock file should be overwritten? Default is `TRUE`; ignored if `use_renv = TRUE`.
+#' @param consent_renv Logical; give renv consent in this session with `options(renv.consent = TRUE)`? Default is `TRUE`. See [renv::consent] for details.
 #'
 #' @return Invisibly returns a list with information about the package (`$info`) and
 #'   the `docker build` command (`$buildcmd`). Primarily called for side effect.
@@ -424,7 +431,8 @@ use_docker <- function(pkg_path = ".",
                        build = FALSE,
                        repos = NULL,
                        overwrite_assets = TRUE,
-                       overwrite_renv = TRUE) {
+                       overwrite_renv = TRUE,
+                       consent_renv = TRUE) {
 
   ## check the package path
   info <- pkg_info(pkg_path)
@@ -445,7 +453,7 @@ use_docker <- function(pkg_path = ".",
 
   ## if using renv then make sure the renv_deps runs and outputs lockfile in docker/ dir
   if(use_renv) {
-    renv_deps(pkg_path = pkg_path, img_path = img_path, other_packages = other_packages, overwrite = overwrite_renv)
+    renv_deps(pkg_path = pkg_path, img_path = img_path, other_packages = other_packages, overwrite = overwrite_renv, consent_renv=consent_renv)
   }
 
   ## add the dockerfile to the docker/ dir
