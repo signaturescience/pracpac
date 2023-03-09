@@ -38,7 +38,7 @@ devtools::install_github("signaturescience/pracpac", build_vignettes = TRUE)
 Detailed documentation is available in the [basic
 usage](https://signaturescience.github.io/pracpac/articles/basic-usage.html)
 and [use
-cases](https://signaturescience.github.io/pracpac/articles/basic-usage.html)
+cases](https://signaturescience.github.io/pracpac/articles/use-cases.html)
 vignettes:
 
 ``` r
@@ -121,5 +121,5 @@ install system libraries, or copy in Shiny app or pipeline-specific
 code. See the [help page for
 `?use_docker`](https://signaturescience.github.io/pracpac/reference/use_docker.html)
 and the [use cases
-vignette](https://signaturescience.github.io/pracpac/articles/basic-usage.html)
+vignette](https://signaturescience.github.io/pracpac/articles/use-cases.html)
 (`vignette("use-cases", package="pracpac")`) for details.

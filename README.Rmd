@@ -38,7 +38,7 @@ devtools::install_github("signaturescience/pracpac", build_vignettes = TRUE)
 
 ## Example
 
-Detailed documentation is available in the [basic usage](https://signaturescience.github.io/pracpac/articles/basic-usage.html) and [use cases](https://signaturescience.github.io/pracpac/articles/basic-usage.html) vignettes:
+Detailed documentation is available in the [basic usage](https://signaturescience.github.io/pracpac/articles/basic-usage.html) and [use cases](https://signaturescience.github.io/pracpac/articles/use-cases.html) vignettes:
 
 ```{r, eval=FALSE}
 vignette("basic-usage", package="pracpac")
@@ -99,4 +99,4 @@ And an `renv.lock` with the dependencies of `hellow` (in this case just the `pra
 }
 ```
 
-By default, `use_docker()` does not actually build the image. You can build the image with `build_image()` after running `use_docker()`, or in one step using `use_docker(build=TRUE)`. This two-step procedure is useful because other use cases may require edits to the Dockerfile to install system libraries, or copy in Shiny app or pipeline-specific code. See the [help page for `?use_docker`](https://signaturescience.github.io/pracpac/reference/use_docker.html) and the [use cases vignette](https://signaturescience.github.io/pracpac/articles/basic-usage.html) (`vignette("use-cases", package="pracpac")`) for details.
+By default, `use_docker()` does not actually build the image. You can build the image with `build_image()` after running `use_docker()`, or in one step using `use_docker(build=TRUE)`. This two-step procedure is useful because other use cases may require edits to the Dockerfile to install system libraries, or copy in Shiny app or pipeline-specific code. See the [help page for `?use_docker`](https://signaturescience.github.io/pracpac/reference/use_docker.html) and the [use cases vignette](https://signaturescience.github.io/pracpac/articles/use-cases.html) (`vignette("use-cases", package="pracpac")`) for details.
