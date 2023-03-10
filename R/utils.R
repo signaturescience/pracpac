@@ -27,8 +27,12 @@ pkg_info <- function(pkg_path=".", ...) {
   descfile <- fs::path(pkg_root, "DESCRIPTION")
 
   # Get package dependencies
-  pkgdeps <- strsplit(as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports, split=",\\n")[[1]]
-
+  imports <- as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports
+  if (is.null(imports)) {
+    pkgdeps <- character(0)
+  } else {
+    pkgdeps <- strsplit(imports, split=",\\n")[[1]]
+  }
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
   pkgver <- strsplit(grep("^Version:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
