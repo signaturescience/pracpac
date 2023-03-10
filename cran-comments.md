@@ -13,7 +13,7 @@
     - Fedora Linux, R-devel, clang, gfortran
         - 0 errors | 0 warnings | 2 notes
         - NOTE: New submission
-        - NOTE: Possibly misspelled words in DESCRIPTION (Dockerfiles, renv, usethis). These are correctly spelled.
+        - NOTE: Possibly misspelled words in DESCRIPTION (Dockerfiles, pracpac, renv, usethis). These are correctly spelled.
     - Ubuntu Linux 20.04.1 LTS, R-release, GCC
         - 0 errors | 0 warnings | 2 notes
         - Same notes as above
