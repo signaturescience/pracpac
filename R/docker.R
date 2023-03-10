@@ -108,7 +108,11 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
   info <- pkg_info(pkg_path)
 
   # Turn the string vector: c("a", "b", "c") to the single element string "'a','b','c'"
-  pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
+  if (length(info$pkgdeps==0L)) {
+    pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
+  } else {
+    pkgs <- character(0)
+  }
 
   ## if the image path is not given then construct path as subdirectory of pkg
   ## otherwise use the specified image path
