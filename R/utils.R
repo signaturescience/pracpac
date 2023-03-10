@@ -26,9 +26,17 @@ pkg_info <- function(pkg_path=".", ...) {
   # Find the description file
   descfile <- fs::path(pkg_root, "DESCRIPTION")
 
-  # Get package dependencies
-  pkgdeps <- strsplit(as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports, split=",\\n")[[1]]
-
+  # Get package dependencies.
+  # If there are no dependencies, make pkgdeps an empty string, character(0).
+  # Both of these are perfectly valid, and result in nothing actually being installed:
+  # BiocManager::install(c(character(0)), update=FALSE, ask=FALSE)
+  # install.packages(c(character(0)))
+  imports <- as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports
+  if (is.null(imports)) {
+    pkgdeps <- character(0)
+  } else {
+    pkgdeps <- strsplit(imports, split=",\\n")[[1]]
+  }
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
   pkgver <- strsplit(grep("^Version:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
