@@ -36,7 +36,7 @@ For more information on Docker installation, terminology, and usage see [https:/
 
 ## Using `pracpac`
 
-The `prapcac` package is designed to do two things:
+The `pracpac` package is designed to do two things:
 
 1. Template files/directories for a Docker image containing an R package
 2. Build the Docker image
