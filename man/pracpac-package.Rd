@@ -4,11 +4,11 @@
 \name{pracpac-package}
 \alias{pracpac}
 \alias{pracpac-package}
-\title{pracpac: Practical R Packaging in Docker}
+\title{pracpac: Practical 'R' Packaging in 'Docker'}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Streamline the creation of Docker images with R packages and dependencies embedded. The pracpac package provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
+Streamline the creation of 'Docker' images with 'R' packages and dependencies embedded. The 'pracpac' package provides a 'usethis'-like interface to creating Dockerfiles with dependencies managed by 'renv'.
 }
 \seealso{
 Useful links:

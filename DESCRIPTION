@@ -1,5 +1,5 @@
 Package: pracpac
-Title: Practical R Packaging in Docker
+Title: Practical 'R' Packaging in 'Docker'
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Stephen",
@@ -13,7 +13,7 @@ Authors@R:
              comment = c(ORCID = "0000-0003-0060-566X")),
       person("Signature Science, LLC.",
              role = "cph"))
-Description: Streamline the creation of Docker images with R packages and dependencies embedded. The pracpac package provides a usethis-like interface to creating Dockerfiles with dependencies managed by renv.
+Description: Streamline the creation of 'Docker' images with 'R' packages and dependencies embedded. The 'pracpac' package provides a 'usethis'-like interface to creating Dockerfiles with dependencies managed by 'renv'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
