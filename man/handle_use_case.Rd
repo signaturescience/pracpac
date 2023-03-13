@@ -15,13 +15,3 @@ List of parsed information for the use case including, the name of the use case,
 \description{
 This unexported helper function internally handles the provided use case.
 }
-\examples{
-\dontrun{
-handle_use_case("default")
-handle_use_case("pipeline")
-handle_use_case("shiny")
-handle_use_case("rstudio")
-handle_use_case("no-such-use-case")
-}
-
-}

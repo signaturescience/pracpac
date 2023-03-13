@@ -54,13 +54,6 @@ pkg_info <- function(pkg_path=".", ...) {
 #' @param ... Arguments passed to [rprojroot::find_package_root_file].
 #' @return A file path of the package root. If no package is found at the root then the function will `stop` with an error message.
 #'
-#' @examples
-#' \dontrun{
-#' # This will succeed if this is a package
-#' pkg_root()
-#' # This will fail if this is not a package location
-#' pkg_root(tempdir())
-#' }
 pkg_root <- function(pkg_path=".", ...) {
   root <- try(rprojroot::find_package_root_file(path=pkg_path, ...), silent=TRUE)
   if (inherits(root, "try-error")) {
@@ -78,15 +71,6 @@ pkg_root <- function(pkg_path=".", ...) {
 #' @param use_case The specified use case.
 #'
 #' @return List of parsed information for the use case including, the name of the use case, path to Dockerfile template, base image, and path to assets (delimited by `;` if there are multiple and `NA` if there are none).
-#'
-#' @examples
-#' \dontrun{
-#' handle_use_case("default")
-#' handle_use_case("pipeline")
-#' handle_use_case("shiny")
-#' handle_use_case("rstudio")
-#' handle_use_case("no-such-use-case")
-#' }
 #'
 handle_use_case <- function(use_case) {
 
