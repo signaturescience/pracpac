@@ -26,9 +26,15 @@ Returns information about the current package in a list which can be passed to o
 }
 \examples{
 \dontrun{
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
 # This will succeed if this is a package
-pkg_info()
+pkg_info(pkg_path = file.path(tempdir(), "hellow"))
 # This will fail if this is not a package location
-pkg_info(tempdir())
+pkg_info(pkg_path = tempdir())
 }
 }

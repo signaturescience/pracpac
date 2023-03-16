@@ -46,7 +46,16 @@ See \code{vignette("use-cases", package="pracpac")} for details on use cases.
 }
 \examples{
 \dontrun{
-add_assets(use_case="shiny")
-add_assets(use_case="pipeline")
+
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
+# Add assets for shiny use case
+add_assets(pkg_path = file.path(tempdir(), "hellow"), use_case="shiny")
+# Add assets for pipeline use case
+add_assets(pkg_path = file.path(tempdir(), "hellow"), use_case="pipeline")
 }
 }

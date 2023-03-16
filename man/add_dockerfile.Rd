@@ -41,15 +41,28 @@ See \code{vignette("use-cases", package="pracpac")} for details on use cases.
 }
 \examples{
 \dontrun{
+
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
 # Default: FROM rocker/r-ver:latest with no additional template
-add_dockerfile()
-# Specify tidyverse frozen at a specific version
-add_dockerfile(base_image="rocker/tidyverse:4.2.2")
+# By default add_dockerfile requires you either to specify use_renv = FALSE
+# Or run renv_deps() prior to add_dockerfile()
+# The use_docker() wrapper runs these sequentially, and is recommended for most usage
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), use_renv = FALSE)
+# Specify tidyverse base image
+renv_deps(pkg_path = file.path(tempdir(), "hellow"))
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), base_image="rocker/tidyverse:4.2.2")
+# Specify different default repo
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), repos="https://cran.wustl.edu/")
 # RStudio template
-add_dockerfile(use_case="shiny")
-# Shiny template, NOT using renv
-add_dockerfile(use_case="shiny", use_renv=FALSE)
-# Pipeline template, changing the default repos
-add_dockerfile(use_case="pipeline", repos="https://cloud.r-project.org")
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), use_case="rstudio")
+# Shiny template
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), use_case = "shiny")
+# Pipeline template
+add_dockerfile(pkg_path = file.path(tempdir(), "hellow"), use_case="pipeline")
 }
 }

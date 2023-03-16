@@ -48,9 +48,15 @@ This function is run as part of \link{use_docker} but can be used on its own.
 }
 \examples{
 \dontrun{
-# Run using defaults: only gets current package dependencies
-renv_deps()
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
+# Run using defaults; only gets current package dependencies
+renv_deps(pkg_path = file.path(tempdir(), "hellow"))
 # Add additional packages not explicitly required by your package
-renv_deps(other_packages=c("shiny", "knitr"))
+renv_deps(pkg_path = file.path(tempdir(), "hellow"), other_packages=c("shiny", "knitr"))
 }
 }

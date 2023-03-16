@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Streamline the creation of 'Docker' images with 'R' packages and dependencies embedded. The 'pracpac' package provides a 'usethis'-like interface to creating Dockerfiles with dependencies managed by 'renv'.
+Streamline the creation of 'Docker' images with 'R' packages and dependencies embedded. The 'pracpac' package provides a 'usethis'-like interface to creating Dockerfiles with dependencies managed by 'renv'. The 'pracpac' functionality is described in Nagraj and Turner (2023) \doi{10.48550/arXiv.2303.07876}.
 }
 \seealso{
 Useful links:
