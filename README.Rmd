@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/signaturescience/pracpac/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/signaturescience/pracpac/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/pracpac)](https://CRAN.R-project.org/package=pracpac)
-<!-- [![arXiv](https://img.shields.io/badge/arXiv-XXXX.YYYYY-b31b1b.svg)](https://arxiv.org/abs/XXXX.YYYYY) -->
+[![arXiv](https://img.shields.io/badge/arXiv-2303.07876-b31b1b.svg)](https://arxiv.org/abs/2303.07876)
 <!-- badges: end -->
 
 **pracpac**: Practical R Packaging with Docker
