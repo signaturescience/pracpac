@@ -3,8 +3,8 @@ FROM {base_image}
 ## copy the renv.lock into the image
 COPY renv.lock /renv.lock
 
-## install renv and biocmanager
-RUN Rscript -e 'install.packages(c("renv","BiocManager"), repos={repos})'
+## install renv
+RUN Rscript -e 'install.packages(c("renv"))'
 
 ## set the renv path var to the renv lib
 ENV RENV_PATHS_LIBRARY renv/library

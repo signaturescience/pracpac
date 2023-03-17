@@ -4,7 +4,7 @@ FROM rocker/r-ver:latest
 COPY renv.lock /renv.lock
 
 ## install renv
-RUN Rscript -e 'install.packages(c("renv"), repos="https://cloud.r-project.org")'
+RUN Rscript -e 'install.packages(c("renv"))'
 
 ## set the renv path var to the renv lib
 ENV RENV_PATHS_LIBRARY renv/library
