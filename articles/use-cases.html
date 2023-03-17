@@ -194,7 +194,7 @@ templated pipeline scripts:</p>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> renv.lock /renv.lock</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">## install renv</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> Rscript <span class="at">-e</span> <span class="st">'install.packages(c("renv"), repos="https://cloud.r-project.org")'</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> Rscript <span class="at">-e</span> <span class="st">'install.packages(c("renv"))'</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">## set the renv path var to the renv lib</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">ENV</span> RENV_PATHS_LIBRARY renv/library</span>
@@ -206,7 +206,7 @@ templated pipeline scripts:</p>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> hellow_0.1.0.tar.gz /hellow_0.1.0.tar.gz</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">## run script to install built R package from source</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> Rscript <span class="at">-e</span> <span class="st">"install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NULL)"</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="ex">RUN</span> Rscript <span class="at">-e</span> <span class="st">'install.packages("/hellow_0.1.0.tar.gz", type="source", repos=NULL)'</span></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">## COPY in the pre processing R script and run shell script</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="ex">COPY</span> assets/pre.R /pre.R</span>
