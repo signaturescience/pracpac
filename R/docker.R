@@ -131,7 +131,7 @@ add_dockerfile <- function(pkg_path = ".", img_path = NULL, use_renv = TRUE, use
   # If info$pkgdeps is empty, create a string 'character(0)' that gets glued into the dockerfile template.
   # Note this must be a quoted string 'character(0)', not an empty string character(0), for the glue to work properly.
   if (length(info$pkgdeps==0L)) {
-    pkgs <- paste(paste0("'",info$pkgdeps,"'"), collapse=",")
+    pkgs <- paste(paste0('"', info$pkgdeps,'"'), collapse=',')
   } else {
     pkgs <- 'character(0)'
   }
