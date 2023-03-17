@@ -127,7 +127,7 @@ RUN Rscript -e 'renv::restore(lockfile = "/renv.lock", repos = NULL)'
 COPY hellow_0.1.0.tar.gz /hellow_0.1.0.tar.gz
 
 ## run script to install built R package from source
-RUN Rscript -e "install.packages('/hellow_0.1.0.tar.gz', type='source', repos=NULL)"
+RUN Rscript -e 'install.packages("/hellow_0.1.0.tar.gz", type='source', repos=NULL)'
 ```
 
 And an `renv.lock` with the dependencies of `hellow` (in this case just the `praise` package):
