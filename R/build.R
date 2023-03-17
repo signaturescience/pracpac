@@ -12,7 +12,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' build_pkg()
+#' # Specify path to example package source and copy to tempdir()
+#' # Note that in practice you do not need to copy to a tempdir()
+#' # And in fact it may be easiest to use pracpac relative to your package directory root
+#' ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+#' file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+#'
+#' # Build the example package from tempdir()
+#' build_pkg(pkg = file.path(tempdir(), "hellow"))
 #' }
 build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 
@@ -60,8 +67,20 @@ build_pkg <- function(pkg_path=".", img_path = NULL, ...) {
 #'
 #' @examples
 #' \dontrun{
-#' build_image()
-#' build_image(build=FALSE)
+#' # Specify path to example package source and copy to tempdir()
+#' # Note that in practice you do not need to copy to a tempdir()
+#' # And in fact it may be easiest to use pracpac relative to your package directory root
+#' ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+#' file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+#'
+#' # Run use_docker to create Docker directory and assets for the example package
+#' use_docker(pkg_path = file.path(tempdir(), "hellow"))
+#'
+#' # Build the image
+#' build_image(pkg_path = file.path(tempdir(), "hellow"))
+#' # Or construct the image build command without building
+#' build_cmd <- build_image(pkg_path = file.path(tempdir(), "hellow"), build=FALSE)
+#' build_cmd
 #' }
 build_image <- function(pkg_path=".", img_path=NULL, cache=TRUE, tag=NULL, build=TRUE) {
 

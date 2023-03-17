@@ -21,6 +21,13 @@ Builds a package source tar.gz using \link[pkgbuild:build]{pkgbuild::build} and 
 }
 \examples{
 \dontrun{
-build_pkg()
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
+# Build the example package from tempdir()
+build_pkg(pkg = file.path(tempdir(), "hellow"))
 }
 }

@@ -22,10 +22,17 @@ This function is run as part of \link{use_docker} but can be used on its own.
 }
 \examples{
 \dontrun{
-# Assuming current directory is the package directory, and create docker/ here
-create_docker_dir()
-# R package directory is not here, but create docker/ here
-create_docker_dir(pkg_path="./packages/myrpackage", img_path="./docker")
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
+# Assuming default behavior then docker/ will be created under source root
+create_docker_dir(pkg_path = file.path(tempdir(), "hellow"))
+
+# Alternatively you can specify another directory above, below, or beside package source
+create_docker_dir(pkg_path = file.path(tempdir(), "hellow"), img_path = file.path(tempdir(), "img"))
 }
 
 }

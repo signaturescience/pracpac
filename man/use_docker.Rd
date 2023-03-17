@@ -71,8 +71,20 @@ See \code{vignette("use-cases", package="pracpac")} for details on use cases.
 }
 \examples{
 \dontrun{
-use_docker()
-use_docker(use_renv=FALSE)
-use_docker(use_renv=FALSE, use_case="pipeline", base_image="rocker/tidyverse:4.2.2")
+
+# Specify path to example package source and copy to tempdir()
+# Note that in practice you do not need to copy to a tempdir()
+# And in fact it may be easiest to use pracpac relative to your package directory root
+ex_pkg_src <- system.file("hellow", package = "pracpac", mustWork = TRUE)
+file.copy(from = ex_pkg_src, to = tempdir(), recursive = TRUE)
+
+# Run use_docker to create Docker directory and assets for the example package
+use_docker(pkg_path = file.path(tempdir(), "hellow"))
+# To not use renv
+use_docker(pkg_path = file.path(tempdir(), "hellow"), use_renv=FALSE)
+# To specify a use case
+use_docker(pkg_path = file.path(tempdir(), "hellow"), use_case="pipeline")
+To overwrite the default base image
+use_docker(pkg_path = file.path(tempdir(), "hellow"), base_image="alpine:latest")
 }
 }

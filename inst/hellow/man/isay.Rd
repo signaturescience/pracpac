@@ -12,6 +12,3 @@ Flavor of "Hello".
 \description{
 Say hello
 }
-\examples{
-isay()
-}
