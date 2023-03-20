@@ -84,7 +84,7 @@ use_docker(pkg_path = file.path(tempdir(), "hellow"))
 use_docker(pkg_path = file.path(tempdir(), "hellow"), use_renv=FALSE)
 # To specify a use case
 use_docker(pkg_path = file.path(tempdir(), "hellow"), use_case="pipeline")
-To overwrite the default base image
+# To overwrite the default base image
 use_docker(pkg_path = file.path(tempdir(), "hellow"), base_image="alpine:latest")
 }
 }

@@ -472,7 +472,7 @@ add_assets <- function(pkg_path = ".", img_path = NULL, use_case = "default", ov
 #' use_docker(pkg_path = file.path(tempdir(), "hellow"), use_renv=FALSE)
 #' # To specify a use case
 #' use_docker(pkg_path = file.path(tempdir(), "hellow"), use_case="pipeline")
-#' To overwrite the default base image
+#' # To overwrite the default base image
 #' use_docker(pkg_path = file.path(tempdir(), "hellow"), base_image="alpine:latest")
 #' }
 use_docker <- function(pkg_path = ".",
