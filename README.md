@@ -23,7 +23,11 @@ applications, or entire data analysis pipelines.
 
 ## Installation
 
-<!-- Install from CRAN with: -->
+Install pracpac from CRAN with:
+
+``` r
+install.packages("pracpac")
+```
 
 Install the development version of pracpac from
 [GitHub](https://github.com/signaturescience/pracpac) with:
