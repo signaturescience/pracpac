@@ -31,9 +31,9 @@ To demonstrate this use case we use the `hellow` R package source code that ship
 
 [^ts]: https://github.com/soimort/translate-shell
 
-### Setting up Docker template
+### Setting up the Docker template
 
-We will first move the example `hellow` package to temporary location:
+We will first move the example `hellow` package to a temporary location:
 
 ```{r, eval=FALSE}
 library(pracpac)
@@ -41,10 +41,8 @@ library(fs)
 
 ## specify the temp directory
 tmp <- tempdir()
-## create a subdirectory of temp called "example"
-dir_create(path = path(tmp, "example"))
 ## copy the example hellow package to the temp directory
-dir_copy(path = system.file("hellow", package = "pracpac"), new_path = path(tmp, "example"))
+dir_copy(path = system.file("hellow", package = "pracpac"), new_path = path(tmp, "example", "hellow"))
 ```
 
 The new directory includes the R package source contents of `hellow`:
@@ -84,6 +82,8 @@ The specified use case (pipeline) includes the following asset: run.sh
 The specified use case (pipeline) includes the following asset: pre.R
 The specified use case (pipeline) includes the following asset: post.R
 Building package hellow version 0.1.0 in /tmp/RtmpsMexB6/example/hellow/hellow_0.1.0.tar.gz
+docker build command:
+docker build  --tag hellow:latest --tag hellow:0.1.0 /tmp/RtmpsMexB6/example/hellow/docker
 ```
 
 The directory now contains the `docker/` subdirectory, which has another subdirectory called `assets/` for the templated pipeline scripts:
@@ -211,3 +211,129 @@ dir_delete(path = path(tmp, "example"))
 ```
 
 
+## Shiny
+
+The "shiny" use case enables quick and intuitive templating of tools necessary to host a Shiny app in a Docker container. There are a number of ways that developers could ship a Shiny app inside an R package, and the example that follows demonstrates one strategy for doing so.
+
+To demonstrate this use case we use the `ocf` R package source code that ships with `pracpac`. The `ocf` package wraps a custom Shiny app that we've titled "Old Colorful". This app is intended to provide basic motivation for how a Shiny image could be templated, built, and used with `pracpac`. In short, the app code uses the bones of the "Old Faithful" Shiny app and simply adds a feature to add color to the eruptions histogram. The color palette is selected at random from palettes in the `wesanderson` package via a function called `get_pal()`. This function is embedded in a reactive context such that when the user clicks a button, the histogram plot title and bar colors dynamically update.
+
+### Setting up the Docker template
+
+We will first move the example `ocf` package to a temporary location:
+
+```{r, eval=FALSE}
+library(pracpac)
+library(fs)
+
+## specify the temp directory
+tmp <- tempdir()
+## copy the example ocf package to the temp directory
+dir_copy(path = system.file("ocf", package = "pracpac"), new_path = path(tmp, "example", "ocf"))
+```
+
+```{r, eval=FALSE}
+dir_tree(path(tmp, "example", "ocf"), recurse = TRUE)
+```
+```
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── pal.R
+├── inst
+│   └── app
+│       └── app.R
+└── man
+    └── get_pal.Rd
+```
+
+
+We can use `use_docker(..., use_case="shiny")` to create the template of files for building the Docker image:
+
+<!-- NOTE: eval=FALSE to use precooked results in the verbatim chunk that follows -->
+<!-- NOTE: We will need to re-run and update this with future changes in the code -->
+
+```{r, results='hide', eval=FALSE}
+use_docker(pkg_path = path(tmp, "example", "ocf"), use_case = "shiny")
+```
+
+```
+Using renv. Dockerfile will build from renv.lock in /tmp/RtmpsMexB6/example/ocf/docker.
+Using template for the specified use case: shiny
+Writing dockerfile: /tmp/RtmpsMexB6/example/ocf/docker/Dockerfile
+The directory will be created at /tmp/RtmpsMexB6/example/ocf/docker/assets 
+Assets for the specified use case (shiny) will be copied there.
+The specified use case (shiny) includes the following asset: app.R
+Building package ocf version 0.1.0 in /tmp/RtmpsMexB6/example/ocf/ocf_0.1.0.tar.gz
+docker build command:
+docker build  --tag ocf:latest --tag ocf:0.1.0 /tmp/RtmpsMexB6/example/ocf/docker
+```
+
+The directory now contains the `docker/` subdirectory, which has another subdirectory called `assets/` for the templated Shiny files:
+
+<!-- NOTE: eval=FALSE to use precooked results in the verbatim chunk that follows -->
+<!-- NOTE: We will need to re-run and update this with future changes in the code -->
+
+```{r, eval=FALSE}
+dir_tree(path(tmp, "example", "ocf"), recurse = TRUE)
+```
+
+```
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   └── pal.R
+├── docker
+│   ├── Dockerfile
+│   ├── assets
+│   │   └── app.R
+│   ├── ocf_0.1.0.tar.gz
+│   └── renv.lock
+├── inst
+│   └── app
+│       └── app.R
+└── man
+    └── get_pal.Rd
+```
+
+One of the files needs to be edited as follows:
+
+```{r, eval=FALSE, echo=FALSE}
+# actually make those changes! don't echo and don't eval. need to edit app.R
+file_copy(system.file("example/ocf/app.R", package = "pracpac"), path(tmp, "example/ocf/docker/assets/app.R"), overwrite=TRUE)
+```
+
+#### `app.R`
+
+```{r eval=FALSE, echo=TRUE, code=readLines(system.file("example", "ocf", "app.R", package = "pracpac"))}
+```
+
+Note that for this particular example, the templated Dockerfile requires no editing. In some cases, it may be necessary to edit the Dockerfile to modify behavior of the Shiny server (e.g., edit the shiny-server.conf file). 
+
+### Building the image
+
+With the template files created and edited as described above, we can build the image:
+
+```{r, eval=FALSE}
+build_image(pkg_path = path(tmp, "example", "ocf"))
+```
+
+In this case, the image will be built with `build_image()` default behavior of tagging with the package name and version:
+
+```{r, eval=FALSE}
+system("docker images")
+```
+
+### Running the container
+
+Now we can run the container, either from a Docker client directly on the host or from within R:
+
+```{r, eval = FALSE}
+system("docker run --rm -it -d --user shiny -p 3838:3838 ocf:0.1.0")
+```
+
+In this case we run the container detached (`-d`) and use the port 3838 such we can navigate to `localhost:3838` in a web browser and view the running app.
+
+```{r, echo=FALSE, eval=FALSE}
+## cleanup needed in case on vignette rebuild the same tmp directory is picked
+dir_delete(path = path(tmp, "example"))
+```
