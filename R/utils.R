@@ -41,7 +41,9 @@ pkg_info <- function(pkg_path=".", ...) {
   if (is.null(imports)) {
     pkgdeps <- character(0)
   } else {
-    pkgdeps <- strsplit(imports, split=",\\n")[[1]]
+    imports <- strsplit(imports, split=",\\n")[[1]]
+    # Strip out any version requirements
+    pkgdeps <- sapply(imports, function(x) gsub("[ \\(<=>].*", "", x), USE.NAMES = FALSE)
   }
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
