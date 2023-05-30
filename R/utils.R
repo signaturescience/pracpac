@@ -38,12 +38,12 @@ pkg_info <- function(pkg_path=".", ...) {
   # BiocManager::install(c(character(0)), update=FALSE, ask=FALSE)
   # install.packages(c(character(0)))
   imports <- as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports
-  # Strip out any version requirements
-  imports <- gsub("[ \\(<=>].*", "", imports)
   if (is.null(imports)) {
     pkgdeps <- character(0)
   } else {
-    pkgdeps <- strsplit(imports, split=",\\n")[[1]]
+    imports <- strsplit(imports, split=",\\n")[[1]]
+    # Strip out any version requirements
+    pkgdeps <- sapply(imports, function(x) gsub("[ \\(<=>].*", "", x), USE.NAMES = FALSE)
   }
   # Get the name and version from it
   pkgname <- strsplit(grep("^Package:", readLines(descfile), value=TRUE), split=" ")[[1]][2]
