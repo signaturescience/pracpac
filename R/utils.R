@@ -39,7 +39,7 @@ pkg_info <- function(pkg_path=".", ...) {
   # install.packages(c(character(0)))
   imports <- as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports
   # Strip out any version requirements
-  imports <- gsub(" .*", "", imports)
+  imports <- gsub("[ \\(<=>].*", "", imports)
   if (is.null(imports)) {
     pkgdeps <- character(0)
   } else {
