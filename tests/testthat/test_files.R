@@ -4,6 +4,8 @@ tmp <- tempdir()
 
 test_that("use_docker pipeline creates expected directories and files with defaults", {
 
+  skip_on_cran()
+
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
@@ -21,6 +23,8 @@ test_that("use_docker pipeline creates expected directories and files with defau
 
 test_that("build_image returns build command as expected", {
 
+  skip_on_cran()
+
   # Check build command
   buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), build=FALSE))
   expect_identical(as.character(buildcmd), paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test", "hellow", "docker")))
@@ -34,6 +38,8 @@ test_that("build_image returns build command as expected", {
 
 
 test_that("Option to ignore renv works", {
+
+  skip_on_cran()
 
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
@@ -50,6 +56,8 @@ test_that("Option to ignore renv works", {
 })
 
 test_that("Alternative directory structure works", {
+
+  skip_on_cran()
 
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
@@ -68,6 +76,8 @@ test_that("Alternative directory structure works", {
 
 test_that("build_image returns build command as expected with alternative directory", {
 
+  skip_on_cran()
+
   # Check build command
   buildcmd <- suppressMessages(build_image(pkg_path = path(tmp, "test", "hellow"), img_path = path(tmp, "test"), build=FALSE))
   expect_identical(as.character(buildcmd), paste("docker build  --tag hellow:latest --tag hellow:0.1.0", path(tmp, "test")))
@@ -80,6 +90,8 @@ test_that("build_image returns build command as expected with alternative direct
 })
 
 test_that("The base image override option works", {
+
+  skip_on_cran()
 
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
@@ -100,6 +112,8 @@ test_that("The base image override option works", {
 
 test_that("The other packages option works", {
 
+  skip_on_cran()
+
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
@@ -118,6 +132,8 @@ test_that("The other packages option works", {
 })
 
 test_that("Use case templates work (shiny)", {
+
+  skip_on_cran()
 
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
@@ -140,6 +156,8 @@ test_that("Use case templates work (shiny)", {
 
 test_that("Use case templates work (rstudio)", {
 
+  skip_on_cran()
+
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
@@ -158,6 +176,8 @@ test_that("Use case templates work (rstudio)", {
 })
 
 test_that("Use case templates work (pipeline)", {
+
+  skip_on_cran()
 
   ex_pkg <- system.file("hellow", package = "pracpac")
   dir_create(path = path(tmp, "test"), recurse = TRUE)
