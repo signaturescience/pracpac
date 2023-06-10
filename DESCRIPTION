@@ -1,6 +1,6 @@
 Package: pracpac
 Title: Practical 'R' Packaging in 'Docker'
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Stephen",
              family = "Turner",
