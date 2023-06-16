@@ -1,4 +1,4 @@
-This submission updates the `pracpac` package to v0.2.0.
+This is is a resubmission for v0.2.0 release. The package now no longer uses `renv` snapshot feature in any tests.
 
 ## Test environments
 

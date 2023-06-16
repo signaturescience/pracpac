@@ -2,6 +2,8 @@ library(fs)
 library(withr)
 tmp <- tempdir()
 
+## NOTE: as of v0.2.0 none of the tests use renv snapshot per CRAN req
+
 test_that("use_docker pipeline creates expected directories and files with defaults", {
 
   skip_on_cran()
@@ -10,13 +12,12 @@ test_that("use_docker pipeline creates expected directories and files with defau
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    use_docker(pkg_path = path(tmp, "test", "hellow"))
+    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = FALSE)
   },
   tmpdir = tmp)
 
   expect_true(dir_exists(path(tmp, "test", "hellow", "docker")))
   expect_true(file_exists(path(tmp, "test", "hellow", "docker", "Dockerfile")))
-  expect_true(file_exists(path(tmp, "test", "hellow", "docker", "renv.lock")))
   expect_true(file_exists(path(tmp, "test", "hellow", "docker", "hellow_0.1.0.tar.gz")))
 
 })
@@ -63,7 +64,7 @@ test_that("Alternative directory structure works", {
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    ## NOTE: setting use_renv to FALSE to make this test run quicker ... have already checked that option above
+    ## NOTE: setting use_renv to FALSE to make this test run quicker
     use_docker(pkg_path = path(tmp, "test", "hellow"), img_path = path(tmp, "test"), use_renv = FALSE)
   },
   tmpdir = tmp)
@@ -97,7 +98,7 @@ test_that("The base image override option works", {
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    ## NOTE: setting use_renv to FALSE to make this test run quicker ... have already checked that option above
+    ## NOTE: setting use_renv to FALSE to make this test run quicker
     use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = FALSE, base_image = "debian:10")
   },
   tmpdir = tmp)
@@ -105,27 +106,6 @@ test_that("The base image override option works", {
   ## check the base image
   dockerfile <- readLines(path(tmp, "test", "hellow", "docker", "Dockerfile"))
   expect_equal(dockerfile[1], "FROM debian:10")
-
-  ## clean up
-  dir_delete(path(tmp, "test"))
-})
-
-test_that("The other packages option works", {
-
-  skip_on_cran()
-
-  ex_pkg <- system.file("hellow", package = "pracpac")
-  dir_create(path = path(tmp, "test"), recurse = TRUE)
-  dir_copy(ex_pkg, path(tmp, "test"))
-  with_tempdir({
-    ## NOTE: have to set use_renv = TRUE for this one ...
-    use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = TRUE, other_packages = "withr")
-  },
-  tmpdir = tmp)
-
-  ## check the base image
-  renvlock <- readLines(path(tmp, "test", "hellow", "docker", "renv.lock"))
-  expect_true(any(sapply(renvlock, function(x) grepl("withr", x))))
 
   ## clean up
   dir_delete(path(tmp, "test"))
@@ -139,7 +119,7 @@ test_that("Use case templates work (shiny)", {
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    ## NOTE: setting use_renv to FALSE to make this test run quicker ... have already checked that option above
+    ## NOTE: setting use_renv to FALSE to make this test run quicker
     use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = FALSE, use_case = "shiny")
   },
   tmpdir = tmp)
@@ -162,7 +142,7 @@ test_that("Use case templates work (rstudio)", {
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    ## NOTE: setting use_renv to FALSE to make this test run quicker ... have already checked that option above
+    ## NOTE: setting use_renv to FALSE to make this test run quicker
     use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = FALSE, use_case = "rstudio")
   },
   tmpdir = tmp)
@@ -183,7 +163,7 @@ test_that("Use case templates work (pipeline)", {
   dir_create(path = path(tmp, "test"), recurse = TRUE)
   dir_copy(ex_pkg, path(tmp, "test"))
   with_tempdir({
-    ## NOTE: setting use_renv to FALSE to make this test run quicker ... have already checked that option above
+    ## NOTE: setting use_renv to FALSE to make this test run quicker
     use_docker(pkg_path = path(tmp, "test", "hellow"), use_renv = FALSE, use_case = "pipeline")
   },
   tmpdir = tmp)
