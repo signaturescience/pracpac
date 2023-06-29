@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   basic-usage: basic-usage.html
   use-cases: use-cases.html
-last_built: 2023-06-17T00:12Z
+last_built: 2023-06-29T20:42Z
 urls:
   reference: https://signaturescience.github.io/pracpac/reference
   article: https://signaturescience.github.io/pracpac/articles
