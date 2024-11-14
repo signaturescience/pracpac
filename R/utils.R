@@ -41,7 +41,10 @@ pkg_info <- function(pkg_path=".", ...) {
   if (is.null(imports)) {
     pkgdeps <- character(0)
   } else {
-    imports <- strsplit(imports, split=",\\n")[[1]]
+    imports <- as.data.frame(read.dcf(descfile),stringsAsFactors=FALSE)$Imports
+    imports <- gsub("\\n", "", imports)
+    imports <- gsub(" ", "", imports)
+    imports <- strsplit(imports, split=",")[[1]]
     # Strip out any version requirements
     pkgdeps <- sapply(imports, function(x) gsub("[ \\(<=>].*", "", x), USE.NAMES = FALSE)
   }
